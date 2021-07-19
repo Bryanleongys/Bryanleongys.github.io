@@ -14,7 +14,7 @@ class Database:
     '''
     def create_tables(self):
         try:
-            self.cur.execute('''CREATE TABLE events(name text, date text, start_time integer, end_time integer)''')
+            self.cur.execute('''CREATE TABLE events(name text, start_date text, end_date text, collection_date text, start_time integer, end_time integer)''')
             self.cur.execute('''CREATE TABLE users(username text, nusnet_id text, house text, telegram_id text)''')
             self.cur.execute('''CREATE TABLE events_joined(event_name text, username text)''')
             return True
@@ -54,9 +54,9 @@ class Database:
     SQLite queries for events table
     '''
 
-    def insert_events(self, name, date, start_time, end_time):
+    def insert_events(self, name, start_date, end_date, collection_date, start_time, end_time):
         try:
-            self.cur.execute("INSERT INTO events(name, date, start_time, end_time) values (?,?,?,?)", (name, date, start_time, end_time,))
+            self.cur.execute("INSERT INTO events(name, start_date, end_date, collection_date, start_time, end_time) values (?,?,?,?,?,?)", (name, start_date, end_date, collection_date, start_time, end_time,))
             return True
         except Exception as e:
             print(e)
@@ -123,9 +123,9 @@ testDatabase.query_all_users()
 
 # Ensuring events table queries work
 print("Expected: 2 events rows printed")
-testDatabase.insert_events("Orientation Welfare", "08/08/2021", 1400, 1700)
-testDatabase.insert_events("Recess Week Welfare", "08/10/2021", 1200, 1700)
-testDatabase.insert_events("Finals Week Welfare", "26/11/2021", 800, 1200)
+testDatabase.insert_events("Orientation Welfare", "07/08/2021", "09/08/2021", "08/08/2021", 1400, 1700)
+testDatabase.insert_events("Recess Week Welfare", "03/10/2021", "13/10/2021", "08/10/2021", 1200, 1700)
+testDatabase.insert_events("Finals Week Welfare", "21/11/2021", "29/11/2021", "26/11/2021", 800, 1200)
 testDatabase.delete_events("Finals Week Welfare")
 testDatabase.query_all_events()
 
