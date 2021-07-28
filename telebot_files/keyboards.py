@@ -120,6 +120,13 @@ def timings_keyboard(timings):
     return InlineKeyboardMarkup(keyboard)
 
 
+def event_items_keyboard(items_array):
+    keyboard = []
+    for item in items_array:
+        keyboard.append([KeyboardButton(item)])
+    return ReplyKeyboardMarkup(keyboard)
+
+
 def feedback_events_keyboard(events_array):
     # events_array: array of String
     keyboard = []

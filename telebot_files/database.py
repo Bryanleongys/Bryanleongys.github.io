@@ -22,11 +22,11 @@ class Database:
     def create_tables(self):
         try:
             self.cur.execute(
-                '''CREATE TABLE events(name text, start_date text, end_date text, collection_date text, start_time integer, end_time integer)''')
+                '''CREATE TABLE events(name text, start_date text, end_date text, collection_date text, start_time integer, end_time integer, item_bool integer)''')
             self.cur.execute(
                 '''CREATE TABLE users(username text, nusnet_id text, house text, telegram_id text)''')
             self.cur.execute(
-                '''CREATE TABLE events_joined(event_name text, username text, timing integer)''')
+                '''CREATE TABLE events_joined(event_name text, username text, timing integer, item_chosen text)''')
             return True
         except Exception as e:
             print(e)
@@ -67,10 +67,10 @@ class Database:
     SQLite queries for events table
     '''
 
-    def insert_events(self, name, start_date, end_date, collection_date, start_time, end_time):
+    def insert_events(self, name, start_date, end_date, collection_date, start_time, end_time, item_bool):
         try:
-            self.cur.execute("INSERT INTO events(name, start_date, end_date, collection_date, start_time, end_time) values (?,?,?,?,?,?)",
-                             (name, start_date, end_date, collection_date, start_time, end_time,))
+            self.cur.execute("INSERT INTO events(name, start_date, end_date, collection_date, start_time, end_time, item_bool) values (?,?,?,?,?,?,?)",
+                             (name, start_date, end_date, collection_date, start_time, end_time, item_bool))
             return True
         except Exception as e:
             print(e)
@@ -150,10 +150,10 @@ class Database:
     SQLite queries for events_joined table
     '''
 
-    def insert_events_joined(self, event_name, username, timing):
+    def insert_events_joined(self, event_name, username, timing, item_chosen):
         try:
             self.cur.execute(
-                "INSERT INTO events_joined(event_name, username, timing) values (?,?,?)", (event_name, username, timing,))
+                "INSERT INTO events_joined(event_name, username, timing, item_chosen) values (?,?,?,?)", (event_name, username, timing, item_chosen,))
             return True
         except Exception as e:
             print(e)

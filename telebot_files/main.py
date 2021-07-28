@@ -11,8 +11,6 @@ from database import Database
 
 print("Bot started...")
 db = Database()
-db.create_tables()
-
 
 def show_home(update, context):
     query = update.callback_query
@@ -63,30 +61,35 @@ def main():
         settings.prompt_settings, pattern='settings'
     ))
     # Initialize arrays
-    ## Past Welfare
+    # Past Welfare
     db.insert_events(
-        "Orientation Welfare", "22/07/2021", "23/07/2021", "25/07/2021", 1400, 1700)
-    ## Current Welfare
+        "Orientation Welfare", "22/07/2021", "23/07/2021", "25/07/2021", 1400, 1700, 1, "70% Sugar")
+    # Current Welfare
     db.insert_events("Sem 2 Welfare",
-                     "25/07/2021", "28/07/2021", "26/11/2021", 800, 1200)
+                     "25/07/2021", "28/07/2021", "26/11/2021", 800, 1200, 1, "Acai")
     db.insert_events("Holiday Welfare",
-                     "26/07/2021", "29/07/2021", "26/11/2021", 1300, 1700)
-    ## Future Welfare
+                     "26/07/2021", "29/07/2021", "26/11/2021", 1300, 1700, 0, "")
+    # Future Welfare
     db.insert_events(
-        "Recess Week Welfare", "03/10/2021", "13/10/2021", "08/10/2021", 1200, 1700)
+        "Recess Week Welfare", "03/10/2021", "13/10/2021", "08/10/2021", 1200, 1700, 0, "")
     db.insert_events("Finals Week Welfare",
-                     "21/11/2021", "29/11/2021", "26/11/2021", 800, 1200)
+                     "21/11/2021", "29/11/2021", "26/11/2021", 800, 1200, 0, "")
+    db.query_all_events()
     # current_events
     current_events = db.query_all_current_events()
     current_events_array = []
     current_events_name_array = []
     timings_array = []
     event_date_array = []
+    event_items_array = []
+    items_bool_array = []
     for event in current_events:
         current_events_array.append(event[0] + ", closes " + event[2])
         current_events_name_array.append(event[0])
         timings_array.append([event[4], event[5]])
         event_date_array.append(event[3])
+        items_bool_array.append(event[6])
+        event_items_array.append(event[7])
 
     # future_events
     future_events = db.query_all_future_events()
@@ -107,8 +110,9 @@ def main():
         entry_points=[CallbackQueryHandler(partial(
             signup.show_current_welfare, events_array=current_events_array), pattern="current_welfare")],
         states={
-            1: [CallbackQueryHandler(partial(signup.show_timings, timings=timings_array, event_dates=event_date_array, events=current_events_name_array), pattern="current")],
-            2: [CallbackQueryHandler(partial(signup.confirm_timing, db=db), pattern="timing")]
+            1: [CallbackQueryHandler(partial(signup.show_timings, timings=timings_array, event_dates=event_date_array, events=current_events_name_array, items_bool_array=items_bool_array), pattern="current")],
+            2: [CallbackQueryHandler(partial(signup.show_item_events, event_items_array=event_items_array))],
+            3: [CallbackQueryHandler(partial(signup.confirm_timing, db=db, items_bool_array=items_bool_array), pattern="timing")]
         },
         fallbacks=[CallbackQueryHandler(
             signup.prompt_welfare, pattern="return_prompt"), CallbackQueryHandler(
