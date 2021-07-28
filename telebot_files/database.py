@@ -89,6 +89,7 @@ class Database:
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
+                print(row)
                 arrayString.append(
                     row[0] + ", ends on " + row[2] + ", " + str(row[5]) + "hrs.")
             return arrayString
@@ -104,6 +105,7 @@ class Database:
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
+                print(row)
                 dateStart = time.strptime(row[1], "%d/%m/%Y")
                 dateEnd = time.strptime(row[2], "%d/%m/%Y")
                 if (dateStart <= dateToday <= dateEnd):
@@ -122,6 +124,7 @@ class Database:
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
+                print(row)
                 dateStart = time.strptime(row[1], "%d/%m/%Y")
                 if (dateToday < dateStart):
                     arrayString.append(row)
@@ -138,6 +141,7 @@ class Database:
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
+                print(row)
                 dateEnd = time.strptime(row[2], "%d/%m/%Y")
                 if (dateEnd < dateToday):
                     arrayString.append(row)
@@ -178,42 +182,43 @@ class Database:
             return e
 
 
-# '''
-# Mock data testing to ensure that the queries work
-# '''
-# testDatabase = Database()
-# testDatabase.create_tables()
+'''
+Mock data testing to ensure that the queries work
+'''
+testDatabase = Database()
+testDatabase.create_tables()
 
-# # Ensuring users table queries work
-# print("Expected: 2 users rows printed")
-# testDatabase.insert_user("bryanwhl", "e0535051", "Aquila", "e591o2")
-# testDatabase.insert_user("bryanlys", "e0535000", "Leo", "e591o3")
-# testDatabase.insert_user("Ian Tan", "e0534121", "Noctua", "e591o4")
-# testDatabase.delete_user("e591o4")
-# testDatabase.query_all_users()
+# Ensuring users table queries work
+print("Expected: 2 users rows printed")
+testDatabase.insert_user("bryanwhl", "e0535051", "Aquila", "e591o2")
+testDatabase.insert_user("bryanlys", "e0535000", "Leo", "e591o3")
+testDatabase.insert_user("Ian Tan", "e0534121", "Noctua", "e591o4")
+testDatabase.delete_user("e591o4")
+testDatabase.query_all_users()
+print("==========================")
 
-# # Ensuring events table queries work
-# print("Expected: 2 events rows printed")
-# testDatabase.insert_events("Sem 2 Welfare",
-#                            "18/07/2021", "19/07/2021", "26/11/2021", 800, 1200)
-# testDatabase.insert_events("Holiday Welfare",
-#                            "19/07/2021", "21/07/2021", "26/11/2021", 800, 1200)
-# testDatabase.insert_events(
-#     "Orientation Welfare", "07/08/2021", "09/08/2021", "08/08/2021", 1400, 1700)
-# testDatabase.insert_events(
-#     "Recess Week Welfare", "03/10/2021", "13/10/2021", "08/10/2021", 1200, 1700)
-# testDatabase.insert_events("Finals Week Welfare",
-#                            "21/11/2021", "29/11/2021", "26/11/2021", 800, 1200)
-# testDatabase.delete_events("Finals Week Welfare")
-# testDatabase.query_all_current_events()
-# testDatabase.query_all_future_events()
-# testDatabase.query_all_past_events()
+# Ensuring events table queries work
+testDatabase.insert_events("Sem 2 Welfare", "18/07/2021", "19/07/2021", "26/11/2021", 800, 1200)
+testDatabase.insert_events("Holiday Welfare", "19/07/2021", "21/07/2021", "26/11/2021", 800, 1200)
+testDatabase.insert_events("Orientation Welfare", "07/08/2021", "09/08/2021", "08/08/2021", 1400, 1700)
+testDatabase.insert_events("Recess Week Welfare", "03/10/2021", "13/10/2021", "08/10/2021", 1200, 1700)
+testDatabase.insert_events("Finals Week Welfare", "21/11/2021", "29/11/2021", "26/11/2021", 800, 1200)
+testDatabase.delete_events("Finals Week Welfare")
+print("Expected: 2 current events rows printed")
+testDatabase.query_all_current_events()
+print("==========================")
+print("Expected: 2 future events rows printed")
+testDatabase.query_all_future_events()
+print("==========================")
+print("Expected: 2 past events rows printed")
+testDatabase.query_all_past_events()
+print("==========================")
 
-# # Ensuring events_joined table queries work
-# print("Expected: 2 events_joined rows printed")
-# testDatabase.insert_events_joined("Orientation Welfare", "bryanwhl", 1100)
-# testDatabase.insert_events_joined("Orientation Welfare", "bryanlys", 1100)
-# testDatabase.insert_events_joined("Recess Week Welfare", "bryanwhl", 1200)
-# testDatabase.insert_events_joined("Recess Week Welfare", "bryanlys", 1200)
-# testDatabase.delete_events_joined("Orientation Welfare")
-# testDatabase.query_all_events_joined()
+# Ensuring events_joined table queries work
+print("Expected: 2 events_joined rows printed")
+testDatabase.insert_events_joined("Orientation Welfare", "bryanwhl", 1100)
+testDatabase.insert_events_joined("Orientation Welfare", "bryanlys", 1100)
+testDatabase.insert_events_joined("Recess Week Welfare", "bryanwhl", 1200)
+testDatabase.insert_events_joined("Recess Week Welfare", "bryanlys", 1200)
+testDatabase.delete_events_joined("Orientation Welfare")
+testDatabase.query_all_events_joined()
