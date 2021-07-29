@@ -1,13 +1,6 @@
-import React, { Component } from "react";
+import React from "react";
 import { Container, Nav } from "react-bootstrap";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useRouteMatch,
-  useParams,
-} from "react-router-dom";
+import { Switch, Route, Link, useRouteMatch } from "react-router-dom";
 import PastEvents from "./events/PastEvents";
 import CurrentEvents from "./events/CurrentEvents";
 import FutureEvents from "./events/FutureEvents";

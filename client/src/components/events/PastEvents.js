@@ -1,15 +1,36 @@
-import React, { Component } from "react";
-import { Container, Table, Button } from "react-bootstrap";
+import React, { useRef } from "react";
+import { Container, Table, Button, Nav } from "react-bootstrap";
+import { Switch, Route, Link, useRouteMatch } from "react-router-dom";
+import EditEvent from "./EditEvent";
 
 const PastEvents = () => {
-  // const [arrayObjects, setArrayObjects] = React.useState();
-  let arrayObject = [
+  let match = useRouteMatch();
+  const sample = [
     { name: "Orientation Welfare", eventDate: "07/07/21" },
     { name: "Recess Week Welfare", eventDate: "08/07/21" },
     { name: "Study Welfare", eventDate: "09/07/21" },
     { name: "For Noobs Welfare", eventDate: "10/07/21" },
   ];
-  // setArrayObjects(array);
+  const [arrayObject, setArrayObject] = React.useState(sample);
+
+  // React.useEffect(() => {
+  //   console.log("hello");
+  // }, [arrayObject]);
+
+  // const handlePress = (index) => {
+  //   console.log(index);
+  //   var newArray = arrayObject;
+  //   newArray.splice(index, 1);
+  //   console.log(newArray);
+  //   setArrayObject(newArray);
+  // };
+
+  const handlePress = (index) => {
+    var newArray = arrayObject;
+    newArray.splice(index, 1);
+    setArrayObject([...newArray]);
+  };
+
   return (
     <Container>
       <Table striped bordered hover>
@@ -24,18 +45,33 @@ const PastEvents = () => {
         <tbody>
           {arrayObject.map((event, index) => {
             return (
-              <tr>
+              <tr key={index}>
                 <td>{index + 1}</td>
-                <td>{event.name}</td>
+                <Nav>
+                  <Nav.Link as={Link} to={`${match.url}/${event.name}`}>
+                    {event.name}
+                  </Nav.Link>
+                </Nav>
                 <td>{event.eventDate}</td>
                 <td>
-                  <Button variant="danger">Remove</Button>
+                  <Button onClick={() => handlePress(index)} variant="danger">
+                    Remove
+                  </Button>
                 </td>
               </tr>
             );
           })}
         </tbody>
       </Table>
+      <Switch>
+        {arrayObject.map((event, index) => {
+          <Route
+            key={index}
+            path={`${match.url}/${event.name}`}
+            component={EditEvent}
+          />;
+        })}
+      </Switch>
     </Container>
   );
 };
