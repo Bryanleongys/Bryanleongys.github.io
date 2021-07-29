@@ -10,7 +10,7 @@ const EventScreen = () => {
 
   return (
     <Container>
-      <Nav justify variant="tabs" defaultActiveKey="/home">
+      <Nav variant="tabs" defaultActiveKey="/home">
         <Nav.Item>
           <Nav.Link as={Link} to={`${match.url}/past-events`}>
             Past Events
