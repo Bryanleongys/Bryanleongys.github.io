@@ -25,7 +25,7 @@ const UserTable = ({ arrayHandles }) => {
                   </Button>
                 </td>
                 <td>
-                  <Button variant="warning">
+                  <Button variant="danger">
                     <X />
                   </Button>
                 </td>

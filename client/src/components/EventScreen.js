@@ -10,19 +10,27 @@ const EventScreen = () => {
 
   return (
     <Container>
-      <Nav variant="tabs" defaultActiveKey="/home">
+      <Nav variant="tabs" defaultActiveKey="link-0">
         <Nav.Item>
-          <Nav.Link as={Link} to={`${match.url}/past-events`}>
+          <Nav.Link as={Link} to={`${match.url}/past-events`} eventKey="link-0">
             Past Events
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link as={Link} to={`${match.url}/current-events`}>
+          <Nav.Link
+            as={Link}
+            to={`${match.url}/current-events`}
+            eventKey="link-1"
+          >
             Current Events
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link as={Link} to={`${match.url}/future-events`}>
+          <Nav.Link
+            as={Link}
+            to={`${match.url}/future-events`}
+            eventKey="link-2"
+          >
             Future Events
           </Nav.Link>
         </Nav.Item>

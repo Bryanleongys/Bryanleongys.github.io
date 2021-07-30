@@ -19,14 +19,14 @@ const UserScreen = () => {
 
   const showTable = () => {
     return (
-      <Nav variant="tabs" defaultActiveKey="/home">
+      <Nav variant="tabs" defaultActiveKey="link-0">
         <Nav.Item>
-          <Nav.Link as={Link} to={`${match.url}/sign-ups`}>
+          <Nav.Link as={Link} to={`${match.url}/sign-ups`} eventKey="link-0">
             Sign Ups
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link as={Link} to={`${match.url}/selected`}>
+          <Nav.Link as={Link} to={`${match.url}/selected`} eventKey="link-1">
             Selected
           </Nav.Link>
         </Nav.Item>
