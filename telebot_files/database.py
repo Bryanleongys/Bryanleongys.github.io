@@ -27,6 +27,8 @@ class Database:
                 '''CREATE TABLE users(username text, nusnet_id text, house text, telegram_id text)''')
             self.cur.execute(
                 '''CREATE TABLE events_joined(event_name text, username text, timing integer, item_chosen text)''')
+            self.cur.execute(
+                '''CREATE TABLE events_custom_choices(event_name text, choice_header text, choice_name text)''')
             return True
         except Exception as e:
             print(e)
@@ -182,47 +184,24 @@ class Database:
             print(e)
             return e
 
+    '''
+    SQLite queries for events_custom_choices table
+    '''
+    def insert_events_custom_choices(self, event_name, choice_number, choice_name):
+        try:
+            self.cur.execute(
+                "INSERT INTO events_custom_choices(event_name, choice_number, choice_name) values (?,?,?)", (event_name, choice_number, choice_name,))
+            return True
+        except Exception as e:
+            print(e)
+            return e
 
-'''
-Mock data testing to ensure that the queries work
-'''
-print("============ Start Of Test ==============")
-testDatabase = Database()
-testDatabase.create_tables()
-
-# Ensuring users table queries work
-print("Expected: 2 users rows printed")
-testDatabase.insert_user("bryanwhl", "e0535051", "Aquila", "e591o2")
-testDatabase.insert_user("bryanlys", "e0535000", "Leo", "e591o3")
-testDatabase.insert_user("Ian Tan", "e0534121", "Noctua", "e591o4")
-testDatabase.delete_user("e591o4")
-testDatabase.query_all_users()
-print("==========================")
-
-# Ensuring events table queries work
-testDatabase.insert_events("Sem 2 Welfare", "Current", "18/07/2021", "19/07/2021", "26/11/2021", 800, 1200, 0)
-testDatabase.insert_events("Holiday Welfare", "Past", "19/07/2021", "21/07/2021", "26/11/2021", 800, 1200, 0)
-testDatabase.insert_events("Random Welfare", "Past", "19/07/2021", "21/07/2021", "26/11/2021", 800, 1200, 0)
-testDatabase.insert_events("Orientation Welfare", "Future", "07/08/2021", "09/08/2021", "08/08/2021", 1400, 1700, 0)
-testDatabase.insert_events("Recess Week Welfare", "Current", "03/10/2021", "13/10/2021", "08/10/2021", 1200, 1700, 0)
-testDatabase.insert_events("Finals Week Welfare", "Future", "21/11/2021", "29/11/2021", "26/11/2021", 800, 1200, 0)
-testDatabase.delete_events("Final Week Welfare")
-print("Expected: 2 current events rows printed")
-testDatabase.query_all_current_events()
-print("==========================")
-print("Expected: 2 future events rows printed")
-testDatabase.query_all_future_events()
-print("==========================")
-print("Expected: 2 past events rows printed")
-testDatabase.query_all_past_events()
-print("==========================")
-
-# Ensuring events_joined table queries work
-print("Expected: 2 events_joined rows printed")
-testDatabase.insert_events_joined("Orientation Welfare", "bryanwhl", 1100, 0)
-testDatabase.insert_events_joined("Orientation Welfare", "bryanlys", 1100, 0)
-testDatabase.insert_events_joined("Recess Week Welfare", "bryanwhl", 1200, 0)
-testDatabase.insert_events_joined("Recess Week Welfare", "bryanlys", 1200, 0)
-testDatabase.delete_events_joined("Orientation Welfare")
-testDatabase.query_all_events_joined()
-print("============ End Of Test ==============")
+    def query_event_choices(self, event_name):
+        try:
+            self.cur.execute("SELECT * FROM events_custom_choices WHERE event_name = (?)", (event_name,))
+            rows = self.cur.fetchall()
+            for row in rows:
+                print(row)
+        except Exception as e:
+            print(e)
+            return e
