@@ -7,7 +7,6 @@ const PastEvents = () => {
   let match = useRouteMatch();
   const sample = [
     { name: "Orientation Welfare", eventDate: "07/07/21" },
-    { name: "Recess Week Welfare", eventDate: "08/07/21" },
     { name: "Study Welfare", eventDate: "09/07/21" },
     { name: "For Noobs Welfare", eventDate: "10/07/21" },
   ];
@@ -48,7 +47,7 @@ const PastEvents = () => {
               <tr key={index}>
                 <td>{index + 1}</td>
                 <Nav>
-                  <Nav.Link as={Link} to={`${match.url}/${event.name}`}>
+                  <Nav.Link as={Link} to={`${event.name}`}>
                     {event.name}
                   </Nav.Link>
                 </Nav>

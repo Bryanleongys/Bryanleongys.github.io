@@ -42,7 +42,7 @@ const CurrentEvents = () => {
   //   setArrayObject(newArray);
   // };
 
-  const handlePress = (index) => {
+  const handleRemove = (index) => {
     var newArray = arrayObject;
     newArray.splice(index, 1);
     setArrayObject([...newArray]);
@@ -60,6 +60,7 @@ const CurrentEvents = () => {
             <th>Start Time</th>
             <th>End Time</th>
             <th>Remove Event</th>
+            <th>User Database</th>
           </tr>
         </thead>
         <tbody>
@@ -68,7 +69,7 @@ const CurrentEvents = () => {
               <tr key={index}>
                 <td>{index + 1}</td>
                 <Nav>
-                  <Nav.Link as={Link} to={`${match.url}/${event.name}`}>
+                  <Nav.Link as={Link} to={`${event.name}`}>
                     {event.name}
                   </Nav.Link>
                 </Nav>
@@ -77,16 +78,21 @@ const CurrentEvents = () => {
                 <td>{event.startTime}</td>
                 <td>{event.endTime}</td>
                 <td>
-                  <Button onClick={() => handlePress(index)} variant="danger">
+                  <Button onClick={() => handleRemove(index)} variant="danger">
                     Remove
                   </Button>
+                </td>
+                <td>
+                  <Link to={`users-${event.name}`}>
+                    <Button variant="warning">Manage</Button>
+                  </Link>
                 </td>
               </tr>
             );
           })}
         </tbody>
       </Table>
-      <Switch>
+      {/* <Switch>
         {arrayObject.map((event, index) => {
           <Route
             key={index}
@@ -94,7 +100,7 @@ const CurrentEvents = () => {
             component={EditEvent}
           />;
         })}
-      </Switch>
+      </Switch> */}
     </Container>
   );
 };

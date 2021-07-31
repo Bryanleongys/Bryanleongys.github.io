@@ -9,14 +9,14 @@ const FeedbackScreen = () => {
 
   return (
     <Container>
-      <Nav justify variant="tabs" defaultActiveKey="/home">
+      <Nav justify variant="tabs" defaultActiveKey="link-0">
         <Nav.Item>
-          <Nav.Link as={Link} to={`${match.url}/general`}>
+          <Nav.Link as={Link} to={`${match.url}/general`} eventKey="link-0">
             General
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link as={Link} to={`${match.url}/events`}>
+          <Nav.Link as={Link} to={`${match.url}/events`} eventKey="link-1">
             Events
           </Nav.Link>
         </Nav.Item>

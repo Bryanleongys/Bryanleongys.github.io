@@ -73,7 +73,7 @@ const FutureEvents = () => {
               <tr key={index}>
                 <td>{index + 1}</td>
                 <Nav>
-                  <Nav.Link as={Link} to={`${match.url}/${event.name}`}>
+                  <Nav.Link as={Link} to={`${event.name}`}>
                     {event.name}
                   </Nav.Link>
                 </Nav>
