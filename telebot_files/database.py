@@ -16,17 +16,23 @@ class Database:
         self.cur = self.con.cursor()
 
     '''
+    Initializing commit function
+    '''
+    def commit(self):
+      self.con.commit()
+
+    '''
     Initializing tables which only needs to be called once at the start of the program
     '''
 
     def create_tables(self):
         try:
             self.cur.execute(
-                '''CREATE TABLE events(name text, event_type text, start_date text, end_date text, collection_date text, start_time integer, end_time integer, item_bool integer)''')
+                '''CREATE TABLE events(name text, event_type text, start_date text, end_date text, collection_date text, start_time text, end_time text, item_bool text)''')
             self.cur.execute(
                 '''CREATE TABLE users(username text, nusnet_id text, house text, telegram_id text)''')
             self.cur.execute(
-                '''CREATE TABLE events_joined(event_name text, username text, timing integer, item_chosen text)''')
+                '''CREATE TABLE events_joined(event_name text, username text, timing text, item_chosen text)''')
             self.cur.execute(
                 '''CREATE TABLE events_custom_choices(event_name text, choice_header text, choice_name text)''')
             return True
@@ -69,16 +75,17 @@ class Database:
     SQLite queries for events table
     '''
 
-    def insert_events(self, name, event_type, start_date, end_date, collection_date, start_time, end_time, item_bool):
+    def insert_event(self, name, event_type, start_date, end_date, collection_date, start_time, end_time, item_bool):
         try:
             self.cur.execute("INSERT INTO events(name, event_type, start_date, end_date, collection_date, start_time, end_time, item_bool) values (?,?,?,?,?,?,?,?)",
                              (name, event_type, start_date, end_date, collection_date, start_time, end_time, item_bool))
+            self.con.commit()
             return True
         except Exception as e:
             print(e)
             return e
 
-    def delete_events(self, name):
+    def delete_event(self, name):
         try:
             self.cur.execute("DELETE FROM events WHERE name=?", (name,))
         except Exception as e:
@@ -103,7 +110,7 @@ class Database:
         today = date.today()
         dateToday = time.strptime(today.strftime("%d/%m/%Y"), "%d/%m/%Y")
         try:
-            self.cur.execute("SELECT * FROM events WHERE event_type = 'Current'")
+            self.cur.execute("SELECT * FROM events WHERE event_type = 'Current Event'")
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
@@ -122,12 +129,11 @@ class Database:
         today = date.today()
         dateToday = time.strptime(today.strftime("%d/%m/%Y"), "%d/%m/%Y")
         try:
-            self.cur.execute("SELECT * FROM events WHERE event_type = 'Future'")
+            self.cur.execute("SELECT * FROM events WHERE event_type = 'Future Event'")
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
                 print(row)
-                print("here")
                 dateStart = time.strptime(row[2], "%d/%m/%Y")
                 if (dateToday < dateStart):
                     arrayString.append(row)
@@ -140,7 +146,7 @@ class Database:
         today = date.today()
         dateToday = time.strptime(today.strftime("%d/%m/%Y"), "%d/%m/%Y")
         try:
-            self.cur.execute("SELECT * FROM events WHERE event_type = 'Past'")
+            self.cur.execute("SELECT * FROM events WHERE event_type = 'Past Event'")
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
@@ -157,7 +163,7 @@ class Database:
     SQLite queries for events_joined table
     '''
 
-    def insert_events_joined(self, event_name, username, timing, item_chosen):
+    def insert_event_joined(self, event_name, username, timing, item_chosen):
         try:
             self.cur.execute(
                 "INSERT INTO events_joined(event_name, username, timing, item_chosen) values (?,?,?,?)", (event_name, username, timing, item_chosen,))
@@ -166,7 +172,7 @@ class Database:
             print(e)
             return e
 
-    def delete_events_joined(self, event_name):
+    def delete_event_joined(self, event_name):
         try:
             self.cur.execute(
                 "DELETE FROM events_joined WHERE event_name=?", (event_name,))
@@ -187,16 +193,16 @@ class Database:
     '''
     SQLite queries for events_custom_choices table
     '''
-    def insert_events_custom_choices(self, event_name, choice_number, choice_name):
+    def insert_events_custom_choices(self, event_name, choice_header, choice_name):
         try:
             self.cur.execute(
-                "INSERT INTO events_custom_choices(event_name, choice_number, choice_name) values (?,?,?)", (event_name, choice_number, choice_name,))
+                "INSERT INTO events_custom_choices(event_name, choice_header, choice_name) values (?,?,?)", (event_name, choice_header, choice_name,))
             return True
         except Exception as e:
             print(e)
             return e
 
-    def query_event_choices(self, event_name):
+    def query_events_choices(self, event_name):
         try:
             self.cur.execute("SELECT * FROM events_custom_choices WHERE event_name = (?)", (event_name,))
             rows = self.cur.fetchall()

@@ -4,6 +4,7 @@ import axios from 'axios';
 
 const AddEventForm = () => {
 
+  const [eventName, setEventName] = React.useState(null);
   const [eventType, setEventType] = React.useState("Future Event");
   const [startDate, setStartDate] = React.useState(null);
   const [endDate, setEndDate] = React.useState(null);
@@ -14,6 +15,7 @@ const AddEventForm = () => {
 
   const handlePostRequest = () => {
     const eventJson = {
+      eventName: eventName,
       eventType: eventType,
       startDate: startDate,
       endDate: endDate,
@@ -32,19 +34,7 @@ const AddEventForm = () => {
   }
 
   const handleSubmitClick = (event) => {
-
-    const eventJson = {
-      eventType: eventType,
-      startDate: startDate,
-      endDate: endDate,
-      collectionDate: collectionDate,
-      startTime: startTime,
-      endTime: endTime
-    }
-    
-    console.log(eventJson);
-    
-    if (startDate !== null && endDate !== null && collectionDate !== null && startTime !== null && endTime !== null) {
+    if (eventName !== null && startDate !== null && endDate !== null && collectionDate !== null && startTime !== null && endTime !== null) {
       setValidated(true);
     }
   };
@@ -67,6 +57,7 @@ const AddEventForm = () => {
             placeholder="e.g. Recess Week Welfare"
             aria-label="Username"
             aria-describedby="basic-addon1"
+            onChange={(e) => setEventName(e.target.value)}
           />
         </InputGroup>
 
