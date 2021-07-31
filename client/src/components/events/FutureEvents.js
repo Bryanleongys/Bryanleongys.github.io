@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { Container, Table, Button, Nav } from "react-bootstrap";
 import { Switch, Route, Link, useRouteMatch } from "react-router-dom";
+import { Plus, PlusSquare } from 'react-bootstrap-icons';
 import EditEvent from "./EditEvent";
 
 const FutureEvents = () => {
@@ -53,7 +54,7 @@ const FutureEvents = () => {
 
   return (
     <Container>
-      <Table striped bordered hover>
+      <Table striped bordered hover responsive>
         <thead>
           <tr>
             <th>#</th>

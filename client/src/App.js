@@ -10,6 +10,7 @@ import EventScreen from "./components/EventScreen";
 import UserScreen from "./components/UserScreen";
 import FeedbackScreen from "./components/FeedbackScreen";
 import HomeScreen from "./components/HomeScreen";
+import AddEventForm from "./components/events/AddEventForm";
 
 import "./App.css";
 
@@ -64,6 +65,7 @@ const App = () => (
         <Route path="/events" component={EventScreen} />
         <Route path="/users" component={UserScreen} />
         <Route path="/feedbacks" component={FeedbackScreen} />
+        <Route path="/add-event" component={AddEventForm} />
       </Switch>
     </Container>
   </Router>

@@ -22,7 +22,7 @@ class Database:
     def create_tables(self):
         try:
             self.cur.execute(
-                '''CREATE TABLE events(name text, start_date text, end_date text, collection_date text, start_time integer, end_time integer, item_bool integer)''')
+                '''CREATE TABLE events(name text, event_type text, start_date text, end_date text, collection_date text, start_time integer, end_time integer, item_bool integer)''')
             self.cur.execute(
                 '''CREATE TABLE users(username text, nusnet_id text, house text, telegram_id text)''')
             self.cur.execute(
@@ -67,10 +67,10 @@ class Database:
     SQLite queries for events table
     '''
 
-    def insert_events(self, name, start_date, end_date, collection_date, start_time, end_time, item_bool):
+    def insert_events(self, name, event_type, start_date, end_date, collection_date, start_time, end_time, item_bool):
         try:
-            self.cur.execute("INSERT INTO events(name, start_date, end_date, collection_date, start_time, end_time, item_bool) values (?,?,?,?,?,?,?)",
-                             (name, start_date, end_date, collection_date, start_time, end_time, item_bool))
+            self.cur.execute("INSERT INTO events(name, event_type, start_date, end_date, collection_date, start_time, end_time, item_bool) values (?,?,?,?,?,?,?,?)",
+                             (name, event_type, start_date, end_date, collection_date, start_time, end_time, item_bool))
             return True
         except Exception as e:
             print(e)
@@ -101,13 +101,13 @@ class Database:
         today = date.today()
         dateToday = time.strptime(today.strftime("%d/%m/%Y"), "%d/%m/%Y")
         try:
-            self.cur.execute("SELECT * FROM events")
+            self.cur.execute("SELECT * FROM events WHERE event_type = 'Current'")
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
                 print(row)
-                dateStart = time.strptime(row[1], "%d/%m/%Y")
-                dateEnd = time.strptime(row[2], "%d/%m/%Y")
+                dateStart = time.strptime(row[2], "%d/%m/%Y")
+                dateEnd = time.strptime(row[3], "%d/%m/%Y")
                 if (dateStart <= dateToday <= dateEnd):
                     arrayString.append(
                         row)
@@ -120,12 +120,13 @@ class Database:
         today = date.today()
         dateToday = time.strptime(today.strftime("%d/%m/%Y"), "%d/%m/%Y")
         try:
-            self.cur.execute("SELECT * FROM events")
+            self.cur.execute("SELECT * FROM events WHERE event_type = 'Future'")
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
                 print(row)
-                dateStart = time.strptime(row[1], "%d/%m/%Y")
+                print("here")
+                dateStart = time.strptime(row[2], "%d/%m/%Y")
                 if (dateToday < dateStart):
                     arrayString.append(row)
             return arrayString
@@ -137,12 +138,12 @@ class Database:
         today = date.today()
         dateToday = time.strptime(today.strftime("%d/%m/%Y"), "%d/%m/%Y")
         try:
-            self.cur.execute("SELECT * FROM events")
+            self.cur.execute("SELECT * FROM events WHERE event_type = 'Past'")
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
                 print(row)
-                dateEnd = time.strptime(row[2], "%d/%m/%Y")
+                dateEnd = time.strptime(row[3], "%d/%m/%Y")
                 if (dateEnd < dateToday):
                     arrayString.append(row)
             return arrayString
@@ -185,6 +186,7 @@ class Database:
 '''
 Mock data testing to ensure that the queries work
 '''
+print("============ Start Of Test ==============")
 testDatabase = Database()
 testDatabase.create_tables()
 
@@ -198,12 +200,13 @@ testDatabase.query_all_users()
 print("==========================")
 
 # Ensuring events table queries work
-testDatabase.insert_events("Sem 2 Welfare", "18/07/2021", "19/07/2021", "26/11/2021", 800, 1200)
-testDatabase.insert_events("Holiday Welfare", "19/07/2021", "21/07/2021", "26/11/2021", 800, 1200)
-testDatabase.insert_events("Orientation Welfare", "07/08/2021", "09/08/2021", "08/08/2021", 1400, 1700)
-testDatabase.insert_events("Recess Week Welfare", "03/10/2021", "13/10/2021", "08/10/2021", 1200, 1700)
-testDatabase.insert_events("Finals Week Welfare", "21/11/2021", "29/11/2021", "26/11/2021", 800, 1200)
-testDatabase.delete_events("Finals Week Welfare")
+testDatabase.insert_events("Sem 2 Welfare", "Current", "18/07/2021", "19/07/2021", "26/11/2021", 800, 1200, 0)
+testDatabase.insert_events("Holiday Welfare", "Past", "19/07/2021", "21/07/2021", "26/11/2021", 800, 1200, 0)
+testDatabase.insert_events("Random Welfare", "Past", "19/07/2021", "21/07/2021", "26/11/2021", 800, 1200, 0)
+testDatabase.insert_events("Orientation Welfare", "Future", "07/08/2021", "09/08/2021", "08/08/2021", 1400, 1700, 0)
+testDatabase.insert_events("Recess Week Welfare", "Current", "03/10/2021", "13/10/2021", "08/10/2021", 1200, 1700, 0)
+testDatabase.insert_events("Finals Week Welfare", "Future", "21/11/2021", "29/11/2021", "26/11/2021", 800, 1200, 0)
+testDatabase.delete_events("Final Week Welfare")
 print("Expected: 2 current events rows printed")
 testDatabase.query_all_current_events()
 print("==========================")
@@ -216,9 +219,10 @@ print("==========================")
 
 # Ensuring events_joined table queries work
 print("Expected: 2 events_joined rows printed")
-testDatabase.insert_events_joined("Orientation Welfare", "bryanwhl", 1100)
-testDatabase.insert_events_joined("Orientation Welfare", "bryanlys", 1100)
-testDatabase.insert_events_joined("Recess Week Welfare", "bryanwhl", 1200)
-testDatabase.insert_events_joined("Recess Week Welfare", "bryanlys", 1200)
+testDatabase.insert_events_joined("Orientation Welfare", "bryanwhl", 1100, 0)
+testDatabase.insert_events_joined("Orientation Welfare", "bryanlys", 1100, 0)
+testDatabase.insert_events_joined("Recess Week Welfare", "bryanwhl", 1200, 0)
+testDatabase.insert_events_joined("Recess Week Welfare", "bryanlys", 1200, 0)
 testDatabase.delete_events_joined("Orientation Welfare")
 testDatabase.query_all_events_joined()
+print("============ End Of Test ==============")
