@@ -7,7 +7,6 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import EventScreen from "./components/EventScreen";
-import UserScreen from "./components/UserScreen";
 import FeedbackScreen from "./components/FeedbackScreen";
 import HomeScreen from "./components/HomeScreen";
 
@@ -24,9 +23,6 @@ const App = () => (
           <Nav className="me-auto">
             <Nav.Link as={Link} to={"/events"}>
               Events
-            </Nav.Link>
-            <Nav.Link as={Link} to={"/users"}>
-              Users
             </Nav.Link>
             <Nav.Link as={Link} to={"/feedbacks"}>
               Feedbacks
@@ -46,7 +42,6 @@ const App = () => (
       <Switch>
         <Route path="/home" component={HomeScreen} />
         <Route path="/events" component={EventScreen} />
-        <Route path="/users" component={UserScreen} />
         <Route path="/feedbacks" component={FeedbackScreen} />
       </Switch>
     </Container>
