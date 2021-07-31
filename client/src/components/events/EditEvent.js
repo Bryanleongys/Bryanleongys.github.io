@@ -1,9 +1,9 @@
 import React from "react";
 
-const EditEvent = () => {
+const EditEvent = ({ event }) => {
   return (
     <div>
-      <h1>Edit Event Screen</h1>
+      <h1>Edit {event}</h1>
     </div>
   );
 };
