@@ -1,0 +1,52 @@
+from database import Database
+
+print("============ Start Of Test ==============")
+testDatabase = Database()
+testDatabase.create_tables()
+
+# Ensuring users table queries work
+print("Expected: 2 users rows printed")
+testDatabase.insert_user("bryanwhl", "e0535051", "Aquila", "e591o2")
+testDatabase.insert_user("bryanlys", "e0535000", "Leo", "e591o3")
+testDatabase.insert_user("Ian Tan", "e0534121", "Noctua", "e591o4")
+testDatabase.delete_user("e591o4")
+testDatabase.query_all_users()
+print("==========================")
+
+# Ensuring events table queries work
+testDatabase.insert_event("Sem 2 Welfare", "Current Event", "18/07/2021", "19/07/2021", "26/11/2021", '12:40', '13:50', 0)
+testDatabase.insert_event("Holiday Welfare", "Past Event", "19/07/2021", "21/07/2021", "26/11/2021", '15:40', '18:00', 0)
+testDatabase.insert_event("Random Welfare", "Past Event", "19/07/2021", "21/07/2021", "26/11/2021", '15:40', '18:00', 0)
+testDatabase.insert_event("Orientation Welfare", "Future Event", "07/08/2021", "09/08/2021", "08/08/2021", '15:40', '18:00', 0)
+testDatabase.insert_event("Recess Week Welfare", "Current Event", "03/10/2021", "13/10/2021", "08/10/2021", '15:40', '18:00', 0)
+testDatabase.insert_event("Finals Week Welfare", "Future Event", "21/11/2021", "29/11/2021", "26/11/2021", '15:40', '18:00', 0)
+testDatabase.delete_event("Final Week Welfare")
+testDatabase.insert_events_custom_choices("Sem 2 Welfare", "Sugar Level", "25%")
+testDatabase.insert_events_custom_choices("Sem 2 Welfare", "Sugar Level", "50%")
+testDatabase.insert_events_custom_choices("Sem 2 Welfare", "Sugar Level", "75%")
+testDatabase.insert_events_custom_choices("Sem 2 Welfare", "Sugar Level", "100%")
+print("Expected: 2 current events rows printed")
+testDatabase.query_all_current_events()
+print("==========================")
+print("Expected: 2 future events rows printed")
+testDatabase.query_all_future_events()
+print("==========================")
+print("Expected: 2 past events rows printed")
+testDatabase.query_all_past_events()
+print("==========================")
+
+# Ensuring events_joined table queries work
+print("Expected: 2 events_joined rows printed")
+testDatabase.insert_event_joined("Orientation Welfare", "bryanwhl", "16:00", 0)
+testDatabase.insert_event_joined("Orientation Welfare", "bryanlys", "16:00", 0)
+testDatabase.insert_event_joined("Recess Week Welfare", "bryanwhl", "16:00", 0)
+testDatabase.insert_event_joined("Recess Week Welfare", "bryanlys", "16:00", 0)
+testDatabase.delete_event_joined("Orientation Welfare")
+testDatabase.query_all_events_joined()
+print("==========================")
+
+# Ensuring events_custom_choices work
+print("Expected: 4 event custom choices printed")
+testDatabase.query_events_choices("Sem 2 Welfare")
+
+print("============ End Of Test ==============")

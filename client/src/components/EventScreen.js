@@ -1,14 +1,20 @@
 import React from "react";
-import { Container, Nav } from "react-bootstrap";
-import { Switch, Route, Link, useRouteMatch } from "react-router-dom";
+import { Container, Nav, Card, Button } from "react-bootstrap";
+import { Switch, Route, Link, useRouteMatch, useHistory } from "react-router-dom";
 import PastEvents from "./events/PastEvents";
 import CurrentEvents from "./events/CurrentEvents";
 import FutureEvents from "./events/FutureEvents";
+import { Plus, PlusSquare } from 'react-bootstrap-icons';
 import EditEvent from "./events/EditEvent";
 import UserTable from "./users/UserTable";
 
 const EventScreen = () => {
   let match = useRouteMatch();
+  let history = useHistory();
+
+  const handleToAddEvent = () => {
+    history.push('/add-event')
+  };
 
   // includes past, current & future events - must be unique
   const all_events = [
@@ -32,6 +38,7 @@ const EventScreen = () => {
 
   return (
     <Container>
+      <Card>
       <Nav variant="tabs" defaultActiveKey="link-0">
         <Nav.Item>
           <Nav.Link as={Link} to={`${match.url}/past-events`} eventKey="link-0">
@@ -76,6 +83,12 @@ const EventScreen = () => {
           );
         })}
       </Switch>
+      </Card>
+      <br></br>
+      <Button onClick={() => handleToAddEvent()}>
+        <Plus/>
+        Add Event
+      </Button>
     </Container>
   );
 };

@@ -9,6 +9,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import EventScreen from "./components/EventScreen";
 import FeedbackScreen from "./components/FeedbackScreen";
 import HomeScreen from "./components/HomeScreen";
+import AddEventForm from "./components/events/AddEventForm";
 
 import "./App.css";
 
@@ -43,6 +44,7 @@ const App = () => (
         <Route path="/home" component={HomeScreen} />
         <Route path="/events" component={EventScreen} />
         <Route path="/feedbacks" component={FeedbackScreen} />
+        <Route path="/add-event" component={AddEventForm} />
       </Switch>
     </Container>
   </Router>
