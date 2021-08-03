@@ -97,8 +97,8 @@ def timings_keyboard(timings):
     # 15 min time interval default
     ## timings: [mintime, maxtime]
     keyboard = []
-    mintime = timings[0]
-    maxtime = timings[1]
+    mintime = int(timings[0][:2] + timings[0][3:])
+    maxtime = int(timings[1][:2] + timings[1][3:])
     while mintime < maxtime:
         array = []
         # convert all 60 to 00hrs
@@ -120,11 +120,25 @@ def timings_keyboard(timings):
     return InlineKeyboardMarkup(keyboard)
 
 
-def event_items_keyboard(items_array):
-    keyboard = []
-    for item in items_array:
-        keyboard.append([KeyboardButton(item)])
-    return ReplyKeyboardMarkup(keyboard)
+# def event_items_keyboard():
+#     keyboard = [InlineKeyboardButton("25% Sugar"), InlineKeyboardButton("50% Sugar")], [InlineKeyboardButton("75% Sugar"), InlineKeyboardButton("100% Sugar")]
+#     # for item in items_array:
+#     #     keyboard.append([KeyboardButton(item)])
+#     return ReplyKeyboardMarkup(keyboard)
+
+def event_items_keyboard():
+    keyboard = [
+        [InlineKeyboardButton(
+            "25% Sugar", callback_data="timing"+"25% Sugar")],
+        [InlineKeyboardButton(
+            "50% Sugar", callback_data="timing"+"50% Sugar")],
+        [InlineKeyboardButton(
+            "75% Sugar", callback_data="timing"+"75% Sugar")],
+        [InlineKeyboardButton(
+            "100% Sugar", callback_data="timing"+"100% Sugar")],
+        [InlineKeyboardButton("Back", callback_data="return_back")]
+    ]
+    return InlineKeyboardMarkup(keyboard)
 
 
 def feedback_events_keyboard(events_array):

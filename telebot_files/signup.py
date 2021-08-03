@@ -65,7 +65,10 @@ def show_current_welfare(update, context, events_array):
 
 def show_timings(update, context, timings, event_dates, events, items_bool_array):
     query = update.callback_query
-    index = int(query.data[7:])
+    if (query.data == "return_back"):
+        index = context.user_data["index"]
+    else:
+        index = int(query.data[7:])
     chat_id = query.message.chat_id
     message_id = query.message.message_id
     context.user_data["event_name"] = events[index]
@@ -74,18 +77,21 @@ def show_timings(update, context, timings, event_dates, events, items_bool_array
 
     text = "Select time slot to sign up for " + \
         events[index] + " on " + event_dates[index] + "."
+    print(timings[index])
     context.bot.edit_message_text(
         chat_id=chat_id,
         message_id=message_id,
         text=text,
         reply_markup=keyboards.timings_keyboard(timings[index])
     )
-    if (items_bool_array[index]):
+    # print(items_bool_array[index] == '1')
+    if (items_bool_array[index] == '1'):
         return 2
-    return 3
+    else:
+        return 3
 
 
-def show_item_events(update, context, event_items):
+def show_item_events(update, context):
     query = update.callback_query
     index = context.user_data["index"]
     chat_id = query.message.chat_id
@@ -93,14 +99,15 @@ def show_item_events(update, context, event_items):
     timing = int(query.data[6:])
     context.user_data["timing"] = timing
 
-    text = "Select item you would like to receive for event."
+    text = "What item would you like?"
 
     context.bot.edit_message_text(
         chat_id=chat_id,
         message_id=message_id,
         text=text,
-        reply_markup=keyboards.event_items_keyboard(event_items[index])
+        reply_markup=keyboards.event_items_keyboard()
     )
+    # update.message.reply_text(text, reply_markup=keyboards.event_items_keyboard())
     return 3
 
 
@@ -109,9 +116,10 @@ def confirm_timing(update, context, db, items_bool_array):
     username = query.message.chat.username
     index = context.user_data["index"]
 
-    if (items_bool_array[index]):
+    if (items_bool_array[index] == '1'):
         timing = context.user_data["timing"]
-        item_chosen = update.message.text
+        item_chosen = query.data[6:]
+        print(item_chosen)
     else:
         timing = int(query.data[6:])
         item_chosen = ""
@@ -121,7 +129,7 @@ def confirm_timing(update, context, db, items_bool_array):
     event_name = context.user_data["event_name"]
     event_date = context.user_data["event_date"]
 
-    db.insert_events_joined(event_name, username, timing, item_chosen)
+    db.insert_event_joined(event_name, username, timing, item_chosen)
     db.query_all_events_joined()
 
     text = "You have signed up for " + event_name + \
