@@ -21,11 +21,11 @@ const UserTable = ({ event }) => {
   const [shouldHighlight, setShouldHighlight] = React.useState(initialArray);
   const [sendAlert, setSendAlert] = React.useState(false);
   const [selectedAlert, setSelectedAlert] = React.useState(false);
-  const [colorChosen, setColorChosen] = React.useState("#52e1a2");
+  const [colorChosen, setColorChosen] = React.useState("#52cca2");
   const [colorRest, setColorRest] = React.useState("#fff");
-  const [buttonText, setButtonText] = React.useState(
-    "Selected Highlighted People"
-  );
+  const [isSubmitted, setIsSubmitted] = React.useState(false);
+  const [isSelected, setIsSelected] = React.useState(false);
+  const [isSent, setIsSent] = React.useState(false);
 
   const handleSubmit = () => {
     if (pax > userArray.length) {
@@ -41,7 +41,13 @@ const UserTable = ({ event }) => {
         array.push(0);
       }
     }
+    setIsSubmitted(true);
     setShouldHighlight(array);
+  };
+
+  const handleSend = () => {
+    console.log("Send Button Pressed");
+    setIsSent(true);
   };
 
   const handleSelect = () => {
@@ -49,11 +55,27 @@ const UserTable = ({ event }) => {
       setSelectedAlert(true);
       return;
     }
+    setIsSelected(true);
     setSelectedAlert(false);
-    setButtonText("Send Message");
     setColorChosen("#52ffa2");
-    setColorRest("#c8c8c8");
+    setColorRest("#e1e1e1");
   };
+
+  const handleRandomize = () => {
+    console.log("Randomize Button Pressed");
+  };
+
+  const handleRefresh = () => {
+    setShouldHighlight(initialArray);
+    setIsSubmitted(false);
+    setIsSelected(false);
+    setColorChosen("#52cca2");
+    setColorRest("#fff");
+  };
+
+  const formProps = isSubmitted ? { disabled: true } : {};
+  const randomProps = isSelected ? { disabled: true } : {};
+  const sendProps = isSent ? { disabled: true } : {};
 
   return (
     <Container>
@@ -64,7 +86,8 @@ const UserTable = ({ event }) => {
           <Form.Control
             value={pax}
             onChange={(e) => setPax(e.target.value)}
-            placeholder="Number"
+            placeholder="e.g. 3"
+            {...formProps}
           />
           <Form.Text className="text-muted">
             Key in no. of pax to receive giveaway
@@ -73,8 +96,15 @@ const UserTable = ({ event }) => {
             <Alert variant="danger">Number exceeded number of users!</Alert>
           ) : null}
         </Form.Group>
-        <Button variant="primary" onClick={handleSubmit}>
+        <Button variant="primary" onClick={handleSubmit} {...formProps}>
           Submit
+        </Button>
+        <Button
+          variant="primary"
+          onClick={handleRefresh}
+          style={styles.confirmButton}
+        >
+          Refresh
         </Button>
       </Form>
       <Table striped bordered hover size="sm">
@@ -102,10 +132,24 @@ const UserTable = ({ event }) => {
           })}
         </tbody>
       </Table>
-      <Button> Randomize </Button>
-      <Button style={styles.confirmButton} onClick={handleSelect}>
-        {buttonText}
+      <Button onClick={handleRandomize} {...randomProps}>
+        {" "}
+        Randomize{" "}
       </Button>
+      {isSelected ? (
+        <Button
+          style={styles.confirmButton}
+          onClick={handleSend}
+          {...sendProps}
+        >
+          Send Message
+        </Button>
+      ) : (
+        <Button style={styles.confirmButton} onClick={handleSelect}>
+          Select Highlighted People
+        </Button>
+      )}
+
       {selectedAlert ? (
         <Alert variant="danger">Please key in minimum one pax!</Alert>
       ) : null}
