@@ -37,9 +37,37 @@ class Events(Resource):
         )
         database.query_all_events()
 
+    def get(self):
+        events=database.query_all_events()
+        return events
+
+    def delete(self):
+        event_json=request.get_json(force=True)
+        database.delete_event(event_json['eventName'])
+        database.query_all_events()
+
+
+class PastEvents(Resource):
+    def get(self):
+        past_events=database.query_all_past_events()
+        return past_events
+
+class CurrentEvents(Resource):
+     def get(self):
+        current_events=database.query_all_current_events()
+        return current_events   
+    
+class FutureEvents(Resource):
+    def get(self):
+        future_events=database.query_all_future_events()
+        return future_events
+
 api.add_resource(HelloWorld, '/')
 
 api.add_resource(Events, '/events')
+api.add_resource(PastEvents, '/pastevents')
+api.add_resource(CurrentEvents, '/currentevents')
+api.add_resource(FutureEvents, '/futureevents')
 
 if __name__ == '__main__':
     app.run(debug=True)

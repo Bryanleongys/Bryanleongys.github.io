@@ -1,9 +1,18 @@
-import React from 'react'
-import { InputGroup, FormControl, Container, Form, Table, Button, Nav, Dropdown, DropdownButton } from "react-bootstrap";
-import axios from 'axios';
+import React from "react";
+import {
+  InputGroup,
+  FormControl,
+  Container,
+  Form,
+  Table,
+  Button,
+  Nav,
+  Dropdown,
+  DropdownButton,
+} from "react-bootstrap";
+import axios from "axios";
 
 const AddEventForm = () => {
-
   const [eventName, setEventName] = React.useState(null);
   const [eventType, setEventType] = React.useState("Future Event");
   const [startDate, setStartDate] = React.useState(null);
@@ -21,20 +30,26 @@ const AddEventForm = () => {
       endDate: endDate,
       collectionDate: collectionDate,
       startTime: startTime,
-      endTime: endTime
-    }
-    
+      endTime: endTime,
+    };
+
     console.log(eventJson);
 
-    axios.post(`http://127.0.0.1:5000/events`, eventJson)
-      .then(res => {
-        console.log(res);
-        console.log(res.data);
-      })
-  }
+    axios.post(`http://127.0.0.1:5000/events`, eventJson).then((res) => {
+      console.log(res);
+      console.log(res.data);
+    });
+  };
 
   const handleSubmitClick = (event) => {
-    if (eventName !== null && startDate !== null && endDate !== null && collectionDate !== null && startTime !== null && endTime !== null) {
+    if (
+      eventName !== null &&
+      startDate !== null &&
+      endDate !== null &&
+      collectionDate !== null &&
+      startTime !== null &&
+      endTime !== null
+    ) {
       setValidated(true);
     }
   };
@@ -68,31 +83,63 @@ const AddEventForm = () => {
             title={eventType === null ? "Select Type" : eventType}
             id="input-group-dropdown-1"
           >
-            <Dropdown.Item as="button"><div onClick={(e) => setEventType(e.target.textContent)}>Future Event</div></Dropdown.Item>
-            <Dropdown.Item as="button"><div onClick={(e) => setEventType(e.target.textContent)}>Current Event</div></Dropdown.Item>
-            <Dropdown.Item as="button"><div onClick={(e) => setEventType(e.target.textContent)}>Past Event</div></Dropdown.Item>
+            <Dropdown.Item as="button">
+              <div onClick={(e) => setEventType(e.target.textContent)}>
+                Future Event
+              </div>
+            </Dropdown.Item>
+            <Dropdown.Item as="button">
+              <div onClick={(e) => setEventType(e.target.textContent)}>
+                Current Event
+              </div>
+            </Dropdown.Item>
+            <Dropdown.Item as="button">
+              <div onClick={(e) => setEventType(e.target.textContent)}>
+                Past Event
+              </div>
+            </Dropdown.Item>
           </DropdownButton>
         </InputGroup>
 
         <Form.Label htmlFor="basic-url">Event Duration:</Form.Label>
         <InputGroup className="mb-3">
           <InputGroup.Text id="basic-addon1">Start Date</InputGroup.Text>
-          <Form.Control required type="date" onChange={(e) => setStartDate(e.target.value)} />
+          <Form.Control
+            required
+            type="date"
+            onChange={(e) => setStartDate(e.target.value)}
+          />
           <InputGroup.Text id="basic-addon1">End Date</InputGroup.Text>
-          <Form.Control required type="date" onChange={(e) => setEndDate(e.target.value)} />
+          <Form.Control
+            required
+            type="date"
+            onChange={(e) => setEndDate(e.target.value)}
+          />
         </InputGroup>
 
         <Form.Label htmlFor="basic-url">Collection Date:</Form.Label>
         <InputGroup className="mb-3">
-          <Form.Control required type="date" onChange={(e) => setCollectionDate(e.target.value)} />
+          <Form.Control
+            required
+            type="date"
+            onChange={(e) => setCollectionDate(e.target.value)}
+          />
         </InputGroup>
 
         <Form.Label htmlFor="basic-url">Collection Time:</Form.Label>
         <InputGroup className="mb-3">
           <InputGroup.Text id="basic-addon1">Start Time</InputGroup.Text>
-          <Form.Control required type="time" onChange={(e) => setStartTime(e.target.value)} />
+          <Form.Control
+            required
+            type="time"
+            onChange={(e) => setStartTime(e.target.value)}
+          />
           <InputGroup.Text id="basic-addon1">End Time</InputGroup.Text>
-          <Form.Control required type="time" onChange={(e) => setEndTime(e.target.value)} />
+          <Form.Control
+            required
+            type="time"
+            onChange={(e) => setEndTime(e.target.value)}
+          />
         </InputGroup>
 
         <Button variant="primary" type="submit">
@@ -100,8 +147,7 @@ const AddEventForm = () => {
         </Button>
       </Form>
     </Container>
-    
-  )
-}
+  );
+};
 
-export default AddEventForm
+export default AddEventForm;

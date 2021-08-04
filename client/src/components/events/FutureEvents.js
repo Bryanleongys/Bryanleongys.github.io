@@ -1,38 +1,31 @@
 import React, { useRef } from "react";
 import { Container, Table, Button, Nav } from "react-bootstrap";
 import { Switch, Route, Link, useRouteMatch } from "react-router-dom";
-import { Plus, PlusSquare } from 'react-bootstrap-icons';
+import { Plus, PlusSquare } from "react-bootstrap-icons";
+import axios from "axios";
 import EditEvent from "./EditEvent";
 
 const FutureEvents = () => {
   let match = useRouteMatch();
-  const sample = [
-    {
-      name: "Hotpot Welfare",
-      startDate: "29/07/21",
-      endDate: "30/07/21",
-      eventDate: "08/08/21",
-      startTime: "1200hrs",
-      endTime: "1400hrs",
-    },
-    {
-      name: "Bulgogi Welfare",
-      startDate: "29/07/21",
-      endDate: "08/08/21",
-      eventDate: "09/08/21",
-      startTime: "1400hrs",
-      endTime: "1600hrs",
-    },
-    {
-      name: "Macdonalds Welfare",
-      startDate: "29/07/21",
-      endDate: "10/08/21",
-      eventDate: "19/08/21",
-      startTime: "1300hrs",
-      endTime: "1500hrs",
-    },
-  ];
-  const [arrayObject, setArrayObject] = React.useState(sample);
+  const [arrayObject, setArrayObject] = React.useState([]);
+
+  React.useEffect(() => {
+    axios.get(`http://127.0.0.1:5000/futureevents`).then((res) => {
+      var initialArray = [];
+      for (var i = 0; i < res.data.length; i++) {
+        var object = {
+          name: res.data[i][0],
+          startDate: res.data[i][2],
+          endDate: res.data[i][3],
+          eventDate: res.data[i][4],
+          startTime: res.data[i][5],
+          endTime: res.data[i][6],
+        };
+        initialArray.push(object);
+      }
+      setArrayObject(initialArray);
+    });
+  }, []);
 
   // React.useEffect(() => {
   //   console.log("hello");

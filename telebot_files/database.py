@@ -99,8 +99,7 @@ class Database:
             arrayString = []
             for row in rows:
                 print(row)
-                arrayString.append(
-                    row[0] + ", ends on " + row[3] + ", " + str(row[5]) + "hrs.")
+                arrayString.append(row)
             return arrayString
         except Exception as e:
             print(e)

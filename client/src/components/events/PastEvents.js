@@ -1,16 +1,25 @@
 import React, { useRef } from "react";
 import { Container, Table, Button, Nav } from "react-bootstrap";
 import { Switch, Route, Link, useRouteMatch } from "react-router-dom";
+import axios from "axios";
 import EditEvent from "./EditEvent";
 
 const PastEvents = () => {
   let match = useRouteMatch();
-  const sample = [
-    { name: "Orientation Welfare", eventDate: "07/07/21" },
-    { name: "Study Welfare", eventDate: "09/07/21" },
-    { name: "For Noobs Welfare", eventDate: "10/07/21" },
-  ];
-  const [arrayObject, setArrayObject] = React.useState(sample);
+  const [arrayObject, setArrayObject] = React.useState([]);
+  React.useEffect(() => {
+    axios.get(`http://127.0.0.1:5000/pastevents`).then((res) => {
+      var initialArray = [];
+      for (var i = 0; i < res.data.length; i++) {
+        var object = {
+          name: res.data[i][0],
+          eventDate: res.data[i][4],
+        };
+        initialArray.push(object);
+      }
+      setArrayObject(initialArray);
+    });
+  }, []);
 
   // React.useEffect(() => {
   //   console.log("hello");

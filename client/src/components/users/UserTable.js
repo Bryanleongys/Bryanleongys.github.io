@@ -27,6 +27,10 @@ const UserTable = ({ event }) => {
   const [isSelected, setIsSelected] = React.useState(false);
   const [isSent, setIsSent] = React.useState(false);
 
+  const formProps = isSubmitted ? { disabled: true } : {};
+  const randomProps = isSelected ? { disabled: true } : {};
+  const sendProps = isSent ? { disabled: true } : {};
+
   const handleSubmit = () => {
     if (pax > userArray.length) {
       setSendAlert(true);
@@ -72,10 +76,6 @@ const UserTable = ({ event }) => {
     setColorChosen("#52cca2");
     setColorRest("#fff");
   };
-
-  const formProps = isSubmitted ? { disabled: true } : {};
-  const randomProps = isSelected ? { disabled: true } : {};
-  const sendProps = isSent ? { disabled: true } : {};
 
   return (
     <Container>
@@ -156,6 +156,7 @@ const UserTable = ({ event }) => {
     </Container>
   );
 };
+
 const styles = {
   form: {
     marginBottom: 20,
