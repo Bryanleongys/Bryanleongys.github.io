@@ -44,7 +44,23 @@ const FutureEvents = () => {
   //   setArrayObject(newArray);
   // };
 
-  const handlePress = (index) => {
+  const handlePress = (index, eventName) => {
+    const eventJson = {
+      eventName: eventName,
+    };
+    console.log(eventJson);
+
+    axios
+      .delete(`http://127.0.0.1:5000/events`, { data: eventJson })
+      .then((res) => console.log(res))
+      .catch((error) => {
+        if (error.request) {
+          console.log(error.request);
+        }
+        if (error.response) {
+          console.log(error.response);
+        }
+      });
     var newArray = arrayObject;
     newArray.splice(index, 1);
     setArrayObject([...newArray]);
@@ -81,7 +97,10 @@ const FutureEvents = () => {
                 <td>{event.startTime}</td>
                 <td>{event.endTime}</td>
                 <td>
-                  <Button onClick={() => handlePress(index)} variant="danger">
+                  <Button
+                    onClick={() => handlePress(index, event.name)}
+                    variant="danger"
+                  >
                     Remove
                   </Button>
                 </td>

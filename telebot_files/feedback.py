@@ -38,9 +38,15 @@ def get_general_feedback(update, context):
     return 1
 
 
-def confirm_general_feedback(update, context):
+def confirm_general_feedback(update, context, db):
     chat_id = update.message.chat.id
     user_input = update.message.text
+    username = update.message.from_user.username
+    event_name = "general"
+
+    db.insert_user_feedback(event_name, username, user_input)
+    db.query_user_feedback(event_name)
+
 
     text = "Thank you for your message! We will feedback RC4 Welfare Committee."
     text2 = "Welcome home. Feel free to access the features below!"
@@ -73,6 +79,7 @@ def get_event_feedback(update, context, events):
     index = int(query.data[6:])
     chat_id = query.message.chat_id
     message_id = query.message.message_id
+    context.user_data["event_name"] = events[index]
 
     text = "Thank you. What feedback would you like to give for " + \
         events[index] + " ?"
@@ -83,6 +90,23 @@ def get_event_feedback(update, context, events):
         reply_markup=keyboards.events_feedback_back()
     )
     return 2
+
+def confirm_event_feedback(update, context, db):
+    chat_id = update.message.chat.id
+    user_input = update.message.text
+    username = update.message.from_user.username
+    event_name = context.user_data["event_name"]
+
+    db.insert_user_feedback(event_name, username, user_input)
+    db.query_user_feedback(event_name)
+
+    text = "Thank you for your message! We will feedback RC4 Welfare Committee."
+    text2 = "Welcome home. Feel free to access the features below!"
+    update.message.reply_text(text=text)
+    update.message.reply_text(
+        text=text2, reply_markup=keyboards.main_options_keyboard())
+
+    return ConversationHandler.END
 
 
 # def get_event_feedback(update, context, event):
