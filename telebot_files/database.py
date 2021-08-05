@@ -35,6 +35,8 @@ class Database:
                 '''CREATE TABLE events_joined(event_name text, username text, timing text, item_chosen text)''')
             self.cur.execute(
                 '''CREATE TABLE events_custom_choices(event_name text, choice_header text, choice_name text)''')
+            self.cur.execute(
+                '''CREATE TABLE user_feedback(event_name text, username text, feedback text)''')
             self.con.commit()
             return True
         except Exception as e:
@@ -230,3 +232,27 @@ class Database:
         except Exception as e:
             print(e)
             return e
+
+    '''
+    SQLite queries for user_feedback table
+    '''
+
+    def insert_user_feedback(self, event_name, username, feedback):
+        try:
+            self.cur.execute(
+                "INSERT INTO user_feedback(event_name, username, feedback) values (?,?,?)", (event_name, username, feedback,))
+            return True
+        except Exception as e:
+            print(e)
+            return e
+
+    def query_user_feedback(self, event_name):
+        try:
+            self.cur.execute("SELECT * FROM user_feedback WHERE event_name = (?)", (event_name,))
+            rows = self.cur.fetchall()
+            for row in rows:
+                print(row)
+        except Exception as e:
+            print(e)
+            return e
+            

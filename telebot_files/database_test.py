@@ -48,6 +48,12 @@ testDatabase.delete_event_joined("Orientation Welfare")
 testDatabase.query_all_events_joined()
 print("==========================")
 
+print("Expected: 2 user feedback rows printed")
+testDatabase.insert_user_feedback("Orientation Welfare", "bryanwhl", "My sugar level was definitely wrong; I asked for 50 percent and it tasted like 200 percent!")
+testDatabase.insert_user_feedback("Orientation Welfare", "bryanlys", "The bubble tea is the best, thanks!")
+testDatabase.query_user_feedback("Orientation Welfare")
+print("==========================")
+
 # Ensuring query_event_joined query work
 print("Expected: 2 events_joined rows printed")
 testDatabase.query_event_joined("Sem 2 Welfare")

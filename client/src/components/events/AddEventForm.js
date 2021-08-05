@@ -1,16 +1,6 @@
-import React from "react";
-import {
-  InputGroup,
-  FormControl,
-  Container,
-  Form,
-  Table,
-  Button,
-  Nav,
-  Dropdown,
-  DropdownButton,
-} from "react-bootstrap";
-import axios from "axios";
+import React from 'react'
+import { InputGroup, FormControl, Row, Col, FloatingLabel, Container, Form, Table, Button, Nav, Dropdown, DropdownButton } from "react-bootstrap";
+import axios from 'axios';
 
 const AddEventForm = () => {
   const [eventName, setEventName] = React.useState(null);
@@ -21,6 +11,7 @@ const AddEventForm = () => {
   const [startTime, setStartTime] = React.useState(null);
   const [endTime, setEndTime] = React.useState(null);
   const [validated, setValidated] = React.useState(false);
+  const [choiceArray, setChoiceArray] = React.useState(["Hello", "Working"]);
 
   const handlePostRequest = () => {
     const eventJson = {
@@ -141,6 +132,44 @@ const AddEventForm = () => {
             onChange={(e) => setEndTime(e.target.value)}
           />
         </InputGroup>
+
+        <Form.Label htmlFor="basic-url">Additional Options:</Form.Label>
+        <Row className="g-2">
+          <Col md>
+            <InputGroup className="mb-3">
+              <FormControl
+                required
+                placeholder="e.g. What is your desired sugar level?"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+                onChange={(e) => setEventName(e.target.value)}
+              />
+            </InputGroup>
+          </Col>
+          <Col md>
+          <InputGroup className="mb-3">
+            {choiceArray.map(choice => {
+                return <FormControl
+                  required
+                  defaultControl
+                  defaultValue={choice}
+                  placeholder="e.g. What is your desired sugar level?"
+                  aria-label="Username"
+                  aria-describedby="basic-addon1"
+                  onChange={(e) => setEventName(e.target.value)}
+                />
+            })}
+            </InputGroup>
+          </Col>
+        </Row>
+        {/* <InputGroup className="mb-3">
+          <InputGroup.Text id="basic-addon1">Question To Ask</InputGroup.Text>
+          <Form.Control required onChange={(e) => setStartTime(e.target.value)} />
+          <Button variant="primary" type="submit">
+            Add Option
+          </Button>
+        </InputGroup> */}
+        <br></br>
 
         <Button variant="primary" type="submit">
           Submit
