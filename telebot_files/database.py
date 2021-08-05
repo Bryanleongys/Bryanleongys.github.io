@@ -37,6 +37,7 @@ class Database:
                 '''CREATE TABLE events_custom_choices(event_name text, choice_header text, choice_name text)''')
             self.cur.execute(
                 '''CREATE TABLE user_feedback(event_name text, username text, feedback text)''')
+            self.con.commit()
             return True
         except Exception as e:
             print(e)
@@ -50,6 +51,7 @@ class Database:
         try:
             self.cur.execute("INSERT INTO users(username, nusnet_id, house, telegram_id) VALUES(?,?,?,?)",
                              (username, nusnet_id, house, telegram_id,))
+            self.con.commit()
             return True
         except Exception as e:
             print(e)
@@ -59,6 +61,7 @@ class Database:
         try:
             self.cur.execute(
                 "DELETE FROM users WHERE telegram_id=?", (telegram_id,))
+            self.con.commit()    
         except Exception as e:
             print(e)
             return e
@@ -90,6 +93,7 @@ class Database:
     def delete_event(self, name):
         try:
             self.cur.execute("DELETE FROM events WHERE name=?", (name,))
+            self.con.commit()
         except Exception as e:
             print(e)
             return e
@@ -101,8 +105,7 @@ class Database:
             arrayString = []
             for row in rows:
                 print(row)
-                arrayString.append(
-                    row[0] + ", ends on " + row[3] + ", " + str(row[5]) + "hrs.")
+                arrayString.append(row)
             return arrayString
         except Exception as e:
             print(e)
@@ -169,6 +172,7 @@ class Database:
         try:
             self.cur.execute(
                 "INSERT INTO events_joined(event_name, username, timing, item_chosen) values (?,?,?,?)", (event_name, username, timing, item_chosen,))
+            self.con.commit()
             return True
         except Exception as e:
             print(e)
@@ -178,6 +182,7 @@ class Database:
         try:
             self.cur.execute(
                 "DELETE FROM events_joined WHERE event_name=?", (event_name,))
+            self.con.commit()
         except Exception as e:
             print(e)
             return e
@@ -191,6 +196,19 @@ class Database:
         except Exception as e:
             print(e)
             return e
+    
+    def query_event_joined(self, event_name):
+        try:
+            self.cur.execute("SELECT * FROM events_joined WHERE event_name=?", (event_name,))
+            rows = self.cur.fetchall()
+            arrayString=[]
+            for row in rows:
+                arrayString.append(row)
+            print(arrayString)
+            return arrayString
+        except Exception as e:
+            print(e)
+            return e    
 
     '''
     SQLite queries for events_custom_choices table
@@ -199,6 +217,7 @@ class Database:
         try:
             self.cur.execute(
                 "INSERT INTO events_custom_choices(event_name, choice_header, choice_name) values (?,?,?)", (event_name, choice_header, choice_name,))
+            self.con.commit()
             return True
         except Exception as e:
             print(e)

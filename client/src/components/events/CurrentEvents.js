@@ -1,48 +1,62 @@
 import React, { useRef } from "react";
 import { Container, Table, Button, Nav } from "react-bootstrap";
 import { Switch, Route, Link, useRouteMatch } from "react-router-dom";
+import axios from "axios";
 import EditEvent from "./EditEvent";
 
 const CurrentEvents = () => {
   let match = useRouteMatch();
-  const sample = [
-    {
-      name: "Recess Week Welfare",
-      endDate: "30/07/21",
-      eventDate: "08/08/21",
-      startTime: "1200hrs",
-      endTime: "1400hrs",
-    },
-    {
-      name: "Acai Welfare",
-      endDate: "08/08/21",
-      eventDate: "09/08/21",
-      startTime: "1400hrs",
-      endTime: "1600hrs",
-    },
-    {
-      name: "Mr Coconut Welfare",
-      endDate: "10/08/21",
-      eventDate: "19/08/21",
-      startTime: "1300hrs",
-      endTime: "1500hrs",
-    },
-  ];
-  const [arrayObject, setArrayObject] = React.useState(sample);
+  const [arrayObject, setArrayObject] = React.useState([]);
 
-  // React.useEffect(() => {
-  //   console.log("hello");
-  // }, [arrayObject]);
+  React.useEffect(() => {
+    const event_type = {
+      eventType: "current",
+    };
 
-  // const handlePress = (index) => {
-  //   console.log(index);
-  //   var newArray = arrayObject;
-  //   newArray.splice(index, 1);
-  //   console.log(newArray);
-  //   setArrayObject(newArray);
-  // };
+    axios
+      .get(`http://127.0.0.1:5000/events`, { params: event_type })
+      .then((res) => {
+        var initialArray = [];
+        for (var i = 0; i < res.data.length; i++) {
+          var object = {
+            name: res.data[i][0],
+            endDate: res.data[i][3],
+            eventDate: res.data[i][4],
+            startTime: res.data[i][5],
+            endTime: res.data[i][6],
+          };
+          initialArray.push(object);
+        }
+        setArrayObject(initialArray);
+      })
+      .catch((error) => {
+        if (error.request) {
+          console.log(error.request);
+        }
+        if (error.response) {
+          console.log(error.response);
+        }
+      });
+  }, []);
 
-  const handleRemove = (index) => {
+  const handleRemove = (index, eventName) => {
+    const eventJson = {
+      eventName: eventName,
+    };
+    console.log(eventJson);
+
+    axios
+      .delete(`http://127.0.0.1:5000/events`, { data: eventJson })
+      .then((res) => console.log(res))
+      .catch((error) => {
+        if (error.request) {
+          console.log(error.request);
+        }
+        if (error.response) {
+          console.log(error.response);
+        }
+      });
+
     var newArray = arrayObject;
     newArray.splice(index, 1);
     setArrayObject([...newArray]);
@@ -78,7 +92,10 @@ const CurrentEvents = () => {
                 <td>{event.startTime}</td>
                 <td>{event.endTime}</td>
                 <td>
-                  <Button onClick={() => handleRemove(index)} variant="danger">
+                  <Button
+                    onClick={() => handleRemove(index, event.name)}
+                    variant="danger"
+                  >
                     Remove
                   </Button>
                 </td>

@@ -37,9 +37,11 @@ testDatabase.query_all_past_events()
 print("==========================")
 
 # Ensuring events_joined table queries work
-print("Expected: 2 events_joined rows printed")
+print("Expected: 4 events_joined rows printed")
 testDatabase.insert_event_joined("Orientation Welfare", "bryanwhl", "16:00", 0)
 testDatabase.insert_event_joined("Orientation Welfare", "bryanlys", "16:00", 0)
+testDatabase.insert_event_joined("Sem 2 Welfare", "bryanwhl", "16:00", 0)
+testDatabase.insert_event_joined("Sem 2 Welfare", "bryanlys", "16:00", 0)
 testDatabase.insert_event_joined("Recess Week Welfare", "bryanwhl", "16:00", 0)
 testDatabase.insert_event_joined("Recess Week Welfare", "bryanlys", "16:00", 0)
 testDatabase.delete_event_joined("Orientation Welfare")
@@ -51,6 +53,10 @@ testDatabase.insert_user_feedback("Orientation Welfare", "bryanwhl", "My sugar l
 testDatabase.insert_user_feedback("Orientation Welfare", "bryanlys", "The bubble tea is the best, thanks!")
 testDatabase.query_user_feedback("Orientation Welfare")
 print("==========================")
+
+# Ensuring query_event_joined query work
+print("Expected: 2 events_joined rows printed")
+testDatabase.query_event_joined("Sem 2 Welfare")
 
 # Ensuring events_custom_choices work
 print("Expected: 4 event custom choices printed")

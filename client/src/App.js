@@ -15,30 +15,30 @@ import "./App.css";
 
 const App = () => (
   <Router>
-    <Container className="p-3">
-      <Navbar bg="primary" variant="dark">
-        <Container>
-          <Navbar.Brand as={Link} to={"/home"}>
-            RC4 Welfare Bot
-          </Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link as={Link} to={"/events"}>
-              Events
-            </Nav.Link>
-            <Nav.Link as={Link} to={"/feedbacks"}>
-              Feedbacks
-            </Nav.Link>
-          </Nav>
-        </Container>
-      </Navbar>
-      {/* <h1 className="header">Welcome To RC4 Welfare Bot</h1> */}
-      {/* <ExampleToast>
+    <Navbar bg="primary" variant="dark">
+      <Container>
+        <Navbar.Brand as={Link} to={"/home"}>
+          RC4 Welfare Bot
+        </Navbar.Brand>
+        <Nav className="me-auto">
+          <Nav.Link as={Link} to={"/events"}>
+            Events
+          </Nav.Link>
+          <Nav.Link as={Link} to={"/feedbacks"}>
+            Feedbacks
+          </Nav.Link>
+        </Nav>
+      </Container>
+    </Navbar>
+    {/* <Container className="p-3"> */}
+    {/* <h1 className="header">Welcome To RC4 Welfare Bot</h1> */}
+    {/* <ExampleToast>
         We now have Toasts
         <span role="img" aria-label="tada">
           🎉
         </span>
       </ExampleToast> */}
-    </Container>
+    {/* </Container> */}
     <Container>
       <Switch>
         <Route path="/home" component={HomeScreen} />
