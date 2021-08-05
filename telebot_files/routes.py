@@ -38,36 +38,33 @@ class Events(Resource):
         database.query_all_events()
 
     def get(self):
-        events=database.query_all_events()
+        event_type = request.args['eventType']
+        if (event_type == "past"):
+            events = database.query_all_past_events()
+        elif (event_type == "current"):
+            events = database.query_all_current_events()
+        elif (event_type == "future"):
+            events = database.query_all_future_events()
+        elif (event_type == "all"):
+            events = database.query_all_events()
         return events
 
     def delete(self):
-        event_json=request.get_json(force=True)
+        print(request.args)
+        event_json = request.get_json(force=True)
         database.delete_event(event_json['eventName'])
         database.query_all_events()
 
-
-class PastEvents(Resource):
+class Users(Resource):
     def get(self):
-        past_events=database.query_all_past_events()
-        return past_events
-
-class CurrentEvents(Resource):
-     def get(self):
-        current_events=database.query_all_current_events()
-        return current_events   
-    
-class FutureEvents(Resource):
-    def get(self):
-        future_events=database.query_all_future_events()
-        return future_events
+        event_name = request.args['eventName']
+        users_joined = database.query_event_joined(event_name)
+        return users_joined
 
 api.add_resource(HelloWorld, '/')
 
 api.add_resource(Events, '/events')
-api.add_resource(PastEvents, '/pastevents')
-api.add_resource(CurrentEvents, '/currentevents')
-api.add_resource(FutureEvents, '/futureevents')
+api.add_resource(Users, '/users')
 
 if __name__ == '__main__':
     app.run(debug=True)

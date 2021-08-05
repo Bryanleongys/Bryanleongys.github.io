@@ -7,18 +7,25 @@ import EditEvent from "./EditEvent";
 const PastEvents = () => {
   let match = useRouteMatch();
   const [arrayObject, setArrayObject] = React.useState([]);
+
   React.useEffect(() => {
-    axios.get(`http://127.0.0.1:5000/pastevents`).then((res) => {
-      var initialArray = [];
-      for (var i = 0; i < res.data.length; i++) {
-        var object = {
-          name: res.data[i][0],
-          eventDate: res.data[i][4],
-        };
-        initialArray.push(object);
-      }
-      setArrayObject(initialArray);
-    });
+    const event_type = {
+      eventType: "past",
+    };
+
+    axios
+      .get(`http://127.0.0.1:5000/events`, { params: event_type })
+      .then((res) => {
+        var initialArray = [];
+        for (var i = 0; i < res.data.length; i++) {
+          var object = {
+            name: res.data[i][0],
+            eventDate: res.data[i][4],
+          };
+          initialArray.push(object);
+        }
+        setArrayObject(initialArray);
+      });
   }, []);
 
   // React.useEffect(() => {

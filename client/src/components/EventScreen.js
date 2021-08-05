@@ -27,20 +27,30 @@ const EventScreen = () => {
   const [allEvents, setAllEvents] = React.useState([]);
   const [currentEvents, setCurrentEvents] = React.useState([]);
   React.useEffect(() => {
-    axios.get(`http://127.0.0.1:5000/events`).then((res) => {
-      var initialArray = [];
-      for (var i = 0; i < res.data.length; i++) {
-        initialArray.push(res.data[i][0]);
-      }
-      setAllEvents(initialArray);
-    });
-    axios.get(`http://127.0.0.1:5000/currentevents`).then((res) => {
-      var initialArray = [];
-      for (var i = 0; i < res.data.length; i++) {
-        initialArray.push(res.data[i][0]);
-      }
-      setCurrentEvents(initialArray);
-    });
+    const all_events = {
+      eventType: "all",
+    };
+    const current_events = {
+      eventType: "current",
+    };
+    axios
+      .get(`http://127.0.0.1:5000/events`, { params: all_events })
+      .then((res) => {
+        var initialArray = [];
+        for (var i = 0; i < res.data.length; i++) {
+          initialArray.push(res.data[i][0]);
+        }
+        setAllEvents(initialArray);
+      });
+    axios
+      .get(`http://127.0.0.1:5000/events`, { params: current_events })
+      .then((res) => {
+        var initialArray = [];
+        for (var i = 0; i < res.data.length; i++) {
+          initialArray.push(res.data[i][0]);
+        }
+        setCurrentEvents(initialArray);
+      });
   }, []);
 
   return (

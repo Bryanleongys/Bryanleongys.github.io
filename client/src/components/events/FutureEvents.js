@@ -10,21 +10,26 @@ const FutureEvents = () => {
   const [arrayObject, setArrayObject] = React.useState([]);
 
   React.useEffect(() => {
-    axios.get(`http://127.0.0.1:5000/futureevents`).then((res) => {
-      var initialArray = [];
-      for (var i = 0; i < res.data.length; i++) {
-        var object = {
-          name: res.data[i][0],
-          startDate: res.data[i][2],
-          endDate: res.data[i][3],
-          eventDate: res.data[i][4],
-          startTime: res.data[i][5],
-          endTime: res.data[i][6],
-        };
-        initialArray.push(object);
-      }
-      setArrayObject(initialArray);
-    });
+    const event_type = {
+      eventType: "future",
+    };
+    axios
+      .get(`http://127.0.0.1:5000/events`, { params: event_type })
+      .then((res) => {
+        var initialArray = [];
+        for (var i = 0; i < res.data.length; i++) {
+          var object = {
+            name: res.data[i][0],
+            startDate: res.data[i][2],
+            endDate: res.data[i][3],
+            eventDate: res.data[i][4],
+            startTime: res.data[i][5],
+            endTime: res.data[i][6],
+          };
+          initialArray.push(object);
+        }
+        setArrayObject(initialArray);
+      });
   }, []);
 
   // React.useEffect(() => {

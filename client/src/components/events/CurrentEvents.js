@@ -9,35 +9,57 @@ const CurrentEvents = () => {
   const [arrayObject, setArrayObject] = React.useState([]);
 
   React.useEffect(() => {
-    axios.get(`http://127.0.0.1:5000/currentevents`).then((res) => {
-      var initialArray = [];
-      for (var i = 0; i < res.data.length; i++) {
-        var object = {
-          name: res.data[i][0],
-          endDate: res.data[i][3],
-          eventDate: res.data[i][4],
-          startTime: res.data[i][5],
-          endTime: res.data[i][6],
-        };
-        initialArray.push(object);
-      }
-      setArrayObject(initialArray);
-    });
+    const event_type = {
+      eventType: "current",
+    };
+
+    axios
+      .get(`http://127.0.0.1:5000/events`, { params: event_type })
+      .then((res) => {
+        var initialArray = [];
+        for (var i = 0; i < res.data.length; i++) {
+          var object = {
+            name: res.data[i][0],
+            endDate: res.data[i][3],
+            eventDate: res.data[i][4],
+            startTime: res.data[i][5],
+            endTime: res.data[i][6],
+          };
+          initialArray.push(object);
+        }
+        setArrayObject(initialArray);
+      })
+      .catch((error) => {
+        if (error.request) {
+          console.log(error.request);
+        }
+        if (error.response) {
+          console.log(error.response);
+        }
+      });
   }, []);
 
   const handleRemove = (index, eventName) => {
-    var newArray = arrayObject;
-    newArray.splice(index, 1);
-    setArrayObject([...newArray]);
-
     const eventJson = {
       eventName: eventName,
     };
     console.log(eventJson);
+
     axios
-      .delete(`http://127.0.0.1:5000/events`, eventJson)
+      .delete(`http://127.0.0.1:5000/events`, { data: eventJson })
       .then((res) => console.log(res))
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        if (error.request) {
+          console.log(error.request);
+        }
+        if (error.response) {
+          console.log(error.response);
+        }
+      });
+
+    var newArray = arrayObject;
+    newArray.splice(index, 1);
+    setArrayObject([...newArray]);
   };
 
   return (

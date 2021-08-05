@@ -1,23 +1,25 @@
 import React from "react";
 import { Container, Table, Button, Form, Alert, Card } from "react-bootstrap";
+import axios from "axios";
 
 const UserTable = ({ event }) => {
   // make query using event name
-  const userArray = [
-    "smulboi",
-    "bryanwhl",
-    "smulboi",
-    "bryanwhl",
-    "smulboi",
-    "bryanwhl",
-    "smulboi",
-    "bryanwhl",
-    "smulboi",
-    "bryanwhl",
-  ];
-  const initialArray = new Array(userArray.length).fill(0);
+  // const userArray = [
+  //   "smulboi",
+  //   "bryanwhl",
+  //   "smulboi",
+  //   "bryanwhl",
+  //   "smulboi",
+  //   "bryanwhl",
+  //   "smulboi",
+  //   "bryanwhl",
+  //   "smulboi",
+  //   "bryanwhl",
+  // ];
 
-  const [pax, setPax] = React.useState();
+  const [userArray, setUserArray] = React.useState([]);
+  const initialArray = new Array(userArray.length).fill(0);
+  const [pax, setPax] = React.useState(null);
   const [shouldHighlight, setShouldHighlight] = React.useState(initialArray);
   const [sendAlert, setSendAlert] = React.useState(false);
   const [selectedAlert, setSelectedAlert] = React.useState(false);
@@ -31,8 +33,25 @@ const UserTable = ({ event }) => {
   const randomProps = isSelected ? { disabled: true } : {};
   const sendProps = isSent ? { disabled: true } : {};
 
+  React.useEffect(() => {
+    const eventJson = {
+      eventName: event,
+    };
+
+    axios
+      .get(`http://127.0.0.1:5000/users`, { params: eventJson })
+      .then((res) => {
+        var arraySet = [];
+        for (var i = 0; i < res.data.length; i++) {
+          arraySet.push(res.data[i][1]);
+        }
+        setUserArray(arraySet);
+      })
+      .catch((error) => console.log(error.response));
+  }, []);
+
   const handleSubmit = () => {
-    if (pax > userArray.length) {
+    if (pax > userArray.length || pax == null || pax == 0) {
       setSendAlert(true);
       return;
     }
@@ -84,6 +103,7 @@ const UserTable = ({ event }) => {
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Number of People</Form.Label>
           <Form.Control
+            required
             value={pax}
             onChange={(e) => setPax(e.target.value)}
             placeholder="e.g. 3"
@@ -93,7 +113,7 @@ const UserTable = ({ event }) => {
             Key in no. of pax to receive giveaway
           </Form.Text>
           {sendAlert ? (
-            <Alert variant="danger">Number exceeded number of users!</Alert>
+            <Alert variant="danger">Please key in a valid input!</Alert>
           ) : null}
         </Form.Group>
         <Button variant="primary" onClick={handleSubmit} {...formProps}>
