@@ -46,6 +46,12 @@ testDatabase.delete_event_joined("Orientation Welfare")
 testDatabase.query_all_events_joined()
 print("==========================")
 
+print("Expected: 2 user feedback rows printed")
+testDatabase.insert_user_feedback("Orientation Welfare", "bryanwhl", "My sugar level was definitely wrong; I asked for 50 percent and it tasted like 200 percent!")
+testDatabase.insert_user_feedback("Orientation Welfare", "bryanlys", "The bubble tea is the best, thanks!")
+testDatabase.query_user_feedback("Orientation Welfare")
+print("==========================")
+
 # Ensuring events_custom_choices work
 print("Expected: 4 event custom choices printed")
 testDatabase.query_events_choices("Sem 2 Welfare")
