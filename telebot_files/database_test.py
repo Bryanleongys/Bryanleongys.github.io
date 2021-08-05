@@ -14,12 +14,12 @@ testDatabase.query_all_users()
 print("==========================")
 
 # Ensuring events table queries work
-testDatabase.insert_event("Sem 2 Welfare", "Current Event", "03/08/2021", "05/08/2021", "09/08/2021", '12:30', '13:30', 0)
-testDatabase.insert_event("Holiday Welfare", "Past Event", "20/07/2021", "21/07/2021", "26/07/2021", '15:30', '18:00', 0)
-testDatabase.insert_event("Random Welfare", "Past Event", "19/07/2021", "21/07/2021", "26/07/2021", '15:30', '18:00', 0)
-testDatabase.insert_event("Orientation Welfare", "Future Event", "11/08/2021", "12/08/2021", "13/08/2021", '15:30', '18:00', 0)
-testDatabase.insert_event("Recess Week Welfare", "Current Event", "03/08/2021", "09/08/2021", "10/08/2021", '15:30', '18:00', 1)
-testDatabase.insert_event("Finals Week Welfare", "Future Event", "21/11/2021", "29/11/2021", "26/11/2021", '15:30', '18:00', 0)
+testDatabase.insert_event("Sem 2 Welfare", "Current Event", "2021/08/03", "2021/08/10", "2021/08/03", '12:30', '13:30', 0)
+testDatabase.insert_event("Holiday Welfare", "Past Event", "2021/08/03", "2021/08/03", "2021/08/03", '15:30', '18:00', 0)
+testDatabase.insert_event("Random Welfare", "Past Event", "2021/08/03", "2021/08/03", "2021/08/03", '15:30', '18:00', 0)
+testDatabase.insert_event("Orientation Welfare", "Future Event", "2021/08/10", "2021/08/10", "2021/08/03", '15:30', '18:00', 0)
+testDatabase.insert_event("Recess Week Welfare", "Current Event", "2021/08/03", "2021/08/10", "2021/08/03", '15:30', '18:00', 1)
+testDatabase.insert_event("Finals Week Welfare", "Future Event", "2021/08/10", "2021/08/10", "2021/08/03", '15:30', '18:00', 0)
 
 testDatabase.delete_event("Final Week Welfare")
 testDatabase.insert_events_custom_choices("Sem 2 Welfare", "Sugar Level", "25%")

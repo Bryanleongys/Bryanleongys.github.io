@@ -16,6 +16,14 @@ Initializing Database
 database = Database()
 
 '''
+Defining helper functions
+'''
+def replace_dash_with_slash(dateString):
+    replacedDateString = dateString.replace("-", "/")
+    print(replacedDateString)
+    return replacedDateString
+
+'''
 Defining Routes
 '''
 class HelloWorld(Resource):
@@ -33,9 +41,9 @@ class Events(Resource):
         database.insert_event(
           event_json['eventName'],
           event_json['eventType'],
-          event_json['startDate'],
-          event_json['endDate'],
-          event_json['collectionDate'],
+          replace_dash_with_slash(event_json['startDate']),
+          replace_dash_with_slash(event_json['endDate']),
+          replace_dash_with_slash(event_json['collectionDate']),
           event_json['startTime'],
           event_json['endTime'],
           number
@@ -71,7 +79,6 @@ class Users(Resource):
         return users_joined
 
 api.add_resource(HelloWorld, '/')
-
 api.add_resource(Events, '/events')
 api.add_resource(Users, '/users')
 
