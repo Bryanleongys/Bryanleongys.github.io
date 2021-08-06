@@ -61,10 +61,21 @@ class Users(Resource):
         users_joined = database.query_event_joined(event_name)
         return users_joined
 
+class Feedbacks(Resource):
+    def get(self):
+        event_name = request.args['eventName']
+        if (event_name == "general"):
+            event_feedback = database.query_user_feedback("general")
+        else:
+            event_feedback = database.query_user_feedback(event_name)
+        return event_feedback
+
+
 api.add_resource(HelloWorld, '/')
 
 api.add_resource(Events, '/events')
 api.add_resource(Users, '/users')
+api.add_resource(Feedbacks, '/feedbacks')
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -51,7 +51,12 @@ print("==========================")
 print("Expected: 2 user feedback rows printed")
 testDatabase.insert_user_feedback("Orientation Welfare", "bryanwhl", "My sugar level was definitely wrong; I asked for 50 percent and it tasted like 200 percent!")
 testDatabase.insert_user_feedback("Orientation Welfare", "bryanlys", "The bubble tea is the best, thanks!")
-testDatabase.query_user_feedback("Orientation Welfare")
+testDatabase.insert_user_feedback("Random Welfare", "bryanlys", "The bubble tea is the best, thanks!")
+testDatabase.insert_user_feedback("Holiday Welfare", "bryanlys", "Best holiday ever!")
+testDatabase.insert_user_feedback("Holiday Welfare", "bryanlwhl", "Why'd you take my holiday up?")
+testDatabase.insert_user_feedback("general", "bryanlwhl", "Thank you welfare for everything!")
+testDatabase.insert_user_feedback("general", "bryanlwhl", "Welfare is the best!")
+print(testDatabase.query_user_feedback("Holiday Welfare"))
 print("==========================")
 
 # Ensuring query_event_joined query work
