@@ -4,6 +4,14 @@ import signup
 from telegram.ext import *
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton, ParseMode, ReplyKeyboardMarkup, KeyboardButton, Message, Bot, ReplyKeyboardRemove
 
+EVENT_NAME = 0
+EVENT_TYPE = 1
+START_SIGNUP = 2
+END_SIGNUP = 3
+END_DATE = 4
+START_TIME = 5
+END_TIME = 6
+ITEM_BOOL = 7
 
 def prompt_feedback(update, context):
     query = update.callback_query
@@ -59,30 +67,37 @@ def confirm_general_feedback(update, context, db):
 # Event Feedback
 
 
-def show_feedback_events(update, context, events_array):
+def show_feedback_events(update, context, db):
     query = update.callback_query
     chat_id = query.message.chat_id
     message_id = query.message.message_id
+
+    events = db.query_all_past_events()
+    context.user_data["events"] = events
+    past_events = []
+    for event in events:
+        past_events.append(event[EVENT_NAME])
 
     text = "Please select the event you would like to give feedback for."
     context.bot.edit_message_text(
         chat_id=chat_id,
         message_id=message_id,
         text=text,
-        reply_markup=keyboards.feedback_events_keyboard(events_array)
+        reply_markup=keyboards.feedback_events_keyboard(past_events)
     )
     return 1
 
 
-def get_event_feedback(update, context, events):
+def get_event_feedback(update, context):
     query = update.callback_query
     index = int(query.data[6:])
     chat_id = query.message.chat_id
     message_id = query.message.message_id
-    context.user_data["event_name"] = events[index]
+    events=context.user_data["events"]
+    context.user_data["event_name"] = events[index][EVENT_NAME]
 
     text = "Thank you. What feedback would you like to give for " + \
-        events[index] + " ?"
+        events[index][EVENT_NAME] + " ?"
     context.bot.edit_message_text(
         chat_id=chat_id,
         message_id=message_id,
