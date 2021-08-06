@@ -119,7 +119,7 @@ def main():
             entry_points=[CallbackQueryHandler(
                 feedback.get_general_feedback, pattern="general_feedback")],
             states={
-                1: [MessageHandler(Filters.text, feedback.confirm_general_feedback)],
+                1: [MessageHandler(Filters.text, partial(feedback.confirm_general_feedback, db=db))],
             },
             fallbacks=[CallbackQueryHandler(
                 feedback.prompt_feedback, pattern="return_feedback")],
@@ -145,6 +145,7 @@ def main():
     #         )
     #     )
     #     counter += 1
+    # Events Feedback
     dp.add_handler(
         ConversationHandler(
             entry_points=[CallbackQueryHandler(partial(
@@ -152,7 +153,7 @@ def main():
             states={
                 1: [CallbackQueryHandler(partial(
                     feedback.get_event_feedback, events=feedback_events_array), pattern="fevent")],
-                2: [MessageHandler(Filters.text, feedback.confirm_general_feedback)],
+                2: [MessageHandler(Filters.text, partial(feedback.confirm_event_feedback, db=db))],
             },
             fallbacks=[CallbackQueryHandler(feedback.prompt_feedback, pattern="return_prompt"), CallbackQueryHandler(
                 partial(

@@ -33,6 +33,7 @@ const EventScreen = () => {
     const current_events = {
       eventType: "current",
     };
+
     axios
       .get(`http://127.0.0.1:5000/events`, { params: all_events })
       .then((res) => {

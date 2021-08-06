@@ -249,9 +249,12 @@ class Database:
     def query_user_feedback(self, event_name):
         try:
             self.cur.execute("SELECT * FROM user_feedback WHERE event_name = (?)", (event_name,))
+            self.con.commit()
             rows = self.cur.fetchall()
+            arrayString = []
             for row in rows:
-                print(row)
+                arrayString.append(row)
+            return arrayString
         except Exception as e:
             print(e)
             return e
