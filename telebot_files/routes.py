@@ -2,6 +2,7 @@ from flask import Flask, request
 from flask_cors import CORS
 from flask_restful import Api, Resource
 from database import Database
+import random
 
 '''
 Initializing Flask and CORS
@@ -78,9 +79,18 @@ class Users(Resource):
         users_joined = database.query_event_joined(event_name)
         return users_joined
 
+# class UserShuffle(Resource):
+#     def get(self):
+#         event_name = request.args['eventName']
+#         users_joined = database.query_event_joined(event_name)
+#         random.shuffle(users_joined)
+#         return users_joined
+        
+
 api.add_resource(HelloWorld, '/')
 api.add_resource(Events, '/events')
 api.add_resource(Users, '/users')
+# api.add_resource(UserShuffle, '/users/shuffle')
 
 if __name__ == '__main__':
     app.run(debug=True)

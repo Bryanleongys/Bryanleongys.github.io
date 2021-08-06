@@ -171,13 +171,6 @@ const AddEventForm = () => {
             Add Option
           </Button>
             
-        {/* <InputGroup className="mb-3">
-          <InputGroup.Text id="basic-addon1">Question To Ask</InputGroup.Text>
-          <Form.Control required onChange={(e) => setStartTime(e.target.value)} />
-          <Button variant="primary" type="submit">
-            Add Option
-          </Button>
-        </InputGroup> */}
         <br></br>
         <br></br>
         <br></br>
