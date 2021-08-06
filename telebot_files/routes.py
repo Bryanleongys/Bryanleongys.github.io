@@ -25,6 +25,11 @@ class HelloWorld(Resource):
 class Events(Resource):
     def post(self):
         event_json = request.get_json(force=True)
+        print(event_json)
+        if event_json['question'] == '':
+            number = 0
+        else:
+            number = 1
         database.insert_event(
           event_json['eventName'],
           event_json['eventType'],
@@ -33,9 +38,13 @@ class Events(Resource):
           event_json['collectionDate'],
           event_json['startTime'],
           event_json['endTime'],
-          0
+          number
         )
         database.query_all_events()
+        if number == 1:
+            for choice in event_json['choiceArray']:
+                database.insert_events_custom_choices(event_json['eventName'], event_json['question'], choice)
+        database.query_events_choices(event_json['eventName'])
 
     def get(self):
         event_type = request.args['eventType']

@@ -1,6 +1,7 @@
 import React from 'react'
 import { InputGroup, FormControl, Row, Col, FloatingLabel, Container, Form, Table, Button, Nav, Dropdown, DropdownButton } from "react-bootstrap";
 import axios from 'axios';
+import { Plus } from 'react-bootstrap-icons';
 
 const AddEventForm = () => {
   const [eventName, setEventName] = React.useState(null);
@@ -11,7 +12,8 @@ const AddEventForm = () => {
   const [startTime, setStartTime] = React.useState(null);
   const [endTime, setEndTime] = React.useState(null);
   const [validated, setValidated] = React.useState(false);
-  const [choiceArray, setChoiceArray] = React.useState(["Hello", "Working"]);
+  const [choiceArray, setChoiceArray] = React.useState([]);
+  const [question, setQuestion] = React.useState("");
 
   const handlePostRequest = () => {
     const eventJson = {
@@ -22,6 +24,8 @@ const AddEventForm = () => {
       collectionDate: collectionDate,
       startTime: startTime,
       endTime: endTime,
+      question: question,
+      choiceArray: choiceArray
     };
 
     console.log(eventJson);
@@ -133,8 +137,8 @@ const AddEventForm = () => {
           />
         </InputGroup>
 
-        <Form.Label htmlFor="basic-url">Additional Options:</Form.Label>
-        <Row className="g-2">
+        <Form.Label htmlFor="basic-url">Question To Ask (Optional)</Form.Label>
+        
           <Col md>
             <InputGroup className="mb-3">
               <FormControl
@@ -142,26 +146,33 @@ const AddEventForm = () => {
                 placeholder="e.g. What is your desired sugar level?"
                 aria-label="Username"
                 aria-describedby="basic-addon1"
-                onChange={(e) => setEventName(e.target.value)}
+                onChange={(e) => setQuestion(e.target.value)}
               />
             </InputGroup>
           </Col>
           <Col md>
-          <InputGroup className="mb-3">
-            {choiceArray.map(choice => {
-                return <FormControl
+            {choiceArray.map((choice, index) => {
+                return <div><InputGroup className="mb-3"><InputGroup.Text id="basic-addon1">Option {index+1}</InputGroup.Text><FormControl
                   required
                   defaultControl
                   defaultValue={choice}
-                  placeholder="e.g. What is your desired sugar level?"
+                  placeholder="e.g. 25% Sugar"
                   aria-label="Username"
                   aria-describedby="basic-addon1"
-                  onChange={(e) => setEventName(e.target.value)}
-                />
+                  onChange={(e) => {
+                    let tempArray = choiceArray;
+                    tempArray[index] = e.target.value;
+                    console.log(tempArray);
+                    return tempArray;
+                  }}
+                /></InputGroup></div>
             })}
-            </InputGroup>
           </Col>
-        </Row>
+          <Button onClick={() => setChoiceArray(oldArray => [...oldArray, ""])}>
+            <Plus />
+            Add Option
+          </Button>
+            
         {/* <InputGroup className="mb-3">
           <InputGroup.Text id="basic-addon1">Question To Ask</InputGroup.Text>
           <Form.Control required onChange={(e) => setStartTime(e.target.value)} />
@@ -169,6 +180,8 @@ const AddEventForm = () => {
             Add Option
           </Button>
         </InputGroup> */}
+        <br></br>
+        <br></br>
         <br></br>
 
         <Button variant="primary" type="submit">
