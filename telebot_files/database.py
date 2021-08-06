@@ -227,8 +227,11 @@ class Database:
         try:
             self.cur.execute("SELECT * FROM events_custom_choices WHERE event_name = (?)", (event_name,))
             rows = self.cur.fetchall()
+            arrayString = []
             for row in rows:
-                print(row)
+                arrayString.append(row)
+            print(arrayString)
+            return arrayString
         except Exception as e:
             print(e)
             return e

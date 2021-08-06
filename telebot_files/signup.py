@@ -91,21 +91,28 @@ def show_timings(update, context, timings, event_dates, events, items_bool_array
         return 3
 
 
-def show_item_events(update, context):
+def show_item_events(update, context, db):
     query = update.callback_query
     index = context.user_data["index"]
     chat_id = query.message.chat_id
     message_id = query.message.message_id
     timing = int(query.data[6:])
     context.user_data["timing"] = timing
+    event_name = context.user_data["event_name"]
 
-    text = "What item would you like?"
+    arrayDatabase = db.query_events_choices(event_name)
+    arrayOptions = []
+
+    for row in arrayDatabase:
+        arrayOptions.append(row[2])
+        
+    text = arrayDatabase[0][1]
 
     context.bot.edit_message_text(
         chat_id=chat_id,
         message_id=message_id,
         text=text,
-        reply_markup=keyboards.event_items_keyboard()
+        reply_markup=keyboards.event_items_keyboard(arrayOptions)
     )
     # update.message.reply_text(text, reply_markup=keyboards.event_items_keyboard())
     return 3

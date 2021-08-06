@@ -82,7 +82,7 @@ def main():
     future_events_array = []
     for event in future_events:
         future_events_array.append(
-            event[0] + ", " + event[1])
+            event[0] + ", " + event[2])
 
     # feedback_events
     feedback_events = db.query_all_past_events()
@@ -97,7 +97,7 @@ def main():
             signup.show_current_welfare, events_array=current_events_array), pattern="current_welfare")],
         states={
             1: [CallbackQueryHandler(partial(signup.show_timings, timings=timings_array, event_dates=event_date_array, events=current_events_name_array, items_bool_array=items_bool_array), pattern="current")],
-            2: [CallbackQueryHandler(partial(signup.show_item_events), pattern="timing")],
+            2: [CallbackQueryHandler(partial(signup.show_item_events, db=db), pattern="timing")],
             3: [CallbackQueryHandler(partial(signup.confirm_timing, db=db, items_bool_array=items_bool_array), pattern="timing")]
         },
         fallbacks=[CallbackQueryHandler(
