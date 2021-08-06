@@ -142,7 +142,6 @@ const AddEventForm = () => {
           <Col md>
             <InputGroup className="mb-3">
               <FormControl
-                required
                 placeholder="e.g. What is your desired sugar level?"
                 aria-label="Username"
                 aria-describedby="basic-addon1"
@@ -153,7 +152,6 @@ const AddEventForm = () => {
           <Col md>
             {choiceArray.map((choice, index) => {
                 return <div><InputGroup className="mb-3"><InputGroup.Text id="basic-addon1">Option {index+1}</InputGroup.Text><FormControl
-                  required
                   defaultControl
                   defaultValue={choice}
                   placeholder="e.g. 25% Sugar"
@@ -173,13 +171,6 @@ const AddEventForm = () => {
             Add Option
           </Button>
             
-        {/* <InputGroup className="mb-3">
-          <InputGroup.Text id="basic-addon1">Question To Ask</InputGroup.Text>
-          <Form.Control required onChange={(e) => setStartTime(e.target.value)} />
-          <Button variant="primary" type="submit">
-            Add Option
-          </Button>
-        </InputGroup> */}
         <br></br>
         <br></br>
         <br></br>

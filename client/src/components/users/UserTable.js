@@ -85,7 +85,16 @@ const UserTable = ({ event }) => {
   };
 
   const handleRandomize = () => {
-    console.log("Randomize Button Pressed");
+    axios
+      .get(`http://127.0.0.1:5000/users/shuffle`)
+      .then((res) => {
+        var arraySet = [];
+        for (var i = 0; i < res.data.length; i++) {
+          arraySet.push(res.data[i][1]);
+        }
+        setUserArray(arraySet);
+      })
+      .catch((error) => console.log(error.response));
   };
 
   const handleRefresh = () => {
@@ -169,6 +178,10 @@ const UserTable = ({ event }) => {
           Select Highlighted People
         </Button>
       )}
+
+      <br></br>
+      <br></br>
+
 
       {selectedAlert ? (
         <Alert variant="danger">Please key in minimum one pax!</Alert>

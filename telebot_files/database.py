@@ -113,15 +113,15 @@ class Database:
 
     def query_all_current_events(self):
         today = date.today()
-        dateToday = time.strptime(today.strftime("%d/%m/%Y"), "%d/%m/%Y")
+        dateToday = time.strptime(today.strftime("%Y/%m/%d"), "%Y/%m/%d")
         try:
             self.cur.execute("SELECT * FROM events WHERE event_type = 'Current Event'")
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
                 print(row)
-                dateStart = time.strptime(row[2], "%d/%m/%Y")
-                dateEnd = time.strptime(row[3], "%d/%m/%Y")
+                dateStart = time.strptime(row[2], "%Y/%m/%d")
+                dateEnd = time.strptime(row[3], "%Y/%m/%d")
                 if (dateStart <= dateToday <= dateEnd):
                     arrayString.append(
                         row)
@@ -132,14 +132,14 @@ class Database:
 
     def query_all_future_events(self):
         today = date.today()
-        dateToday = time.strptime(today.strftime("%d/%m/%Y"), "%d/%m/%Y")
+        dateToday = time.strptime(today.strftime("%Y/%m/%d"), "%Y/%m/%d")
         try:
             self.cur.execute("SELECT * FROM events WHERE event_type = 'Future Event'")
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
                 print(row)
-                dateStart = time.strptime(row[2], "%d/%m/%Y")
+                dateStart = time.strptime(row[2], "%Y/%m/%d")
                 if (dateToday < dateStart):
                     arrayString.append(row)
             return arrayString
@@ -149,14 +149,14 @@ class Database:
 
     def query_all_past_events(self):
         today = date.today()
-        dateToday = time.strptime(today.strftime("%d/%m/%Y"), "%d/%m/%Y")
+        dateToday = time.strptime(today.strftime("%Y/%m/%d"), "%Y/%m/%d")
         try:
             self.cur.execute("SELECT * FROM events WHERE event_type = 'Past Event'")
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
                 print(row)
-                dateEnd = time.strptime(row[3], "%d/%m/%Y")
+                dateEnd = time.strptime(row[3], "%Y/%m/%d")
                 if (dateEnd < dateToday):
                     arrayString.append(row)
             return arrayString

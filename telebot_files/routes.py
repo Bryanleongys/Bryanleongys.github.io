@@ -2,6 +2,7 @@ from flask import Flask, request
 from flask_cors import CORS
 from flask_restful import Api, Resource
 from database import Database
+import random
 
 '''
 Initializing Flask and CORS
@@ -14,6 +15,14 @@ api = Api(app)
 Initializing Database
 '''
 database = Database()
+
+'''
+Defining helper functions
+'''
+def replace_dash_with_slash(dateString):
+    replacedDateString = dateString.replace("-", "/")
+    print(replacedDateString)
+    return replacedDateString
 
 '''
 Defining Routes
@@ -33,9 +42,9 @@ class Events(Resource):
         database.insert_event(
           event_json['eventName'],
           event_json['eventType'],
-          event_json['startDate'],
-          event_json['endDate'],
-          event_json['collectionDate'],
+          replace_dash_with_slash(event_json['startDate']),
+          replace_dash_with_slash(event_json['endDate']),
+          replace_dash_with_slash(event_json['collectionDate']),
           event_json['startTime'],
           event_json['endTime'],
           number
@@ -70,6 +79,13 @@ class Users(Resource):
         users_joined = database.query_event_joined(event_name)
         return users_joined
 
+# class UserShuffle(Resource):
+#     def get(self):
+#         event_name = request.args['eventName']
+#         users_joined = database.query_event_joined(event_name)
+#         random.shuffle(users_joined)
+#         return users_joined
+        
 class Feedbacks(Resource):
     def get(self):
         event_name = request.args['eventName']
@@ -79,11 +95,10 @@ class Feedbacks(Resource):
             event_feedback = database.query_user_feedback(event_name)
         return event_feedback
 
-
 api.add_resource(HelloWorld, '/')
-
 api.add_resource(Events, '/events')
 api.add_resource(Users, '/users')
+# api.add_resource(UserShuffle, '/users/shuffle')
 api.add_resource(Feedbacks, '/feedbacks')
 
 if __name__ == '__main__':
