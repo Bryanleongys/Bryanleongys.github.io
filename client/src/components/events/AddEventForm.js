@@ -1,7 +1,20 @@
-import React from 'react'
-import { InputGroup, FormControl, Row, Col, FloatingLabel, Container, Form, Table, Button, Nav, Dropdown, DropdownButton } from "react-bootstrap";
-import axios from 'axios';
-import { Plus } from 'react-bootstrap-icons';
+import React from "react";
+import {
+  InputGroup,
+  FormControl,
+  Row,
+  Col,
+  FloatingLabel,
+  Container,
+  Form,
+  Table,
+  Button,
+  Nav,
+  Dropdown,
+  DropdownButton,
+} from "react-bootstrap";
+import axios from "axios";
+import { Plus } from "react-bootstrap-icons";
 
 const AddEventForm = () => {
   const [eventName, setEventName] = React.useState(null);
@@ -13,6 +26,7 @@ const AddEventForm = () => {
   const [endTime, setEndTime] = React.useState(null);
   const [validated, setValidated] = React.useState(false);
   const [choiceArray, setChoiceArray] = React.useState([]);
+  const [message, setMessage] = React.useState(null);
   const [question, setQuestion] = React.useState("");
 
   const handlePostRequest = () => {
@@ -24,8 +38,9 @@ const AddEventForm = () => {
       collectionDate: collectionDate,
       startTime: startTime,
       endTime: endTime,
+      message: message,
       question: question,
-      choiceArray: choiceArray
+      choiceArray: choiceArray,
     };
 
     console.log(eventJson);
@@ -43,7 +58,8 @@ const AddEventForm = () => {
       endDate !== null &&
       collectionDate !== null &&
       startTime !== null &&
-      endTime !== null
+      endTime !== null &&
+      message !== null
     ) {
       setValidated(true);
     }
@@ -137,40 +153,62 @@ const AddEventForm = () => {
           />
         </InputGroup>
 
+        <Form.Label htmlFor="basic-url">Confirmation Message:</Form.Label>
+        <InputGroup className="mb-3">
+          <FormControl
+            required
+            placeholder="e.g. You have been selected for Recess Week Welfare. Please remember to make your payment on www.payment.com!"
+            aria-label="Username"
+            aria-describedby="basic-addon1"
+            onChange={(e) => setMessage(e.target.value)}
+            as="textarea"
+            rows={3}
+          />
+        </InputGroup>
+
         <Form.Label htmlFor="basic-url">Question To Ask (Optional)</Form.Label>
-        
-          <Col md>
-            <InputGroup className="mb-3">
-              <FormControl
-                placeholder="e.g. What is your desired sugar level?"
-                aria-label="Username"
-                aria-describedby="basic-addon1"
-                onChange={(e) => setQuestion(e.target.value)}
-              />
-            </InputGroup>
-          </Col>
-          <Col md>
-            {choiceArray.map((choice, index) => {
-                return <div><InputGroup className="mb-3"><InputGroup.Text id="basic-addon1">Option {index+1}</InputGroup.Text><FormControl
-                  defaultControl
-                  defaultValue={choice}
-                  placeholder="e.g. 25% Sugar"
-                  aria-label="Username"
-                  aria-describedby="basic-addon1"
-                  onChange={(e) => {
-                    let tempArray = choiceArray;
-                    tempArray[index] = e.target.value;
-                    console.log(tempArray);
-                    return tempArray;
-                  }}
-                /></InputGroup></div>
-            })}
-          </Col>
-          <Button onClick={() => setChoiceArray(oldArray => [...oldArray, ""])}>
-            <Plus />
-            Add Option
-          </Button>
-            
+
+        <Col md>
+          <InputGroup className="mb-3">
+            <FormControl
+              placeholder="e.g. What is your desired sugar level?"
+              aria-label="Username"
+              aria-describedby="basic-addon1"
+              onChange={(e) => setQuestion(e.target.value)}
+            />
+          </InputGroup>
+        </Col>
+        <Col md>
+          {choiceArray.map((choice, index) => {
+            return (
+              <div>
+                <InputGroup className="mb-3">
+                  <InputGroup.Text id="basic-addon1">
+                    Option {index + 1}
+                  </InputGroup.Text>
+                  <FormControl
+                    defaultControl
+                    defaultValue={choice}
+                    placeholder="e.g. 25% Sugar"
+                    aria-label="Username"
+                    aria-describedby="basic-addon1"
+                    onChange={(e) => {
+                      let tempArray = choiceArray;
+                      tempArray[index] = e.target.value;
+                      console.log(tempArray);
+                      return tempArray;
+                    }}
+                  />
+                </InputGroup>
+              </div>
+            );
+          })}
+        </Col>
+        <Button onClick={() => setChoiceArray((oldArray) => [...oldArray, ""])}>
+          <Plus />
+          Add Option
+        </Button>
+
         <br></br>
         <br></br>
         <br></br>

@@ -3,6 +3,11 @@ from datetime import datetime
 from datetime import date
 import time
 
+'''
+CONSTANTS
+'''
+
+EVENT_MESSAGE = 7
 
 class Database:
 
@@ -28,7 +33,7 @@ class Database:
     def create_tables(self):
         try:
             self.cur.execute(
-                '''CREATE TABLE events(name text, event_type text, start_date text, end_date text, collection_date text, start_time text, end_time text, item_bool text)''')
+                '''CREATE TABLE events(name text, event_type text, start_date text, end_date text, collection_date text, start_time text, end_time text, message text, item_bool text)''')
             self.cur.execute(
                 '''CREATE TABLE users(username text, nusnet_id text, house text, telegram_id text)''')
             self.cur.execute(
@@ -80,10 +85,10 @@ class Database:
     SQLite queries for events table
     '''
 
-    def insert_event(self, name, event_type, start_date, end_date, collection_date, start_time, end_time, item_bool):
+    def insert_event(self, name, event_type, start_date, end_date, collection_date, start_time, end_time, message, item_bool):
         try:
-            self.cur.execute("INSERT INTO events(name, event_type, start_date, end_date, collection_date, start_time, end_time, item_bool) values (?,?,?,?,?,?,?,?)",
-                             (name, event_type, start_date, end_date, collection_date, start_time, end_time, item_bool))
+            self.cur.execute("INSERT INTO events(name, event_type, start_date, end_date, collection_date, start_time, end_time, message, item_bool) values (?,?,?,?,?,?,?,?,?)",
+                             (name, event_type, start_date, end_date, collection_date, start_time, end_time, message, item_bool))
             self.con.commit()
             return True
         except Exception as e:
@@ -160,6 +165,18 @@ class Database:
                 if (dateEnd < dateToday):
                     arrayString.append(row)
             return arrayString
+        except Exception as e:
+            print(e)
+            return e
+
+    def query_event_message(self, event_name):
+        try:
+            self.cur.execute("SELECT * FROM events WHERE name=?", (event_name,))
+            self.con.commit()
+            rows = self.cur.fetchall()
+            event_message = rows[0][EVENT_MESSAGE] # takes only one event
+            print(event_message)
+            return event_message
         except Exception as e:
             print(e)
             return e

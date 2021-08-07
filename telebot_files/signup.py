@@ -14,12 +14,12 @@ END_SIGNUP = 3
 END_DATE = 4
 START_TIME = 5
 END_TIME = 6
-ITEM_BOOL = 7
+ITEM_BOOL = 8
 
 def prompt_welfare(update, context):
-    print("hello")
     query = update.callback_query
     chat_id = query.message.chat_id
+    print(chat_id)
     message_id = query.message.message_id
 
     text = "Please select the following options:"
@@ -150,6 +150,7 @@ def confirm_timing(update, context, db):
 
     db.insert_event_joined(event_name, username, timing, item_chosen)
     db.query_all_events_joined()
+    db.query_event_message(event_name)
 
     text = "You have signed up for " + event_name + \
         " on " + str(event_date) + ", " + str(timing) + "."

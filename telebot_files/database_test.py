@@ -14,12 +14,12 @@ testDatabase.query_all_users()
 print("==========================")
 
 # Ensuring events table queries work
-testDatabase.insert_event("Sem 2 Welfare", "Current Event", "2021/08/03", "2021/08/10", "2021/08/03", '12:30', '13:30', 1)
-testDatabase.insert_event("Holiday Welfare", "Past Event", "2021/08/03", "2021/08/03", "2021/08/03", '15:30', '18:00', 0)
-testDatabase.insert_event("Random Welfare", "Past Event", "2021/08/03", "2021/08/03", "2021/08/03", '15:30', '18:00', 0)
-testDatabase.insert_event("Orientation Welfare", "Future Event", "2021/08/10", "2021/08/10", "2021/08/03", '15:30', '18:00', 0)
-testDatabase.insert_event("Recess Week Welfare", "Current Event", "2021/08/03", "2021/08/10", "2021/08/03", '15:30', '18:00', 0)
-testDatabase.insert_event("Finals Week Welfare", "Future Event", "2021/08/10", "2021/08/10", "2021/08/03", '15:30', '18:00', 0)
+testDatabase.insert_event("Sem 2 Welfare", "Current Event", "2021/08/03", "2021/08/10", "2021/08/03", '12:30', '13:30', "You have been selected!", 1)
+testDatabase.insert_event("Holiday Welfare", "Past Event", "2021/08/03", "2021/08/03", "2021/08/03", '15:30', '18:00', "You have been selected!",0)
+testDatabase.insert_event("Random Welfare", "Past Event", "2021/08/03", "2021/08/03", "2021/08/03", '15:30', '18:00', "You have been selected!",0)
+testDatabase.insert_event("Orientation Welfare", "Future Event", "2021/08/10", "2021/08/10", "2021/08/03", '15:30', '18:00', "You have been selected!",0)
+testDatabase.insert_event("Recess Week Welfare", "Current Event", "2021/08/03", "2021/08/10", "2021/08/03", '15:30', '18:00', "You have been selected!",0)
+testDatabase.insert_event("Finals Week Welfare", "Future Event", "2021/08/10", "2021/08/10", "2021/08/03", '15:30', '18:00', "You have been selected!",0)
 
 testDatabase.delete_event("Final Week Welfare")
 testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level would you like?", "25%")
@@ -34,6 +34,9 @@ testDatabase.query_all_future_events()
 print("==========================")
 print("Expected: 2 past events rows printed")
 testDatabase.query_all_past_events()
+print("==========================")
+print("Expected: 1 event message printed")
+testDatabase.query_event_message("Sem 2 Welfare")
 print("==========================")
 
 # Ensuring events_joined table queries work

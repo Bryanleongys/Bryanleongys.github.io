@@ -5,7 +5,7 @@ import keyboards
 
 def start(update, context):
     chat_id = update.message.chat.id
-    username = update.message.from_user.username
+    username = str(update.message.from_user.username)
     context.user_data["telegram_handle"] = username
 
     text = "Hi @" + username + "! Let's get you started!"

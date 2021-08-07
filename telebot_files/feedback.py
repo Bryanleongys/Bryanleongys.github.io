@@ -11,7 +11,7 @@ END_SIGNUP = 3
 END_DATE = 4
 START_TIME = 5
 END_TIME = 6
-ITEM_BOOL = 7
+ITEM_BOOL = 8
 
 def prompt_feedback(update, context):
     query = update.callback_query

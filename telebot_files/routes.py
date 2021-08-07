@@ -47,6 +47,7 @@ class Events(Resource):
           replace_dash_with_slash(event_json['collectionDate']),
           event_json['startTime'],
           event_json['endTime'],
+          event_json['message'],
           number
         )
         database.query_all_events()
