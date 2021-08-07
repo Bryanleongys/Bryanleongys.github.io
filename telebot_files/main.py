@@ -29,6 +29,13 @@ def show_home(update, context):
 
     return ConversationHandler.END
 
+# def send_msg(chat_id, text):
+#     token = keys.API_KEY
+#     chat_id = chat_id
+#     url_req = "https://api.telegram.org/bot" + token + "/sendMessage" + "?chat_id=" + str(chat_id) + "&text=" + text 
+#     results = requests.get(url_req)
+#     print(results.json())
+
 
 def error(update, context):
     print("error")
@@ -37,7 +44,6 @@ def error(update, context):
 def main():
     updater = Updater(keys.API_KEY)
     dp = updater.dispatcher
-
     # Conversation for initialization
     dp.add_handler(
         ConversationHandler(
@@ -62,55 +68,28 @@ def main():
     dp.add_handler(CallbackQueryHandler(
         settings.prompt_settings, pattern='settings'
     ))
-    # Initialize arrays
-    # current_events
-    current_events = db.query_all_current_events()
-    current_events_array = []
-    current_events_name_array = []
-    timings_array = []
-    event_date_array = []
-    items_bool_array = []
-    for event in current_events:
-        current_events_array.append(event[0] + ", closes " + event[3])
-        current_events_name_array.append(event[0])
-        timings_array.append([event[5], event[6]])
-        event_date_array.append(event[4])
-        items_bool_array.append(event[7])
-
-    # future_events
-    future_events = db.query_all_future_events()
-    future_events_array = []
-    for event in future_events:
-        future_events_array.append(
-            event[0] + ", " + event[1])
-
-    # feedback_events
-    feedback_events = db.query_all_past_events()
-    feedback_events_array = []
-    for event in feedback_events:
-        feedback_events_array.append(event[0])
 
     # Welfare Events
     # Current welfare events
     dp.add_handler(ConversationHandler(
         entry_points=[CallbackQueryHandler(partial(
-            signup.show_current_welfare, events_array=current_events_array), pattern="current_welfare")],
+            signup.show_current_welfare, db=db), pattern="current_welfare")],
         states={
-            1: [CallbackQueryHandler(partial(signup.show_timings, timings=timings_array, event_dates=event_date_array, events=current_events_name_array, items_bool_array=items_bool_array), pattern="current")],
-            2: [CallbackQueryHandler(partial(signup.show_item_events), pattern="timing")],
-            3: [CallbackQueryHandler(partial(signup.confirm_timing, db=db, items_bool_array=items_bool_array), pattern="timing")]
+            1: [CallbackQueryHandler(partial(signup.show_timings), pattern="current")],
+            2: [CallbackQueryHandler(partial(signup.show_item_events, db=db), pattern="timing")],
+            3: [CallbackQueryHandler(partial(signup.confirm_timing, db=db), pattern="timing")]
         },
         fallbacks=[CallbackQueryHandler(
             signup.prompt_welfare, pattern="return_prompt"), CallbackQueryHandler(
-            partial(signup.show_timings, timings=timings_array, event_dates=event_date_array, events=current_events_name_array, items_bool_array=items_bool_array), pattern="return_back"), CallbackQueryHandler(
+            partial(signup.show_timings), pattern="return_back"), CallbackQueryHandler(
             partial(
-                signup.show_current_welfare, events_array=current_events_array), pattern="return_current")],
+                signup.show_current_welfare, db=db), pattern="return_current")],
         per_user=False
     ))
 
     # Future welfare events
     dp.add_handler(CallbackQueryHandler(partial(
-        signup.show_future_welfare, events_array=future_events_array), pattern="future_welfare"))
+        signup.show_future_welfare, db=db), pattern="future_welfare"))
 
     # Feedback
     # General feedback
@@ -127,37 +106,19 @@ def main():
         )
     )
 
-    # Events feedback
-    # dp.add_handler(CallbackQueryHandler(partial(
-    #     feedback.show_feedback_events, events_array=feedback_events_array), pattern="event_feedback"))
-
-    # counter = 0
-    # for event in feedback_events_array:
-    #     dp.add_handler(
-    #         ConversationHandler(
-    #             entry_points=[CallbackQueryHandler(partial(
-    #                 feedback.get_event_feedback, event=event), pattern="fevents"+str(counter))],
-    #             states={
-    #                 1: [MessageHandler(Filters.text, feedback.confirm_general_feedback)],
-    #             },
-    #             fallbacks=[],
-    #             per_user=False
-    #         )
-    #     )
-    #     counter += 1
     # Events Feedback
     dp.add_handler(
         ConversationHandler(
             entry_points=[CallbackQueryHandler(partial(
-                feedback.show_feedback_events, events_array=feedback_events_array), pattern="event_feedback")],
+                feedback.show_feedback_events, db=db), pattern="event_feedback")],
             states={
                 1: [CallbackQueryHandler(partial(
-                    feedback.get_event_feedback, events=feedback_events_array), pattern="fevent")],
+                    feedback.get_event_feedback), pattern="fevent")],
                 2: [MessageHandler(Filters.text, partial(feedback.confirm_event_feedback, db=db))],
             },
             fallbacks=[CallbackQueryHandler(feedback.prompt_feedback, pattern="return_prompt"), CallbackQueryHandler(
                 partial(
-                    feedback.show_feedback_events, events_array=feedback_events_array), pattern="return_events")],
+                    feedback.show_feedback_events, db=db), pattern="return_events")],
             per_user=False
         )
     )

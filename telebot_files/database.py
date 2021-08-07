@@ -3,6 +3,12 @@ from datetime import datetime
 from datetime import date
 import time
 
+'''
+CONSTANTS
+'''
+
+EVENT_MESSAGE = 7
+USER_NAME = 0
 
 class Database:
 
@@ -28,11 +34,11 @@ class Database:
     def create_tables(self):
         try:
             self.cur.execute(
-                '''CREATE TABLE events(name text, event_type text, start_date text, end_date text, collection_date text, start_time text, end_time text, item_bool text)''')
+                '''CREATE TABLE events(name text, event_type text, start_date text, end_date text, collection_date text, start_time text, end_time text, message text, item_bool text)''')
             self.cur.execute(
                 '''CREATE TABLE users(username text, nusnet_id text, house text, telegram_id text)''')
             self.cur.execute(
-                '''CREATE TABLE events_joined(event_name text, username text, timing text, item_chosen text)''')
+                '''CREATE TABLE events_joined(event_name text, username text, telegram_id, timing text, item_chosen text)''')
             self.cur.execute(
                 '''CREATE TABLE events_custom_choices(event_name text, choice_header text, choice_name text)''')
             self.cur.execute(
@@ -76,14 +82,27 @@ class Database:
             print(e)
             return e
 
+    def query_user_name(self, telegram_id):
+        try:
+            self.cur.execute("SELECT * FROM users WHERE telegram_id=?", (telegram_id,))
+            self.con.commit()
+            rows = self.cur.fetchall()
+            user_name = rows[0][USER_NAME]
+            print(user_name)
+            return user_name
+            
+        except Exception as e:
+            print(e)
+            return e
+
     '''
     SQLite queries for events table
     '''
 
-    def insert_event(self, name, event_type, start_date, end_date, collection_date, start_time, end_time, item_bool):
+    def insert_event(self, name, event_type, start_date, end_date, collection_date, start_time, end_time, message, item_bool):
         try:
-            self.cur.execute("INSERT INTO events(name, event_type, start_date, end_date, collection_date, start_time, end_time, item_bool) values (?,?,?,?,?,?,?,?)",
-                             (name, event_type, start_date, end_date, collection_date, start_time, end_time, item_bool))
+            self.cur.execute("INSERT INTO events(name, event_type, start_date, end_date, collection_date, start_time, end_time, message, item_bool) values (?,?,?,?,?,?,?,?,?)",
+                             (name, event_type, start_date, end_date, collection_date, start_time, end_time, message, item_bool))
             self.con.commit()
             return True
         except Exception as e:
@@ -164,14 +183,26 @@ class Database:
             print(e)
             return e
 
+    def query_event_message(self, event_name):
+        try:
+            self.cur.execute("SELECT * FROM events WHERE name=?", (event_name,))
+            self.con.commit()
+            rows = self.cur.fetchall()
+            event_message = rows[0][EVENT_MESSAGE] # takes only one event
+            print(event_message)
+            return event_message
+        except Exception as e:
+            print(e)
+            return e
+
     '''
     SQLite queries for events_joined table
     '''
 
-    def insert_event_joined(self, event_name, username, timing, item_chosen):
+    def insert_event_joined(self, event_name, username, telegram_id, timing, item_chosen):
         try:
             self.cur.execute(
-                "INSERT INTO events_joined(event_name, username, timing, item_chosen) values (?,?,?,?)", (event_name, username, timing, item_chosen,))
+                "INSERT INTO events_joined(event_name, username, telegram_id, timing, item_chosen) values (?,?,?,?,?)", (event_name, username, telegram_id, timing, item_chosen,))
             self.con.commit()
             return True
         except Exception as e:
@@ -227,8 +258,11 @@ class Database:
         try:
             self.cur.execute("SELECT * FROM events_custom_choices WHERE event_name = (?)", (event_name,))
             rows = self.cur.fetchall()
+            arrayString = []
             for row in rows:
-                print(row)
+                arrayString.append(row)
+            print(arrayString)
+            return arrayString
         except Exception as e:
             print(e)
             return e
@@ -254,6 +288,7 @@ class Database:
             arrayString = []
             for row in rows:
                 arrayString.append(row)
+            print(arrayString)
             return arrayString
         except Exception as e:
             print(e)

@@ -2,6 +2,9 @@ import React from "react";
 import { Container, Table, Button, Form, Alert, Card } from "react-bootstrap";
 import axios from "axios";
 
+const USER_NAME = 1;
+const TELEGRAM_ID = 2;
+
 const UserTable = ({ event }) => {
   // make query using event name
   // const userArray = [
@@ -17,7 +20,7 @@ const UserTable = ({ event }) => {
   //   "bryanwhl",
   // ];
 
-  const [userArray, setUserArray] = React.useState([]);
+  const [userArray, setUserArray] = React.useState([]); // array of object
   const initialArray = new Array(userArray.length).fill(0);
   const [pax, setPax] = React.useState(null);
   const [shouldHighlight, setShouldHighlight] = React.useState(initialArray);
@@ -41,11 +44,14 @@ const UserTable = ({ event }) => {
     axios
       .get(`http://127.0.0.1:5000/users`, { params: eventJson })
       .then((res) => {
-        var arraySet = [];
+        var arrayUser = [];
         for (var i = 0; i < res.data.length; i++) {
-          arraySet.push(res.data[i][1]);
+          arrayUser.push({
+            telegram_id: res.data[i][TELEGRAM_ID],
+            name: res.data[i][USER_NAME],
+          });
         }
-        setUserArray(arraySet);
+        setUserArray(arrayUser);
       })
       .catch((error) => console.log(error.response));
   }, []);
@@ -70,6 +76,15 @@ const UserTable = ({ event }) => {
 
   const handleSend = () => {
     console.log("Send Button Pressed");
+    for (var i = 0; i < shouldHighlight.length; i++) {
+      const eventJson = {
+        chat_id: userArray[i].telegram_id,
+        event: event,
+      };
+      if (shouldHighlight[i]) {
+        axios.post(`http://127.0.0.1:5000/users`, eventJson);
+      }
+    }
     setIsSent(true);
   };
 
@@ -90,7 +105,10 @@ const UserTable = ({ event }) => {
       .then((res) => {
         var arraySet = [];
         for (var i = 0; i < res.data.length; i++) {
-          arraySet.push(res.data[i][1]);
+          arraySet.push({
+            telegram_id: res.data[i][TELEGRAM_ID],
+            name: res.data[i][USER_NAME],
+          });
         }
         setUserArray(arraySet);
       })
@@ -101,6 +119,7 @@ const UserTable = ({ event }) => {
     setShouldHighlight(initialArray);
     setIsSubmitted(false);
     setIsSelected(false);
+    setIsSent(false);
     setColorChosen("#52cca2");
     setColorRest("#fff");
   };
@@ -140,11 +159,11 @@ const UserTable = ({ event }) => {
         <thead>
           <tr>
             <th>#</th>
-            <th>Telegram Handle</th>
+            <th>Names</th>
           </tr>
         </thead>
         <tbody>
-          {userArray.map((handle, index) => {
+          {userArray.map((user, index) => {
             return (
               <tr
                 style={{
@@ -155,7 +174,7 @@ const UserTable = ({ event }) => {
                 key={index}
               >
                 <td>{index + 1}</td>
-                <td>{handle}</td>
+                <td>{user.name}</td>
               </tr>
             );
           })}
@@ -182,7 +201,6 @@ const UserTable = ({ event }) => {
       <br></br>
       <br></br>
 
-
       {selectedAlert ? (
         <Alert variant="danger">Please key in minimum one pax!</Alert>
       ) : null}
@@ -198,4 +216,5 @@ const styles = {
     marginLeft: 30,
   },
 };
+
 export default UserTable;

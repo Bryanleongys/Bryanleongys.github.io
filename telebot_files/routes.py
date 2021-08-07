@@ -3,6 +3,8 @@ from flask_cors import CORS
 from flask_restful import Api, Resource
 from database import Database
 import random
+import Constants as keys
+import requests
 
 '''
 Initializing Flask and CORS
@@ -47,6 +49,7 @@ class Events(Resource):
           replace_dash_with_slash(event_json['collectionDate']),
           event_json['startTime'],
           event_json['endTime'],
+          event_json['message'],
           number
         )
         database.query_all_events()
@@ -72,12 +75,23 @@ class Events(Resource):
         event_json = request.get_json(force=True)
         database.delete_event(event_json['eventName'])
         database.query_all_events()
+        
 
 class Users(Resource):
     def get(self):
         event_name = request.args['eventName']
         users_joined = database.query_event_joined(event_name)
         return users_joined
+    
+    def post(self):
+        event_json = request.get_json(force=True)
+        token = keys.API_KEY
+        chat_id = event_json['chat_id']
+        event = event_json['event']
+        text = database.query_event_message(event)
+        url_req = "https://api.telegram.org/bot" + token + "/sendMessage" + "?chat_id=" + str(chat_id) + "&text=" + text 
+        results = requests.get(url_req)
+        print(results.json())
 
 # class UserShuffle(Resource):
 #     def get(self):

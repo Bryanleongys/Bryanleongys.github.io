@@ -126,18 +126,10 @@ def timings_keyboard(timings):
 #     #     keyboard.append([KeyboardButton(item)])
 #     return ReplyKeyboardMarkup(keyboard)
 
-def event_items_keyboard():
-    keyboard = [
-        [InlineKeyboardButton(
-            "25% Sugar", callback_data="timing"+"25% Sugar")],
-        [InlineKeyboardButton(
-            "50% Sugar", callback_data="timing"+"50% Sugar")],
-        [InlineKeyboardButton(
-            "75% Sugar", callback_data="timing"+"75% Sugar")],
-        [InlineKeyboardButton(
-            "100% Sugar", callback_data="timing"+"100% Sugar")],
-        [InlineKeyboardButton("Back", callback_data="return_back")]
-    ]
+def event_items_keyboard(arrayOptions):
+    keyboard = []
+    for option in arrayOptions:
+        keyboard.append([InlineKeyboardButton(option, callback_data="timing"+option)])
     return InlineKeyboardMarkup(keyboard)
 
 
