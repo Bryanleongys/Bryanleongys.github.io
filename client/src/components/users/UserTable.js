@@ -140,7 +140,7 @@ const UserTable = ({ event }) => {
         <thead>
           <tr>
             <th>#</th>
-            <th>Telegram Handle</th>
+            <th>Names</th>
           </tr>
         </thead>
         <tbody>
@@ -181,7 +181,6 @@ const UserTable = ({ event }) => {
 
       <br></br>
       <br></br>
-
 
       {selectedAlert ? (
         <Alert variant="danger">Please key in minimum one pax!</Alert>

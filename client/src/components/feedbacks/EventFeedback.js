@@ -2,6 +2,12 @@ import React from "react";
 import { Container, Dropdown, ListGroup } from "react-bootstrap";
 import axios from "axios";
 
+/*
+Constants
+*/
+
+USER_NAME = 1;
+FEEDBACK_MESSAGE = 2;
 const EventFeedback = () => {
   // const events = ["Orientation", "RC4Welfare", "Acai Welfare"];
   // const feedbacks = [

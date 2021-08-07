@@ -8,6 +8,7 @@ CONSTANTS
 '''
 
 EVENT_MESSAGE = 7
+USER_NAME = 0
 
 class Database:
 
@@ -37,7 +38,7 @@ class Database:
             self.cur.execute(
                 '''CREATE TABLE users(username text, nusnet_id text, house text, telegram_id text)''')
             self.cur.execute(
-                '''CREATE TABLE events_joined(event_name text, username text, timing text, item_chosen text)''')
+                '''CREATE TABLE events_joined(event_name text, username text, telegram_id, timing text, item_chosen text)''')
             self.cur.execute(
                 '''CREATE TABLE events_custom_choices(event_name text, choice_header text, choice_name text)''')
             self.cur.execute(
@@ -77,6 +78,19 @@ class Database:
             rows = self.cur.fetchall()
             for row in rows:
                 print(row)
+        except Exception as e:
+            print(e)
+            return e
+
+    def query_user_name(self, telegram_id):
+        try:
+            self.cur.execute("SELECT * FROM users WHERE telegram_id=?", (telegram_id,))
+            self.con.commit()
+            rows = self.cur.fetchall()
+            user_name = rows[0][USER_NAME]
+            print(user_name)
+            return user_name
+            
         except Exception as e:
             print(e)
             return e
@@ -185,10 +199,10 @@ class Database:
     SQLite queries for events_joined table
     '''
 
-    def insert_event_joined(self, event_name, username, timing, item_chosen):
+    def insert_event_joined(self, event_name, username, telegram_id, timing, item_chosen):
         try:
             self.cur.execute(
-                "INSERT INTO events_joined(event_name, username, timing, item_chosen) values (?,?,?,?)", (event_name, username, timing, item_chosen,))
+                "INSERT INTO events_joined(event_name, username, telegram_id, timing, item_chosen) values (?,?,?,?,?)", (event_name, username, telegram_id, timing, item_chosen,))
             self.con.commit()
             return True
         except Exception as e:
@@ -274,6 +288,7 @@ class Database:
             arrayString = []
             for row in rows:
                 arrayString.append(row)
+            print(arrayString)
             return arrayString
         except Exception as e:
             print(e)

@@ -147,8 +147,9 @@ def confirm_timing(update, context, db):
     message_id = query.message.message_id
     event_name = context.user_data["event_name"]
     event_date = context.user_data["event_date"]
+    full_name = db.query_user_name(chat_id)
 
-    db.insert_event_joined(event_name, username, timing, item_chosen)
+    db.insert_event_joined(event_name, full_name, chat_id, timing, item_chosen)
     db.query_all_events_joined()
     db.query_event_message(event_name)
 
