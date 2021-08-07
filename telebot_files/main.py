@@ -29,6 +29,13 @@ def show_home(update, context):
 
     return ConversationHandler.END
 
+# def send_msg(chat_id, text):
+#     token = keys.API_KEY
+#     chat_id = chat_id
+#     url_req = "https://api.telegram.org/bot" + token + "/sendMessage" + "?chat_id=" + str(chat_id) + "&text=" + text 
+#     results = requests.get(url_req)
+#     print(results.json())
+
 
 def error(update, context):
     print("error")
@@ -37,7 +44,6 @@ def error(update, context):
 def main():
     updater = Updater(keys.API_KEY)
     dp = updater.dispatcher
-
     # Conversation for initialization
     dp.add_handler(
         ConversationHandler(
