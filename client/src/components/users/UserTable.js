@@ -4,6 +4,7 @@ import axios from "axios";
 
 const USER_NAME = 1;
 const TELEGRAM_ID = 2;
+const TELEGRAM_HANDLE = 3;
 
 const UserTable = ({ event }) => {
   // make query using event name
@@ -49,6 +50,7 @@ const UserTable = ({ event }) => {
           arrayUser.push({
             telegram_id: res.data[i][TELEGRAM_ID],
             name: res.data[i][USER_NAME],
+            telegram_handle: res.data[i][TELEGRAM_HANDLE],
           });
         }
         setUserArray(arrayUser);
@@ -108,6 +110,7 @@ const UserTable = ({ event }) => {
           arraySet.push({
             telegram_id: res.data[i][TELEGRAM_ID],
             name: res.data[i][USER_NAME],
+            telegram_handle: res.data[i][TELEGRAM_HANDLE],
           });
         }
         setUserArray(arraySet);
@@ -160,6 +163,7 @@ const UserTable = ({ event }) => {
           <tr>
             <th>#</th>
             <th>Names</th>
+            <th>Telegram Handle</th>
           </tr>
         </thead>
         <tbody>
@@ -175,6 +179,7 @@ const UserTable = ({ event }) => {
               >
                 <td>{index + 1}</td>
                 <td>{user.name}</td>
+                <td>{user.telegram_handle}</td>
               </tr>
             );
           })}
