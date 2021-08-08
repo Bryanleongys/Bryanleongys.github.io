@@ -75,7 +75,13 @@ class Events(Resource):
         event_json = request.get_json(force=True)
         database.delete_event(event_json['eventName'])
         database.query_all_events()
-        
+
+class EventChoices(Resource):
+    def get(self):
+        event_name = request.args['eventName']
+        event_choices = database.query_events_choices(event_name)
+        return event_choices
+
 
 class Users(Resource):
     def get(self):
@@ -93,12 +99,23 @@ class Users(Resource):
         results = requests.get(url_req)
         print(results.json())
 
-# class UserShuffle(Resource):
-#     def get(self):
-#         event_name = request.args['eventName']
-#         users_joined = database.query_event_joined(event_name)
-#         random.shuffle(users_joined)
-#         return users_joined
+class UserShuffle(Resource):
+    def get(self):
+        event_name = request.args['eventName']
+        users_joined = database.query_event_joined(event_name)
+        if len(users_joined) > 0 and users_joined[0][4] != "":
+            # Do sorting algorithm
+            choice_bucket = {}
+            for user in users_joined:
+                if user[4] in choice_bucket:
+                    choice_bucket[user[4]].append(user[1])
+                else:
+                    choice_bucket[user[4]] = []
+                    choice_bucket[user[4]].append(user[1])
+            print(choice_bucket)
+        else:
+            random.shuffle(users_joined)
+            return users_joined
         
 class Feedbacks(Resource):
     def get(self):
@@ -111,8 +128,9 @@ class Feedbacks(Resource):
 
 api.add_resource(HelloWorld, '/')
 api.add_resource(Events, '/events')
+api.add_resource(EventChoices, '/events/choices')
 api.add_resource(Users, '/users')
-# api.add_resource(UserShuffle, '/users/shuffle')
+api.add_resource(UserShuffle, '/users/shuffle')
 api.add_resource(Feedbacks, '/feedbacks')
 
 if __name__ == '__main__':

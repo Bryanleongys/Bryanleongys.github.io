@@ -46,11 +46,14 @@ const EventScreen = () => {
     axios
       .get(`http://127.0.0.1:5000/events`, { params: current_events })
       .then((res) => {
-        var initialArray = [];
-        for (var i = 0; i < res.data.length; i++) {
-          initialArray.push(res.data[i][0]);
-        }
-        setCurrentEvents(initialArray);
+        console.log(res.data)
+        setCurrentEvents(res.data)
+        // var initialArray = [];
+        // for (var i = 0; i < res.data.length; i++) {
+        //   initialArray.push(res.data[i][0]);
+        // }
+        // console.log(initialArray)
+        // setCurrentEvents(initialArray);
       });
   }, []);
 
@@ -101,8 +104,9 @@ const EventScreen = () => {
             );
           })}
           {currentEvents.map((event, index) => {
+            const eventName = event[0]
             return (
-              <Route key={index} path={`${match.url}/users-${event}`}>
+              <Route key={index} path={`${match.url}/users-${eventName}`}>
                 <UserTable event={event} />
               </Route>
             );

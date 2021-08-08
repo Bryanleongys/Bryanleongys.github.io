@@ -31,6 +31,7 @@ const UserTable = ({ event }) => {
   const [isSubmitted, setIsSubmitted] = React.useState(false);
   const [isSelected, setIsSelected] = React.useState(false);
   const [isSent, setIsSent] = React.useState(false);
+  const [choiceArray, setChoiceArray] = React.useState(null);
 
   const formProps = isSubmitted ? { disabled: true } : {};
   const randomProps = isSelected ? { disabled: true } : {};
@@ -38,7 +39,7 @@ const UserTable = ({ event }) => {
 
   React.useEffect(() => {
     const eventJson = {
-      eventName: event,
+      eventName: event[0],
     };
 
     axios
@@ -54,6 +55,21 @@ const UserTable = ({ event }) => {
         setUserArray(arrayUser);
       })
       .catch((error) => console.log(error.response));
+  }, []);
+
+  React.useEffect(() => {
+    if (event[8] === '1') {
+      const eventJson = {
+        eventName: event[0],
+      };
+      axios
+      .get(`http://127.0.0.1:5000/events/choices`, { params: eventJson })
+      .then((res) => {
+        console.log(res.data)
+        setChoiceArray(res.data);
+      })
+      .catch((error) => console.log(error.response));
+    }
   }, []);
 
   const handleSubmit = () => {
@@ -79,7 +95,7 @@ const UserTable = ({ event }) => {
     for (var i = 0; i < shouldHighlight.length; i++) {
       const eventJson = {
         chat_id: userArray[i].telegram_id,
-        event: event,
+        event: event[0],
       };
       if (shouldHighlight[i]) {
         axios.post(`http://127.0.0.1:5000/users`, eventJson);
@@ -126,20 +142,36 @@ const UserTable = ({ event }) => {
 
   return (
     <Container>
-      <h3>Manage {event}</h3>
+      <h3>Manage {event[0]}</h3>
       <Form style={styles.form}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Number of People</Form.Label>
-          <Form.Control
-            required
-            value={pax}
-            onChange={(e) => setPax(e.target.value)}
-            placeholder="e.g. 3"
-            {...formProps}
-          />
-          <Form.Text className="text-muted">
-            Key in no. of pax to receive giveaway
-          </Form.Text>
+          <div className="mb-3">
+            <Form.Label>Number of People</Form.Label>
+            <Form.Control
+              required
+              value={pax}
+              onChange={(e) => setPax(e.target.value)}
+              placeholder="e.g. 3"
+              {...formProps}
+            />
+            <Form.Text className="text-muted">
+              Key in no. of pax to receive giveaway
+            </Form.Text>
+          </div>
+          {choiceArray !== null ? choiceArray.map ( choice => {
+          return <div>
+            <Form.Label>No. of pax for {choice[2]}</Form.Label>
+            <Form.Control
+              required
+              className="mb-3"
+              value={pax}
+              onChange={(e) => setPax(e.target.value)}
+              placeholder="e.g. 3"
+              {...formProps}
+            />
+          </div>
+          }) : null
+          }
           {sendAlert ? (
             <Alert variant="danger">Please key in a valid input!</Alert>
           ) : null}
