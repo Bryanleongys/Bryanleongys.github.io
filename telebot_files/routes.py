@@ -60,6 +60,7 @@ class Events(Resource):
 
     def get(self):
         event_type = request.args['eventType']
+        print(event_type)
         if (event_type == "past"):
             events = database.query_all_past_events()
         elif (event_type == "current"):

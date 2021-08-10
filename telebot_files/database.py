@@ -131,9 +131,9 @@ class Database:
             return e
 
     def query_all_current_events(self):
-        today = date.today()
-        dateToday = time.strptime(today.strftime("%Y/%m/%d"), "%Y/%m/%d")
         try:
+            today = date.today()
+            dateToday = time.strptime(today.strftime("%Y/%m/%d"), "%Y/%m/%d")
             self.cur.execute("SELECT * FROM events WHERE event_type = 'Current Event'")
             rows = self.cur.fetchall()
             arrayString = []
@@ -150,9 +150,9 @@ class Database:
             return e
 
     def query_all_future_events(self):
-        today = date.today()
-        dateToday = time.strptime(today.strftime("%Y/%m/%d"), "%Y/%m/%d")
         try:
+            today = date.today()
+            dateToday = time.strptime(today.strftime("%Y/%m/%d"), "%Y/%m/%d")
             self.cur.execute("SELECT * FROM events WHERE event_type = 'Future Event'")
             rows = self.cur.fetchall()
             arrayString = []
@@ -167,9 +167,9 @@ class Database:
             return e
 
     def query_all_past_events(self):
-        today = date.today()
-        dateToday = time.strptime(today.strftime("%Y/%m/%d"), "%Y/%m/%d")
         try:
+            today = date.today()
+            dateToday = time.strptime(today.strftime("%Y/%m/%d"), "%Y/%m/%d")
             self.cur.execute("SELECT * FROM events WHERE event_type = 'Past Event'")
             rows = self.cur.fetchall()
             arrayString = []

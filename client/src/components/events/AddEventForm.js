@@ -68,6 +68,7 @@ const AddEventForm = () => {
   React.useEffect(() => {
     if (validated === true) {
       handlePostRequest();
+      setValidated(false);
     }
   });
 

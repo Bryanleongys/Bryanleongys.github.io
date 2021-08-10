@@ -5,6 +5,13 @@ import axios from "axios";
 const USER_NAME = 1;
 const TELEGRAM_ID = 2;
 
+// Helper function to check if input is a number
+function isNumeric(str) {
+  if (typeof str != "string") return false
+  return !isNaN(str) &&
+         !isNaN(parseFloat(str))
+}
+
 const UserTable = ({ event }) => {
   // make query using event name
   // const userArray = [
@@ -32,6 +39,7 @@ const UserTable = ({ event }) => {
   const [isSelected, setIsSelected] = React.useState(false);
   const [isSent, setIsSent] = React.useState(false);
   const [choiceArray, setChoiceArray] = React.useState(null);
+  const [choicePax, setChoicePax] = React.useState(null);
 
   const formProps = isSubmitted ? { disabled: true } : {};
   const randomProps = isSelected ? { disabled: true } : {};
@@ -67,6 +75,12 @@ const UserTable = ({ event }) => {
       .then((res) => {
         console.log(res.data)
         setChoiceArray(res.data);
+        let tempArray = [];
+        res.data.map(choice => {
+          tempArray.push("");
+        })
+        console.log(tempArray)
+        setChoicePax(tempArray)
       })
       .catch((error) => console.log(error.response));
     }
@@ -116,8 +130,18 @@ const UserTable = ({ event }) => {
   };
 
   const handleRandomize = () => {
-    axios
-      .get(`http://127.0.0.1:5000/users/shuffle`)
+    let validated = true;
+    choicePax.map(choice => {
+      if (isNumeric(choice) === false) {
+        validated = false;
+      }
+    })
+    if (validated === true) {
+      let choiceJson = {
+        choicePax: choicePax
+      }
+      axios
+      .get(`http://127.0.0.1:5000/users/shuffle`, { params: choiceJson })
       .then((res) => {
         var arraySet = [];
         for (var i = 0; i < res.data.length; i++) {
@@ -129,6 +153,7 @@ const UserTable = ({ event }) => {
         setUserArray(arraySet);
       })
       .catch((error) => console.log(error.response));
+    }
   };
 
   const handleRefresh = () => {
@@ -158,14 +183,19 @@ const UserTable = ({ event }) => {
               Key in no. of pax to receive giveaway
             </Form.Text>
           </div>
-          {choiceArray !== null ? choiceArray.map ( choice => {
+          {choiceArray !== null ? choiceArray.map ((choice, index) => {
           return <div>
             <Form.Label>No. of pax for {choice[2]}</Form.Label>
             <Form.Control
               required
               className="mb-3"
-              value={pax}
-              onChange={(e) => setPax(e.target.value)}
+              defaultValue={choicePax[index]}
+              onChange={(e) => {
+                let tempArray = choicePax;
+                tempArray[index] = e.target.value;
+                console.log(tempArray);
+                setChoicePax(tempArray)
+              }}
               placeholder="e.g. 3"
               {...formProps}
             />
