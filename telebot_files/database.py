@@ -40,7 +40,7 @@ class Database:
             self.cur.execute(
                 '''CREATE TABLE users(username text, nusnet_id text, house text, telegram_id text)''')
             self.cur.execute(
-                '''CREATE TABLE events_joined(event_name text, username text, telegram_id, timing text, item_chosen text)''')
+                '''CREATE TABLE events_joined(event_name text, username text, telegram_id text, telegram_handle text, timing text, item_chosen text)''')
             self.cur.execute(
                 '''CREATE TABLE events_custom_choices(event_name text, choice_header text, choice_name text)''')
             self.cur.execute(
@@ -57,6 +57,17 @@ class Database:
 
     def insert_user(self, username, nusnet_id, house, telegram_id):
         try:
+            ## if user's full name and nusnet_id exists, do not insert
+            self.cur.execute("SELECT * FROM users WHERE username=? AND nusnet_id=? ", (username, nusnet_id,))
+            if (len(self.cur.fetchall())):
+                return False
+
+            ## if telegram_id registered before, delete and insert
+            self.cur.execute("SELECT * FROM users WHERE telegram_id=?", (telegram_id,))
+            if (len(self.cur.fetchall())):
+                self.cur.execute(
+                "DELETE FROM users WHERE telegram_id=?", (telegram_id,))
+
             self.cur.execute("INSERT INTO users(username, nusnet_id, house, telegram_id) VALUES(?,?,?,?)",
                              (username, nusnet_id, house, telegram_id,))
             self.con.commit()
@@ -103,6 +114,11 @@ class Database:
 
     def insert_event(self, name, event_type, start_date, end_date, collection_date, start_time, end_time, message, item_bool):
         try:
+            ## if event name exists, do not insert
+            self.cur.execute("SELECT * FROM events WHERE name=?",(name,))
+            if (len(self.cur.fetchall())):
+                return False
+
             self.cur.execute("INSERT INTO events(name, event_type, start_date, end_date, collection_date, start_time, end_time, message, item_bool) values (?,?,?,?,?,?,?,?,?)",
                              (name, event_type, start_date, end_date, collection_date, start_time, end_time, message, item_bool))
             self.con.commit()
@@ -197,14 +213,31 @@ class Database:
             print(e)
             return e
 
+    def query_event_exist(self, event_name):
+        try:
+            self.cur.execute("SELECT * FROM events WHERE name=?", (event_name,))
+            self.con.commit()
+            if (len(self.cur.fetchall())):
+                return True
+            return False
+        except Exception as e:
+            print(e)
+            return e
+
     '''
     SQLite queries for events_joined table
     '''
 
-    def insert_event_joined(self, event_name, username, telegram_id, timing, item_chosen):
+    def insert_event_joined(self, event_name, username, telegram_id, telegram_handle, timing, item_chosen):
         try:
+            ## delete event user have signed up for and insert a new query
+            self.cur.execute("SELECT * FROM events_joined WHERE telegram_id=? AND event_name=?", (telegram_id, event_name,))
+            if (len(self.cur.fetchall())):
+                self.cur.execute(
+                "DELETE FROM events_joined WHERE telegram_id=? AND event_name=?", (telegram_id, event_name,))
+            
             self.cur.execute(
-                "INSERT INTO events_joined(event_name, username, telegram_id, timing, item_chosen) values (?,?,?,?,?)", (event_name, username, telegram_id, timing, item_chosen,))
+                "INSERT INTO events_joined(event_name, username, telegram_id, telegram_handle, timing, item_chosen) values (?,?,?,?,?,?)", (event_name, username, telegram_id, telegram_handle, timing, item_chosen,))
             self.con.commit()
             return True
         except Exception as e:
@@ -237,7 +270,7 @@ class Database:
             arrayString=[]
             for row in rows:
                 arrayString.append(row)
-            print(arrayString)
+                print(row)
             return arrayString
         except Exception as e:
             print(e)

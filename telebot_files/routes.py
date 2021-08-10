@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, jsonify, make_response, abort, Response
 from flask_cors import CORS
 from flask_restful import Api, Resource
 from database import Database
@@ -37,12 +37,20 @@ class HelloWorld(Resource):
 class Events(Resource):
     def post(self):
         event_json = request.get_json(force=True)
-        print(event_json)
+
+        ## Check event exists
+        if (event_json['requestType'] == "check") :
+            eventExist = database.query_event_exist(event_json['eventName'])
+            if (eventExist):
+                return True
+            return False
+        
+        ## Add event
         if event_json['question'] == '':
             number = 0
         else:
             number = 1
-        database.insert_event(
+        event_inserted = database.insert_event(
           event_json['eventName'],
           event_json['eventType'],
           replace_dash_with_slash(event_json['startDate']),
@@ -53,6 +61,8 @@ class Events(Resource):
           event_json['message'],
           number
         )
+        if not event_inserted:
+            abort(Response("Event name already exists! Please use another name", 401))
         database.query_all_events()
         if number == 1:
             for choice in event_json['choiceArray']:

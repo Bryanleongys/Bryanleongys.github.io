@@ -53,14 +53,18 @@ def get_house(update, context, db):
     full_name = context.user_data["full_name"]
     nusnet_id = context.user_data["nusnet_id"]
 
-    db.insert_user(full_name, nusnet_id, user_input, chat_id)
+    user_inserted = db.insert_user(full_name, nusnet_id, user_input, chat_id)
     db.query_all_users()
 
     text = "Great! Your house, " + user_input + ", has been registered."
     text2 = "Welcome to RC4 Welfare Telegram Bot! Feel free to access the features below!"
+    text3 = "You have registered before! Please press /start to re-register, or contact our adminstrators. Thank you."
 
-    update.message.reply_text(text)
-    update.message.reply_text(
-        text=text2, reply_markup=keyboards.main_options_keyboard())
+    if (user_inserted):
+        update.message.reply_text(text)
+        update.message.reply_text(
+            text=text2, reply_markup=keyboards.main_options_keyboard())
+    else:
+        update.message.reply_text(text3)
 
     return ConversationHandler.END

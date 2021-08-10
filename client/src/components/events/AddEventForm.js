@@ -12,6 +12,8 @@ import {
   Nav,
   Dropdown,
   DropdownButton,
+  Alert,
+  Toast,
 } from "react-bootstrap";
 import axios from "axios";
 import { Plus } from "react-bootstrap-icons";
@@ -28,9 +30,12 @@ const AddEventForm = () => {
   const [choiceArray, setChoiceArray] = React.useState([]);
   const [message, setMessage] = React.useState(null);
   const [question, setQuestion] = React.useState("");
+  const [submitType, setSubmitType] = React.useState("");
+  const [showToast, setShowToast] = React.useState(false);
 
   const handlePostRequest = () => {
     const eventJson = {
+      requestType: "add_event",
       eventName: eventName,
       eventType: eventType,
       startDate: startDate,
@@ -43,12 +48,15 @@ const AddEventForm = () => {
       choiceArray: choiceArray,
     };
 
-    console.log(eventJson);
-
-    axios.post(`http://127.0.0.1:5000/events`, eventJson).then((res) => {
-      console.log(res);
-      console.log(res.data);
-    });
+    axios
+      .post(`http://127.0.0.1:5000/events`, eventJson)
+      .then((res) => {
+        console.log(res);
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+      });
   };
 
   const handleSubmitClick = (event) => {
@@ -63,6 +71,28 @@ const AddEventForm = () => {
     ) {
       setValidated(true);
     }
+  };
+
+  const handleSubmitCheck = (eventName) => {
+    const eventJson = {
+      requestType: "check",
+      eventName: eventName,
+    };
+
+    axios
+      .post(`http://127.0.0.1:5000/events`, eventJson)
+      .then((res) => {
+        if (!res.data) {
+          setSubmitType("submit");
+          setShowToast(false);
+        } else {
+          setSubmitType("");
+          setShowToast(true);
+        }
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+      });
   };
 
   React.useEffect(() => {
@@ -84,9 +114,29 @@ const AddEventForm = () => {
             placeholder="e.g. Recess Week Welfare"
             aria-label="Username"
             aria-describedby="basic-addon1"
-            onChange={(e) => setEventName(e.target.value)}
+            onChange={(e) => {
+              setEventName(e.target.value);
+              handleSubmitCheck(e.target.value);
+            }}
           />
         </InputGroup>
+        <Row>
+          <Col xs={6}>
+            <Toast bg={"danger"} show={showToast}>
+              <Toast.Header closeButton={false}>
+                <img
+                  src="holder.js/20x20?text=%20"
+                  className="rounded me-2"
+                  alt=""
+                />
+                <strong className="me-auto">
+                  Event name already exists! Please use different name.
+                </strong>
+              </Toast.Header>
+              {/* <Toast.Body>Event Name already exists!</Toast.Body> */}
+            </Toast>
+          </Col>
+        </Row>
 
         <Form.Label htmlFor="basic-url">Event Type:</Form.Label>
         <InputGroup className="mb-3">
@@ -214,7 +264,7 @@ const AddEventForm = () => {
         <br></br>
         <br></br>
 
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type={submitType}>
           Submit
         </Button>
       </Form>
