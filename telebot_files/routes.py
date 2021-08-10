@@ -1,10 +1,11 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 from flask_restful import Api, Resource
 from database import Database
 import random
 import Constants as keys
 import requests
+import json
 
 '''
 Initializing Flask and CORS
@@ -64,11 +65,13 @@ class Events(Resource):
         if (event_type == "past"):
             events = database.query_all_past_events()
         elif (event_type == "current"):
+            print("Events are here!!")
             events = database.query_all_current_events()
         elif (event_type == "future"):
             events = database.query_all_future_events()
         elif (event_type == "all"):
             events = database.query_all_events()
+        print(events)
         return events
 
     def delete(self):
@@ -81,7 +84,8 @@ class EventChoices(Resource):
     def get(self):
         event_name = request.args['eventName']
         event_choices = database.query_events_choices(event_name)
-        return event_choices
+        print(event_choices)
+        return make_response(jsonify(event_choices), 200)
 
 
 class Users(Resource):
@@ -103,20 +107,26 @@ class Users(Resource):
 class UserShuffle(Resource):
     def get(self):
         event_name = request.args['eventName']
-        users_joined = database.query_event_joined(event_name)
-        if len(users_joined) > 0 and users_joined[0][4] != "":
-            # Do sorting algorithm
-            choice_bucket = {}
-            for user in users_joined:
-                if user[4] in choice_bucket:
-                    choice_bucket[user[4]].append(user[1])
-                else:
-                    choice_bucket[user[4]] = []
-                    choice_bucket[user[4]].append(user[1])
-            print(choice_bucket)
-        else:
-            random.shuffle(users_joined)
-            return users_joined
+        choice_pax = request.args.getlist('choicePax[]')
+        event_choices = database.query_events_choices(event_name)
+        print(event_choices)
+        
+        choice_pax = list(map(lambda choice: int(choice), choice_pax))
+
+        final_user_array = []
+
+        for index in range(len(choice_pax)):
+            pax = choice_pax[index]
+            choice = event_choices[index][2]
+            users = database.query_user_choice(event_name, choice)
+            random.shuffle(users)
+            users = users[0:pax]
+            for user in users:
+                final_user_array.append(user[1])
+        print(final_user_array)
+
+        # Returns the list of users chosen based on the algorithm
+        return make_response(jsonify(final_user_array), 200)
         
 class Feedbacks(Resource):
     def get(self):

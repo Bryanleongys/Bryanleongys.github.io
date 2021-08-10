@@ -17,11 +17,11 @@ testDatabase.query_user_name("123456")
 print("==========================")
 
 # Ensuring events table queries work
-testDatabase.insert_event("Sem 2 Welfare", "Current Event", "2021/08/03", "2021/08/10", "2021/08/03", '12:30', '13:30', "You have been selected!", 1)
+testDatabase.insert_event("Sem 2 Welfare", "Current Event", "2021/08/03", "2021/08/20", "2021/08/03", '12:30', '13:30', "You have been selected!", 1)
 testDatabase.insert_event("Holiday Welfare", "Past Event", "2021/08/03", "2021/08/03", "2021/08/03", '15:30', '18:00', "You have been selected!",0)
 testDatabase.insert_event("Random Welfare", "Past Event", "2021/08/03", "2021/08/03", "2021/08/03", '15:30', '18:00', "You have been selected!",0)
 testDatabase.insert_event("Orientation Welfare", "Future Event", "2021/08/10", "2021/08/10", "2021/08/03", '15:30', '18:00', "You have been selected!",0)
-testDatabase.insert_event("Recess Week Welfare", "Current Event", "2021/08/03", "2021/08/10", "2021/08/03", '15:30', '18:00', "You have been selected!",0)
+testDatabase.insert_event("Recess Week Welfare", "Current Event", "2021/08/03", "2021/08/20", "2021/08/03", '15:30', '18:00', "You have been selected!",0)
 testDatabase.insert_event("Finals Week Welfare", "Future Event", "2021/08/10", "2021/08/10", "2021/08/03", '15:30', '18:00', "You have been selected!",0)
 
 testDatabase.delete_event("Final Week Welfare")
