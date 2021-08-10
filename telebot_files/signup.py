@@ -151,7 +151,6 @@ def confirm_timing(update, context, db):
 
     db.insert_event_joined(event_name, full_name, chat_id, username, timing, item_chosen)
     db.query_all_events_joined()
-    db.query_event_message(event_name)
 
     text = "You have signed up for " + event_name + \
         " on " + str(event_date) + ", " + str(timing) + "."
