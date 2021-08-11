@@ -146,22 +146,35 @@ const UserTable = ({ event }) => {
             });
           }
 
+          console.log(arraySet);
+          console.log(userArray);
+
           // Change shouldHighlight list
-          var i = 0; // counter for userArray
-          var j = 0; // counter for arraySet
+          // var i = 0; // counter for userArray
+          // var j = 0; // counter for arraySet
+          // while (i < userArray.length) {
+          //   if (
+          //     j < arraySet.length &&
+          //     userArray[i].telegram_id == arraySet[j].telegram_id
+          //   ) {
+          //     array.push(1);
+          //     j++;
+          //   } else {
+          //     array.push(0);
+          //   }
+          //   i++;
+          // }
           var array = [];
-          while (i < userArray.length) {
+          for (var i = 0; i < userArray.length; i++) {
             if (
-              j < arraySet.length &&
-              userArray[i].telegram_id == arraySet[j].telegram_id
+              arraySet.some((e) => e.telegram_id === userArray[i].telegram_id)
             ) {
               array.push(1);
-              j++;
             } else {
               array.push(0);
             }
-            i++;
           }
+          console.log(array);
           setShouldHighlight(array);
         })
         .catch((error) => {

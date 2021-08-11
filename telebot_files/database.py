@@ -284,6 +284,7 @@ class Database:
     
     def query_event_joined(self, event_name):
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM events_joined WHERE event_name=?", (event_name,))
             rows = self.cur.fetchall()
             arrayString=[]
@@ -293,7 +294,9 @@ class Database:
             return arrayString
         except Exception as e:
             print(e)
-            return e    
+            return e   
+        finally:
+            LOCK.release() 
 
     def query_user_choice(self, event_name, item_chosen):
         try:
