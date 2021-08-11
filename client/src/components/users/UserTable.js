@@ -6,6 +6,13 @@ const USER_NAME = 1;
 const TELEGRAM_ID = 2;
 const TELEGRAM_HANDLE = 3;
 
+// Helper function to check if input is a number
+function isNumeric(str) {
+  if (typeof str != "string") return false
+  return !isNaN(str) &&
+         !isNaN(parseFloat(str))
+}
+
 const UserTable = ({ event }) => {
   // make query using event name
   // const userArray = [
@@ -32,6 +39,8 @@ const UserTable = ({ event }) => {
   const [isSubmitted, setIsSubmitted] = React.useState(false);
   const [isSelected, setIsSelected] = React.useState(false);
   const [isSent, setIsSent] = React.useState(false);
+  const [choiceArray, setChoiceArray] = React.useState(null);
+  const [choicePax, setChoicePax] = React.useState(null);
 
   const formProps = isSubmitted ? { disabled: true } : {};
   const randomProps = isSelected ? { disabled: true } : {};
@@ -39,7 +48,7 @@ const UserTable = ({ event }) => {
 
   React.useEffect(() => {
     const eventJson = {
-      eventName: event,
+      eventName: event[0],
     };
 
     axios
@@ -53,10 +62,61 @@ const UserTable = ({ event }) => {
             telegram_handle: res.data[i][TELEGRAM_HANDLE],
           });
         }
-        setUserArray(arrayUser);
+        // setUserArray(arrayUser);
       })
       .catch((error) => console.log(error.response));
   }, []);
+
+  React.useEffect(() => {
+    if (event[8] === '1') {
+      const eventJson = {
+        eventName: event[0],
+      };
+      axios
+      .get(`http://127.0.0.1:5000/events/choices`, { params: eventJson })
+      .then((res) => {
+        console.log(res.data)
+        setChoiceArray(res.data);
+        let tempArray = [];
+        res.data.map(choice => {
+          tempArray.push("");
+        })
+        console.log(tempArray)
+        setChoicePax(tempArray)
+      })
+      .catch((error) => console.log(error.response));
+    }
+  }, []);
+
+  const handleRandomize = () => {
+    let validated = true;
+    choicePax.map(choice => {
+      if (isNumeric(choice) === false) {
+        validated = false;
+      }
+    })
+    if (validated === true) {
+      let choiceJson = {
+        eventName: event[0],
+        choicePax: choicePax
+      }
+      axios
+      .get(`http://127.0.0.1:5000/users/shuffle`, { params: choiceJson })
+      .then((res) => {
+        var arraySet = [];
+        for (var i = 0; i < res.data.length; i++) {
+          arraySet.push({
+            telegram_id: res.data[i][TELEGRAM_ID],
+            name: res.data[i][USER_NAME],
+          });
+        }
+        console.log(userArray)
+        
+        setUserArray(arraySet);
+      })
+      .catch((error) => console.log(error.response));
+    }
+  };
 
   const handleSubmit = () => {
     if (pax > userArray.length || pax == null || pax == 0) {
@@ -72,8 +132,9 @@ const UserTable = ({ event }) => {
         array.push(0);
       }
     }
-    setIsSubmitted(true);
+    // setIsSubmitted(true);
     setShouldHighlight(array);
+    handleRandomize();
   };
 
   const handleSend = () => {
@@ -81,7 +142,7 @@ const UserTable = ({ event }) => {
     for (var i = 0; i < shouldHighlight.length; i++) {
       const eventJson = {
         chat_id: userArray[i].telegram_id,
-        event: event,
+        event: event[0],
       };
       if (shouldHighlight[i]) {
         axios.post(`http://127.0.0.1:5000/users`, eventJson);
@@ -101,23 +162,6 @@ const UserTable = ({ event }) => {
     setColorRest("#e1e1e1");
   };
 
-  const handleRandomize = () => {
-    axios
-      .get(`http://127.0.0.1:5000/users/shuffle`)
-      .then((res) => {
-        var arraySet = [];
-        for (var i = 0; i < res.data.length; i++) {
-          arraySet.push({
-            telegram_id: res.data[i][TELEGRAM_ID],
-            name: res.data[i][USER_NAME],
-            telegram_handle: res.data[i][TELEGRAM_HANDLE],
-          });
-        }
-        setUserArray(arraySet);
-      })
-      .catch((error) => console.log(error.response));
-  };
-
   const handleRefresh = () => {
     setShouldHighlight(initialArray);
     setIsSubmitted(false);
@@ -129,34 +173,55 @@ const UserTable = ({ event }) => {
 
   return (
     <Container>
-      <h3>Manage {event}</h3>
+      <h3>Manage {event[0]}</h3>
       <Form style={styles.form}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Number of People</Form.Label>
-          <Form.Control
-            required
-            value={pax}
-            onChange={(e) => setPax(e.target.value)}
-            placeholder="e.g. 3"
-            {...formProps}
-          />
-          <Form.Text className="text-muted">
-            Key in no. of pax to receive giveaway
-          </Form.Text>
+          <div className="mb-3">
+            <Form.Label>Number of People</Form.Label>
+            <Form.Control
+              required
+              value={pax}
+              onChange={(e) => setPax(e.target.value)}
+              placeholder="e.g. 3"
+              {...formProps}
+            />
+            <Form.Text className="text-muted">
+              Key in no. of pax to receive giveaway
+            </Form.Text>
+          </div>
+          {choiceArray !== null ? choiceArray.map ((choice, index) => {
+          return <div>
+            <Form.Label>No. of pax for {choice[2]}</Form.Label>
+            <Form.Control
+              required
+              className="mb-3"
+              defaultValue={choicePax === null ? "" : choicePax[index]}
+              onChange={(e) => {
+                let tempArray = choicePax;
+                tempArray[index] = e.target.value;
+                console.log(tempArray);
+                setChoicePax(tempArray)
+              }}
+              placeholder="e.g. 3"
+              {...formProps}
+            />
+          </div>
+          }) : null
+          }
           {sendAlert ? (
             <Alert variant="danger">Please key in a valid input!</Alert>
           ) : null}
         </Form.Group>
         <Button variant="primary" onClick={handleSubmit} {...formProps}>
-          Submit
+          Generate List Of Welfare Recipients
         </Button>
-        <Button
+        {/* <Button
           variant="primary"
           onClick={handleRefresh}
           style={styles.confirmButton}
         >
           Refresh
-        </Button>
+        </Button> */}
       </Form>
       <Table striped bordered hover size="sm">
         <thead>
@@ -187,9 +252,9 @@ const UserTable = ({ event }) => {
       </Table>
       <Button onClick={handleRandomize} {...randomProps}>
         {" "}
-        Randomize{" "}
+        Send Welfare Message To Recipients{" "}
       </Button>
-      {isSelected ? (
+      {/* {isSelected ? (
         <Button
           style={styles.confirmButton}
           onClick={handleSend}
@@ -201,7 +266,7 @@ const UserTable = ({ event }) => {
         <Button style={styles.confirmButton} onClick={handleSelect}>
           Select Highlighted People
         </Button>
-      )}
+      )} */}
 
       <br></br>
       <br></br>

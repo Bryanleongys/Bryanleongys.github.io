@@ -2,6 +2,7 @@ import sqlite3
 from datetime import datetime
 from datetime import date
 import time
+import threading
 
 '''
 CONSTANTS
@@ -9,6 +10,7 @@ CONSTANTS
 
 EVENT_MESSAGE = 7
 USER_NAME = 0
+LOCK = threading.Lock()
 
 class Database:
 
@@ -274,6 +276,19 @@ class Database:
             print(e)
             return e    
 
+    def query_user_choice(self, event_name, item_chosen):
+        try:
+            self.cur.execute("SELECT * FROM events_joined WHERE event_name=? AND item_chosen=?", (event_name, item_chosen,))
+            rows = self.cur.fetchall()
+            arrayString=[]
+            for row in rows:
+                arrayString.append(row)
+            print(arrayString)
+            return arrayString
+        except Exception as e:
+            print(e)
+            return e   
+
     '''
     SQLite queries for events_custom_choices table
     '''
@@ -289,6 +304,7 @@ class Database:
 
     def query_events_choices(self, event_name):
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM events_custom_choices WHERE event_name = (?)", (event_name,))
             rows = self.cur.fetchall()
             arrayString = []
@@ -299,6 +315,8 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
 
     '''
     SQLite queries for user_feedback table
