@@ -132,7 +132,7 @@ class UserShuffle(Resource):
             random.shuffle(users)
             users = users[0:pax]
             for user in users:
-                final_user_array.append(user[1])
+                final_user_array.append(user)
         print(final_user_array)
 
         # Returns the list of users chosen based on the algorithm

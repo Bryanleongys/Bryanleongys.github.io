@@ -5,12 +5,12 @@ import axios from "axios";
 const USER_NAME = 1;
 const TELEGRAM_ID = 2;
 const TELEGRAM_HANDLE = 3;
+const ITEM_CHOSEN = 5;
 
 // Helper function to check if input is a number
 function isNumeric(str) {
-  if (typeof str != "string") return false
-  return !isNaN(str) &&
-         !isNaN(parseFloat(str))
+  if (typeof str != "string") return false;
+  return !isNaN(str) && !isNaN(parseFloat(str));
 }
 
 const UserTable = ({ event }) => {
@@ -32,19 +32,21 @@ const UserTable = ({ event }) => {
   const initialArray = new Array(userArray.length).fill(0);
   const [pax, setPax] = React.useState(null);
   const [shouldHighlight, setShouldHighlight] = React.useState(initialArray);
+  const [randomizeAlert, setRandomizeAlert] = React.useState(false);
   const [sendAlert, setSendAlert] = React.useState(false);
-  const [selectedAlert, setSelectedAlert] = React.useState(false);
-  const [colorChosen, setColorChosen] = React.useState("#52cca2");
-  const [colorRest, setColorRest] = React.useState("#fff");
-  const [isSubmitted, setIsSubmitted] = React.useState(false);
-  const [isSelected, setIsSelected] = React.useState(false);
   const [isSent, setIsSent] = React.useState(false);
   const [choiceArray, setChoiceArray] = React.useState(null);
   const [choicePax, setChoicePax] = React.useState(null);
 
+  // Unused States (might remove)
+  // const [colorChosen, setColorChosen] = React.useState("#52cca2");
+  // const [colorRest, setColorRest] = React.useState("#fff");
+  const [isSubmitted, setIsSubmitted] = React.useState(false);
+  const [isSelected, setIsSelected] = React.useState(false);
+
   const formProps = isSubmitted ? { disabled: true } : {};
   const randomProps = isSelected ? { disabled: true } : {};
-  const sendProps = isSent ? { disabled: true } : {};
+  // const sendProps = isSent ? { disabled: true } : {};
 
   React.useEffect(() => {
     const eventJson = {
@@ -60,85 +62,99 @@ const UserTable = ({ event }) => {
             telegram_id: res.data[i][TELEGRAM_ID],
             name: res.data[i][USER_NAME],
             telegram_handle: res.data[i][TELEGRAM_HANDLE],
+            item_chosen: res.data[i][ITEM_CHOSEN],
           });
         }
-        // setUserArray(arrayUser);
+        setUserArray(arrayUser);
       })
       .catch((error) => console.log(error.response));
-  }, []);
 
-  React.useEffect(() => {
-    if (event[8] === '1') {
+    if (event[8] === "1") {
       const eventJson = {
         eventName: event[0],
       };
       axios
-      .get(`http://127.0.0.1:5000/events/choices`, { params: eventJson })
-      .then((res) => {
-        console.log(res.data)
-        setChoiceArray(res.data);
-        let tempArray = [];
-        res.data.map(choice => {
-          tempArray.push("");
+        .get(`http://127.0.0.1:5000/events/choices`, { params: eventJson })
+        .then((res) => {
+          console.log(res.data);
+          setChoiceArray(res.data);
+          let tempArray = [];
+          res.data.map((choice) => {
+            tempArray.push("");
+          });
+          console.log(tempArray);
+          setChoicePax(tempArray);
         })
-        console.log(tempArray)
-        setChoicePax(tempArray)
-      })
-      .catch((error) => console.log(error.response));
+        .catch((error) => console.log(error.response));
     }
   }, []);
 
   const handleRandomize = () => {
+    var totalPax = 0;
+    choicePax.map((pax, index) => {
+      totalPax += parseInt(pax);
+    });
+    if (totalPax > userArray.length || totalPax == 0) {
+      return setRandomizeAlert(true);
+    }
+    setRandomizeAlert(false);
     let validated = true;
-    choicePax.map(choice => {
+    choicePax.map((choice) => {
       if (isNumeric(choice) === false) {
         validated = false;
       }
-    })
+    });
     if (validated === true) {
       let choiceJson = {
         eventName: event[0],
-        choicePax: choicePax
-      }
+        choicePax: choicePax,
+      };
       axios
-      .get(`http://127.0.0.1:5000/users/shuffle`, { params: choiceJson })
-      .then((res) => {
-        var arraySet = [];
-        for (var i = 0; i < res.data.length; i++) {
-          arraySet.push({
-            telegram_id: res.data[i][TELEGRAM_ID],
-            name: res.data[i][USER_NAME],
-          });
-        }
-        console.log(userArray)
-        
-        setUserArray(arraySet);
-      })
-      .catch((error) => console.log(error.response));
-    }
-  };
+        .get(`http://127.0.0.1:5000/users/shuffle`, { params: choiceJson })
+        .then((res) => {
+          var arraySet = [];
+          for (var i = 0; i < res.data.length; i++) {
+            arraySet.push({
+              telegram_id: res.data[i][TELEGRAM_ID],
+              name: res.data[i][USER_NAME],
+              telegram_handle: res.data[i][TELEGRAM_HANDLE],
+              item_chosen: res.data[i][ITEM_CHOSEN],
+            });
+          }
+          console.log(arraySet);
 
-  const handleSubmit = () => {
-    if (pax > userArray.length || pax == null || pax == 0) {
-      setSendAlert(true);
-      return;
+          // Change shouldHighlight list
+          var i = 0; // counter for userArray
+          var j = 0; // counter for arraySet
+          var array = [];
+          while (i < userArray.length) {
+            console.log("iteration");
+            if (
+              j < arraySet.length &&
+              userArray[i].telegram_id == arraySet[j].telegram_id
+            ) {
+              array.push(1);
+              j++;
+            } else {
+              array.push(0);
+            }
+            i++;
+          }
+          setShouldHighlight(array);
+        })
+        .catch((error) => console.log(error.response));
     }
-    setSendAlert(false);
-    var array = [];
-    for (var i = 0; i < userArray.length; i++) {
-      if (i < pax) {
-        array.push(1);
-      } else {
-        array.push(0);
-      }
-    }
-    // setIsSubmitted(true);
-    setShouldHighlight(array);
-    handleRandomize();
   };
 
   const handleSend = () => {
-    console.log("Send Button Pressed");
+    var totalCondition = 0;
+    shouldHighlight.map((condition, index) => {
+      totalCondition += parseInt(condition);
+    });
+    if (totalCondition == 0) {
+      return setSendAlert(true);
+    }
+    setSendAlert(false);
     for (var i = 0; i < shouldHighlight.length; i++) {
       const eventJson = {
         chat_id: userArray[i].telegram_id,
@@ -149,26 +165,6 @@ const UserTable = ({ event }) => {
       }
     }
     setIsSent(true);
-  };
-
-  const handleSelect = () => {
-    if (pax == 0 || pax == null) {
-      setSelectedAlert(true);
-      return;
-    }
-    setIsSelected(true);
-    setSelectedAlert(false);
-    setColorChosen("#52ffa2");
-    setColorRest("#e1e1e1");
-  };
-
-  const handleRefresh = () => {
-    setShouldHighlight(initialArray);
-    setIsSubmitted(false);
-    setIsSelected(false);
-    setIsSent(false);
-    setColorChosen("#52cca2");
-    setColorRest("#fff");
   };
 
   return (
@@ -189,30 +185,33 @@ const UserTable = ({ event }) => {
               Key in no. of pax to receive giveaway
             </Form.Text>
           </div>
-          {choiceArray !== null ? choiceArray.map ((choice, index) => {
-          return <div>
-            <Form.Label>No. of pax for {choice[2]}</Form.Label>
-            <Form.Control
-              required
-              className="mb-3"
-              defaultValue={choicePax === null ? "" : choicePax[index]}
-              onChange={(e) => {
-                let tempArray = choicePax;
-                tempArray[index] = e.target.value;
-                console.log(tempArray);
-                setChoicePax(tempArray)
-              }}
-              placeholder="e.g. 3"
-              {...formProps}
-            />
-          </div>
-          }) : null
-          }
-          {sendAlert ? (
+          {choiceArray !== null
+            ? choiceArray.map((choice, index) => {
+                return (
+                  <div>
+                    <Form.Label>No. of pax for {choice[2]}</Form.Label>
+                    <Form.Control
+                      required
+                      className="mb-3"
+                      defaultValue={choicePax === null ? "" : choicePax[index]}
+                      onChange={(e) => {
+                        let tempArray = choicePax;
+                        tempArray[index] = e.target.value;
+                        console.log(tempArray);
+                        setChoicePax(tempArray);
+                      }}
+                      placeholder="e.g. 3"
+                      {...formProps}
+                    />
+                  </div>
+                );
+              })
+            : null}
+          {randomizeAlert ? (
             <Alert variant="danger">Please key in a valid input!</Alert>
           ) : null}
         </Form.Group>
-        <Button variant="primary" onClick={handleSubmit} {...formProps}>
+        <Button variant="primary" onClick={handleRandomize} {...formProps}>
           Generate List Of Welfare Recipients
         </Button>
         {/* <Button
@@ -229,6 +228,7 @@ const UserTable = ({ event }) => {
             <th>#</th>
             <th>Names</th>
             <th>Telegram Handle</th>
+            <th>Item Chosen</th>
           </tr>
         </thead>
         <tbody>
@@ -236,21 +236,20 @@ const UserTable = ({ event }) => {
             return (
               <tr
                 style={{
-                  backgroundColor: shouldHighlight[index]
-                    ? colorChosen
-                    : colorRest,
+                  backgroundColor: shouldHighlight[index] ? "#52cca2" : "#fff",
                 }}
                 key={index}
               >
                 <td>{index + 1}</td>
                 <td>{user.name}</td>
                 <td>{user.telegram_handle}</td>
+                <td>{user.item_chosen}</td>
               </tr>
             );
           })}
         </tbody>
       </Table>
-      <Button onClick={handleRandomize} {...randomProps}>
+      <Button onClick={handleSend} {...randomProps}>
         {" "}
         Send Welfare Message To Recipients{" "}
       </Button>
@@ -271,8 +270,8 @@ const UserTable = ({ event }) => {
       <br></br>
       <br></br>
 
-      {selectedAlert ? (
-        <Alert variant="danger">Please key in minimum one pax!</Alert>
+      {sendAlert ? (
+        <Alert variant="danger">No user selected! Please generate list.</Alert>
       ) : null}
     </Container>
   );
