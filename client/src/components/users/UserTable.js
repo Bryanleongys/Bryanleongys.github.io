@@ -67,7 +67,20 @@ const UserTable = ({ event }) => {
         }
         setUserArray(arrayUser);
       })
-      .catch((error) => console.log(error.response));
+      .catch((error) => {
+        if (error.response) {
+          // Request made and server responded
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.log(error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log("Error", error.message);
+        }
+      });
 
     if (event[8] === "1") {
       const eventJson = {
@@ -76,16 +89,27 @@ const UserTable = ({ event }) => {
       axios
         .get(`http://127.0.0.1:5000/events/choices`, { params: eventJson })
         .then((res) => {
-          console.log(res.data);
           setChoiceArray(res.data);
           let tempArray = [];
           res.data.map((choice) => {
             tempArray.push("");
           });
-          console.log(tempArray);
           setChoicePax(tempArray);
         })
-        .catch((error) => console.log(error.response));
+        .catch((error) => {
+          if (error.response) {
+            // Request made and server responded
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          } else if (error.request) {
+            // The request was made but no response was received
+            console.log(error.request);
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log("Error", error.message);
+          }
+        });
     }
   }, []);
 
@@ -121,14 +145,12 @@ const UserTable = ({ event }) => {
               item_chosen: res.data[i][ITEM_CHOSEN],
             });
           }
-          console.log(arraySet);
 
           // Change shouldHighlight list
           var i = 0; // counter for userArray
           var j = 0; // counter for arraySet
           var array = [];
           while (i < userArray.length) {
-            console.log("iteration");
             if (
               j < arraySet.length &&
               userArray[i].telegram_id == arraySet[j].telegram_id
@@ -142,7 +164,20 @@ const UserTable = ({ event }) => {
           }
           setShouldHighlight(array);
         })
-        .catch((error) => console.log(error.response));
+        .catch((error) => {
+          if (error.response) {
+            // Request made and server responded
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          } else if (error.request) {
+            // The request was made but no response was received
+            console.log(error.request);
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log("Error", error.message);
+          }
+        });
     }
   };
 
@@ -197,7 +232,6 @@ const UserTable = ({ event }) => {
                       onChange={(e) => {
                         let tempArray = choicePax;
                         tempArray[index] = e.target.value;
-                        console.log(tempArray);
                         setChoicePax(tempArray);
                       }}
                       placeholder="e.g. 3"

@@ -12,6 +12,7 @@ Initializing Flask and CORS
 '''
 app = Flask(__name__)
 cors = CORS(app, resources={r"*": {"origins": "*"}})
+# cors = CORS(app, resources={r"*": {"origins": "http://localhost:port"}})
 api = Api(app)
 
 '''
@@ -82,7 +83,7 @@ class Events(Resource):
         elif (event_type == "all"):
             events = database.query_all_events()
         print(events)
-        return events
+        return make_response(jsonify(events), 200)
 
     def delete(self):
         print(request.args)
@@ -102,7 +103,7 @@ class Users(Resource):
     def get(self):
         event_name = request.args['eventName']
         users_joined = database.query_event_joined(event_name)
-        return users_joined
+        return make_response(jsonify(users_joined), 200)
     
     def post(self):
         event_json = request.get_json(force=True)
@@ -145,7 +146,7 @@ class Feedbacks(Resource):
             event_feedback = database.query_user_feedback("general")
         else:
             event_feedback = database.query_user_feedback(event_name)
-        return event_feedback
+        return make_response(jsonify(event_feedback), 200)
 
 api.add_resource(HelloWorld, '/')
 api.add_resource(Events, '/events')
