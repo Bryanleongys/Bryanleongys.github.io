@@ -76,7 +76,7 @@ class Events(Resource):
             events = database.query_all_past_events()
         elif (event_type == "current"):
             print("Events are here!!")
-            events = database.query_all_current_events()
+            events = database.query_all_ongoing_events()
         elif (event_type == "future"):
             events = database.query_all_future_events()
         elif (event_type == "all"):

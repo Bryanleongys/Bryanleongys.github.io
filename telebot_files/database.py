@@ -148,7 +148,7 @@ class Database:
             print(e)
             return e
 
-    def query_all_current_events(self):
+    def query_all_sign_up_events(self):
         today = date.today()
         dateToday = time.strptime(today.strftime("%Y/%m/%d"), "%Y/%m/%d")
         try:
@@ -156,12 +156,31 @@ class Database:
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
-                print(row)
                 dateStart = time.strptime(row[2], "%Y/%m/%d")
                 dateEnd = time.strptime(row[3], "%Y/%m/%d")
                 if (dateStart <= dateToday <= dateEnd):
                     arrayString.append(
                         row)
+            print(arrayString)
+            return arrayString
+        except Exception as e:
+            print(e)
+            return e
+
+    def query_all_ongoing_events(self):
+        today = date.today()
+        dateToday = time.strptime(today.strftime("%Y/%m/%d"), "%Y/%m/%d")
+        try:
+            self.cur.execute("SELECT * FROM events WHERE event_type = 'Current Event'")
+            rows = self.cur.fetchall()
+            arrayString = []
+            for row in rows:
+                dateStart = time.strptime(row[2], "%Y/%m/%d")
+                dateEnd = time.strptime(row[4], "%Y/%m/%d")
+                if (dateStart <= dateToday <= dateEnd):
+                    arrayString.append(
+                        row)
+            print(arrayString)
             return arrayString
         except Exception as e:
             print(e)

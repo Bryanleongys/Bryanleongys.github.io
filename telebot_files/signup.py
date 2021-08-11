@@ -56,7 +56,7 @@ def show_current_welfare(update, context, db):
     query = update.callback_query
     chat_id = query.message.chat_id
     message_id = query.message.message_id
-    events = db.query_all_current_events()
+    events = db.query_all_sign_up_events()
     context.user_data["events"] = events
     current_events = []
     for event in events:
