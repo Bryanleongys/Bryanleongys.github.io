@@ -119,23 +119,32 @@ class UserShuffle(Resource):
     def get(self):
         event_name = request.args['eventName']
         choice_pax = request.args.getlist('choicePax[]')
+        total_pax = int(request.args['totalPax'])
         event_choices = database.query_events_choices(event_name)
         print(event_choices)
-        
-        choice_pax = list(map(lambda choice: int(choice), choice_pax))
 
-        final_user_array = []
+        if choice_pax:
+            choice_pax = list(map(lambda choice: int(choice), choice_pax))
 
-        for index in range(len(choice_pax)):
-            pax = choice_pax[index]
-            choice = event_choices[index][2]
-            users = database.query_user_choice(event_name, choice)
+            final_user_array = []
+
+            for index in range(len(choice_pax)):
+                pax = choice_pax[index]
+                choice = event_choices[index][2]
+                users = database.query_user_choice(event_name, choice)
+                random.shuffle(users)
+                users = users[0:pax]
+                for user in users:
+                    final_user_array.append(user)
+        else:
+            final_user_array = []
+            users = database.query_event_joined(event_name)
             random.shuffle(users)
-            users = users[0:pax]
+            users = users[0:total_pax]
             for user in users:
                 final_user_array.append(user)
-        print(final_user_array)
 
+        print(final_user_array)
         # Returns the list of users chosen based on the algorithm
         return make_response(jsonify(final_user_array), 200)
         

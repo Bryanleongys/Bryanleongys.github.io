@@ -15,20 +15,6 @@ function isNumeric(str) {
 }
 
 const UserTable = ({ event }) => {
-  // make query using event name
-  // const userArray = [
-  //   "smulboi",
-  //   "bryanwhl",
-  //   "smulboi",
-  //   "bryanwhl",
-  //   "smulboi",
-  //   "bryanwhl",
-  //   "smulboi",
-  //   "bryanwhl",
-  //   "smulboi",
-  //   "bryanwhl",
-  // ];
-
   const [userArray, setUserArray] = React.useState([]); // array of object
   const initialArray = new Array(userArray.length).fill(0);
   const [pax, setPax] = React.useState(null);
@@ -116,24 +102,37 @@ const UserTable = ({ event }) => {
   }, []);
 
   const handleRandomize = () => {
-    var totalPax = 0;
-    choicePax.map((pax, index) => {
-      totalPax += parseInt(pax);
-    });
-    if (totalPax > userArray.length || totalPax == 0) {
-      return setRandomizeAlert(true);
-    }
-    setRandomizeAlert(false);
     let validated = true;
-    choicePax.map((choice) => {
-      if (isNumeric(choice) === false) {
+    if (isNumeric(pax) === false) {
+      validated = false;
+    }
+    if (choicePax) {
+      var totalPax = 0;
+      choicePax.map((pax, index) => {
+        totalPax += parseInt(pax);
+      });
+      if (totalPax != pax || pax > userArray.length || pax == 0) {
         validated = false;
       }
-    });
-    if (validated === true) {
+      choicePax.map((choice) => {
+        if (isNumeric(choice) === false) {
+          validated = false;
+        }
+      });
+    } else {
+      // if no choices available
+      if (pax > userArray.length || pax == 0) {
+        validated = false;
+      }
+    }
+    if (validated == false) {
+      return setRandomizeAlert(true);
+    } else {
+      setRandomizeAlert(false);
       let choiceJson = {
         eventName: event[0],
         choicePax: choicePax,
+        totalPax: pax,
       };
       axios
         .get(`http://127.0.0.1:5000/users/shuffle`, { params: choiceJson })
@@ -257,7 +256,7 @@ const UserTable = ({ event }) => {
               })
             : null}
           {randomizeAlert ? (
-            <Alert variant="danger">Please key in a valid input!</Alert>
+            <Alert variant="danger">Please key in valid inputs!</Alert>
           ) : null}
         </Form.Group>
         <Button variant="primary" onClick={handleRandomize} {...formProps}>

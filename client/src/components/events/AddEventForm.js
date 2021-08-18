@@ -20,7 +20,6 @@ import { Plus } from "react-bootstrap-icons";
 
 const AddEventForm = () => {
   const [eventName, setEventName] = React.useState(null);
-  // const [eventType, setEventType] = React.useState("Future Event");
   const [startDate, setStartDate] = React.useState(null);
   const [endDate, setEndDate] = React.useState(null);
   const [collectionDate, setCollectionDate] = React.useState(null);
@@ -37,7 +36,6 @@ const AddEventForm = () => {
     const eventJson = {
       requestType: "add_event",
       eventName: eventName,
-      // eventType: eventType,
       startDate: startDate,
       endDate: endDate,
       collectionDate: collectionDate,
