@@ -53,7 +53,7 @@ class Events(Resource):
             number = 1
         event_inserted = database.insert_event(
           event_json['eventName'],
-          event_json['eventType'],
+        #   event_json['eventType'],
           replace_dash_with_slash(event_json['startDate']),
           replace_dash_with_slash(event_json['endDate']),
           replace_dash_with_slash(event_json['collectionDate']),

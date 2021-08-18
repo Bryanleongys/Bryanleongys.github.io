@@ -6,6 +6,7 @@ const USER_NAME = 1;
 const TELEGRAM_ID = 2;
 const TELEGRAM_HANDLE = 3;
 const ITEM_CHOSEN = 5;
+const ITEM_BOOL = 7;
 
 // Helper function to check if input is a number
 function isNumeric(str) {
@@ -82,7 +83,7 @@ const UserTable = ({ event }) => {
         }
       });
 
-    if (event[8] === "1") {
+    if (event[ITEM_BOOL] === "1") {
       const eventJson = {
         eventName: event[0],
       };
@@ -95,6 +96,7 @@ const UserTable = ({ event }) => {
             tempArray.push("");
           });
           setChoicePax(tempArray);
+          console.log(tempArray);
         })
         .catch((error) => {
           if (error.response) {

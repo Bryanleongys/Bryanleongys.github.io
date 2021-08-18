@@ -20,7 +20,7 @@ import { Plus } from "react-bootstrap-icons";
 
 const AddEventForm = () => {
   const [eventName, setEventName] = React.useState(null);
-  const [eventType, setEventType] = React.useState("Future Event");
+  // const [eventType, setEventType] = React.useState("Future Event");
   const [startDate, setStartDate] = React.useState(null);
   const [endDate, setEndDate] = React.useState(null);
   const [collectionDate, setCollectionDate] = React.useState(null);
@@ -37,7 +37,7 @@ const AddEventForm = () => {
     const eventJson = {
       requestType: "add_event",
       eventName: eventName,
-      eventType: eventType,
+      // eventType: eventType,
       startDate: startDate,
       endDate: endDate,
       collectionDate: collectionDate,
@@ -138,7 +138,7 @@ const AddEventForm = () => {
           </Col>
         </Row>
 
-        <Form.Label htmlFor="basic-url">Event Type:</Form.Label>
+        {/* <Form.Label htmlFor="basic-url">Event Type:</Form.Label>
         <InputGroup className="mb-3">
           <DropdownButton
             variant="outline-secondary"
@@ -161,7 +161,7 @@ const AddEventForm = () => {
               </div>
             </Dropdown.Item>
           </DropdownButton>
-        </InputGroup>
+        </InputGroup> */}
 
         <Form.Label htmlFor="basic-url">Event Duration:</Form.Label>
         <InputGroup className="mb-3">
