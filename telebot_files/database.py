@@ -318,6 +318,17 @@ class Database:
             return arrayString
         except Exception as e:
             print(e)
+            return e
+
+    def query_number_user_joined(self, event_name, timing):
+        try:
+            self.cur.execute("SELECT * FROM events_joined WHERE event_name=? AND timing=?", (event_name, timing,))
+            rows = self.cur.fetchall()
+            userNumber = len(rows)
+            print(userNumber)
+            return userNumber
+        except Exception as e:
+            print(e)
             return e   
 
     '''

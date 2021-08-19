@@ -62,8 +62,8 @@ print("==========================")
 print("Expected: 4 events_joined rows printed")
 testDatabase.insert_event_joined("Orientation Welfare", "Bryan Wong Hong Liang",  "1157634501", "bryanwhl","16:00", "")
 testDatabase.insert_event_joined("Orientation Welfare", "Bryan Leong Yong Sheng",  "1157634500", "bryanlys","16:00", "")
-testDatabase.insert_event_joined("Sem 2 Welfare", "Bryan Wong Hong Liang",  "1157634501", "bryanwhl","16:00", "75%")
-testDatabase.insert_event_joined("Sem 2 Welfare", "Bryan Leong Yong Sheng","1157634500", "bryanlys", "16:00", "25%")
+testDatabase.insert_event_joined("Sem 2 Welfare", "Bryan Wong Hong Liang",  "1157634501", "bryanwhl","12:30", "75%")
+testDatabase.insert_event_joined("Sem 2 Welfare", "Bryan Leong Yong Sheng","1157634500", "bryanlys", "12:30", "25%")
 testDatabase.insert_event_joined("Recess Week Welfare", "Bryan Wong Hong Liang", "1157634501", "bryanwhl", "16:00", "")
 testDatabase.insert_event_joined("Recess Week Welfare", "Bryan Leong Yong Sheng", "1157634500", "bryanlys", "16:00", "")
 testDatabase.insert_event_joined("Recess Week Welfare", "Bryan Leong Yong Sheng", "1157634500", "bryanlys", "17:00", "") ## this should be printed
@@ -85,6 +85,9 @@ print("==========================")
 # Ensuring query_event_joined query work
 print("Expected: 2 events_joined rows printed")
 testDatabase.query_event_joined("Sem 2 Welfare")
+print("==========================")
+print("Expected: 2 printed")
+testDatabase.query_number_user_joined("Sem 2 Welfare", "16:00")
 print("==========================")
 
 # Ensuring events_custom_choices work
