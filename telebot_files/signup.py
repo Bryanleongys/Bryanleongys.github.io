@@ -8,13 +8,12 @@ Defining constants
 '''
 
 EVENT_NAME = 0
-EVENT_TYPE = 1
-START_SIGNUP = 2
-END_SIGNUP = 3
-END_DATE = 4
-START_TIME = 5
-END_TIME = 6
-ITEM_BOOL = 8
+START_SIGNUP = 1
+END_SIGNUP = 2
+END_DATE = 3
+START_TIME = 4
+END_TIME = 5
+ITEM_BOOL = 7
 
 def prompt_welfare(update, context):
     query = update.callback_query
@@ -56,7 +55,7 @@ def show_current_welfare(update, context, db):
     query = update.callback_query
     chat_id = query.message.chat_id
     message_id = query.message.message_id
-    events = db.query_all_current_events()
+    events = db.query_all_sign_up_events()
     context.user_data["events"] = events
     current_events = []
     for event in events:
@@ -72,7 +71,7 @@ def show_current_welfare(update, context, db):
     return 1
 
 
-def show_timings(update, context):
+def show_timings(update, context, db):
     query = update.callback_query
     if (query.data == "return_back"):
         index = context.user_data["index"]
@@ -95,7 +94,7 @@ def show_timings(update, context):
         chat_id=chat_id,
         message_id=message_id,
         text=text,
-        reply_markup=keyboards.timings_keyboard(timings)
+        reply_markup=keyboards.timings_keyboard(timings, db, events[index][EVENT_NAME])
     )
     # print(items_bool_array[index] == '1')
     if ( events[index][ITEM_BOOL] == '1'):

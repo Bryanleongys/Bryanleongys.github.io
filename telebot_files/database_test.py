@@ -19,20 +19,34 @@ testDatabase.query_user_name("1157634501")
 print("==========================")
 
 # Ensuring events table queries work
-testDatabase.insert_event("Sem 2 Welfare", "Current Event", "2021/08/03", "2021/08/20", "2021/08/03", '12:30', '13:30', "You have been selected!", 1)
-testDatabase.insert_event("Holiday Welfare", "Past Event", "2021/08/03", "2021/08/03", "2021/08/03", '15:30', '18:00', "You have been selected!",0)
-testDatabase.insert_event("Random Welfare", "Past Event", "2021/08/03", "2021/08/03", "2021/08/03", '15:30', '18:00', "You have been selected!",0)
-testDatabase.insert_event("Orientation Welfare", "Future Event", "2021/08/10", "2021/08/10", "2021/08/03", '15:30', '18:00', "You have been selected!",0)
-testDatabase.insert_event("Recess Week Welfare", "Current Event", "2021/08/03", "2021/08/20", "2021/08/03", '15:30', '18:00', "You have been selected!",0)
-testDatabase.insert_event("Finals Week Welfare", "Future Event", "2021/08/10", "2021/08/10", "2021/08/03", '15:30', '18:00', "You have been selected!",0)
+## Past Welfare
+testDatabase.insert_event("Holiday Welfare", "2021/08/03", "2021/08/04", "2021/08/16", '15:30', '18:00', "You have been selected!",0)
+testDatabase.insert_event("Random Welfare", "2021/08/03", "2021/08/03", "2021/08/03", '15:30', '18:00', "You have been selected!",0)
+
+## Ongoing Welfare (but signups over)
+testDatabase.insert_event("Hello Welfare", "2021/08/10", "2021/08/10", "2021/08/21", '15:30', '18:00', "You have been selected!",0)
+testDatabase.insert_event("Giveaway Welfare", "2021/08/10", "2021/08/15", "2021/08/21", '15:30', '18:00', "You have been selected!",0)
+
+## Sign up Welfare
+testDatabase.insert_event("Sem 2 Welfare", "2021/08/03", "2021/08/20", "2021/08/21", '12:30', '13:30', "You have been selected!", 1)
+testDatabase.insert_event("Recess Week Welfare", "2021/08/03", "2021/08/20", "2021/08/25", '15:30', '18:00', "You have been selected!",0)
+
+## Future Welfare
+testDatabase.insert_event("Orientation Welfare", "2021/09/10", "2021/09/10", "2021/09/03", '15:30', '18:00', "You have been selected!",0)
+testDatabase.insert_event("BBT Welfare", "2021/09/10", "2021/09/10", "2021/09/03", '15:30', '18:00', "You have been selected!",0)
+
+testDatabase.insert_event("Final Week Welfare", "2021/08/10", "2021/08/16", "2021/08/21", '15:30', '18:00', "You have been selected!",0)
 
 testDatabase.delete_event("Final Week Welfare")
 testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level would you like?", "25%")
 testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level would you like?", "50%")
 testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level would you like?", "75%")
 testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level would you like?", "100%")
-print("Expected: 2 current events rows printed")
-testDatabase.query_all_current_events()
+print("Expected: 4 ongoing events rows printed")
+testDatabase.query_all_ongoing_events()
+print("==========================")
+print("Expected: 2 events able to sign up rows printed")
+testDatabase.query_all_sign_up_events()
 print("==========================")
 print("Expected: 2 future events rows printed")
 testDatabase.query_all_future_events()
@@ -48,8 +62,8 @@ print("==========================")
 print("Expected: 4 events_joined rows printed")
 testDatabase.insert_event_joined("Orientation Welfare", "Bryan Wong Hong Liang",  "1157634501", "bryanwhl","16:00", "")
 testDatabase.insert_event_joined("Orientation Welfare", "Bryan Leong Yong Sheng",  "1157634500", "bryanlys","16:00", "")
-testDatabase.insert_event_joined("Sem 2 Welfare", "Bryan Wong Hong Liang",  "1157634501", "bryanwhl","16:00", "75%")
-testDatabase.insert_event_joined("Sem 2 Welfare", "Bryan Leong Yong Sheng","1157634500", "bryanlys", "16:00", "25%")
+testDatabase.insert_event_joined("Sem 2 Welfare", "Bryan Wong Hong Liang",  "1157634501", "bryanwhl","12:30", "75%")
+testDatabase.insert_event_joined("Sem 2 Welfare", "Bryan Leong Yong Sheng","1157634500", "bryanlys", "12:30", "25%")
 testDatabase.insert_event_joined("Recess Week Welfare", "Bryan Wong Hong Liang", "1157634501", "bryanwhl", "16:00", "")
 testDatabase.insert_event_joined("Recess Week Welfare", "Bryan Leong Yong Sheng", "1157634500", "bryanlys", "16:00", "")
 testDatabase.insert_event_joined("Recess Week Welfare", "Bryan Leong Yong Sheng", "1157634500", "bryanlys", "17:00", "") ## this should be printed
@@ -71,6 +85,9 @@ print("==========================")
 # Ensuring query_event_joined query work
 print("Expected: 2 events_joined rows printed")
 testDatabase.query_event_joined("Sem 2 Welfare")
+print("==========================")
+print("Expected: 2 printed")
+testDatabase.query_number_user_joined("Sem 2 Welfare", "16:00")
 print("==========================")
 
 # Ensuring events_custom_choices work

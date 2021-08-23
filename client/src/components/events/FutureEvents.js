@@ -5,6 +5,15 @@ import { Plus, PlusSquare } from "react-bootstrap-icons";
 import axios from "axios";
 import EditEvent from "./EditEvent";
 
+const EVENT_NAME = 0;
+const START_DATE = 1;
+const END_DATE = 2;
+const COLLECTION_DATE = 3;
+const START_TIME = 4;
+const END_TIME = 5;
+const MESSAGE = 6;
+const ITEM_BOOL = 7;
+
 const FutureEvents = () => {
   let match = useRouteMatch();
   const [arrayObject, setArrayObject] = React.useState([]);
@@ -19,12 +28,12 @@ const FutureEvents = () => {
         var initialArray = [];
         for (var i = 0; i < res.data.length; i++) {
           var object = {
-            name: res.data[i][0],
-            startDate: res.data[i][2],
-            endDate: res.data[i][3],
-            eventDate: res.data[i][4],
-            startTime: res.data[i][5],
-            endTime: res.data[i][6],
+            name: res.data[i][EVENT_NAME],
+            startDate: res.data[i][START_DATE],
+            endDate: res.data[i][END_DATE],
+            eventDate: res.data[i][COLLECTION_DATE],
+            startTime: res.data[i][START_TIME],
+            endTime: res.data[i][END_TIME],
           };
           initialArray.push(object);
         }

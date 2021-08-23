@@ -8,8 +8,11 @@ import threading
 CONSTANTS
 '''
 
-EVENT_MESSAGE = 7
+EVENT_MESSAGE = 6
 USER_NAME = 0
+START_DATE = 1
+END_DATE = 2
+COLLECTION_DATE = 3
 LOCK = threading.Lock()
 
 class Database:
@@ -36,7 +39,7 @@ class Database:
     def create_tables(self):
         try:
             self.cur.execute(
-                '''CREATE TABLE events(name text, event_type text, start_date text, end_date text, collection_date text, start_time text, end_time text, message text, item_bool text)''')
+                '''CREATE TABLE events(name text, start_date text, end_date text, collection_date text, start_time text, end_time text, message text, item_bool text)''')
             self.cur.execute(
                 '''CREATE TABLE users(username text, nusnet_id text, house text, telegram_id text)''')
             self.cur.execute(
@@ -89,8 +92,11 @@ class Database:
         try:
             self.cur.execute("SELECT * FROM users")
             rows = self.cur.fetchall()
+            arrayString = []
             for row in rows:
-                print(row)
+                arrayString.append(row)
+            print(arrayString)
+            return arrayString
         except Exception as e:
             print(e)
             return e
@@ -112,15 +118,15 @@ class Database:
     SQLite queries for events table
     '''
 
-    def insert_event(self, name, event_type, start_date, end_date, collection_date, start_time, end_time, message, item_bool):
+    def insert_event(self, name, start_date, end_date, collection_date, start_time, end_time, message, item_bool):
         try:
             ## if event name exists, do not insert
             self.cur.execute("SELECT * FROM events WHERE name=?",(name,))
             if (len(self.cur.fetchall())):
                 return False
 
-            self.cur.execute("INSERT INTO events(name, event_type, start_date, end_date, collection_date, start_time, end_time, message, item_bool) values (?,?,?,?,?,?,?,?,?)",
-                             (name, event_type, start_date, end_date, collection_date, start_time, end_time, message, item_bool))
+            self.cur.execute("INSERT INTO events(name, start_date, end_date, collection_date, start_time, end_time, message, item_bool) values (?,?,?,?,?,?,?,?)",
+                             (name, start_date, end_date, collection_date, start_time, end_time, message, item_bool))
             self.con.commit()
             return True
         except Exception as e:
@@ -141,27 +147,46 @@ class Database:
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
-                print(row)
                 arrayString.append(row)
+            print(arrayString)
             return arrayString
         except Exception as e:
             print(e)
             return e
 
-    def query_all_current_events(self):
+    def query_all_sign_up_events(self):
         today = date.today()
         dateToday = time.strptime(today.strftime("%Y/%m/%d"), "%Y/%m/%d")
         try:
-            self.cur.execute("SELECT * FROM events WHERE event_type = 'Current Event'")
+            self.cur.execute("SELECT * FROM events")
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
-                print(row)
-                dateStart = time.strptime(row[2], "%Y/%m/%d")
-                dateEnd = time.strptime(row[3], "%Y/%m/%d")
+                dateStart = time.strptime(row[START_DATE], "%Y/%m/%d")
+                dateEnd = time.strptime(row[END_DATE], "%Y/%m/%d")
                 if (dateStart <= dateToday <= dateEnd):
                     arrayString.append(
                         row)
+            print(arrayString)
+            return arrayString
+        except Exception as e:
+            print(e)
+            return e
+
+    def query_all_ongoing_events(self):
+        today = date.today()
+        dateToday = time.strptime(today.strftime("%Y/%m/%d"), "%Y/%m/%d")
+        try:
+            self.cur.execute("SELECT * FROM events")
+            rows = self.cur.fetchall()
+            arrayString = []
+            for row in rows:
+                dateStart = time.strptime(row[START_DATE], "%Y/%m/%d")
+                dateEnd = time.strptime(row[COLLECTION_DATE], "%Y/%m/%d")
+                if (dateStart <= dateToday <= dateEnd):
+                    arrayString.append(
+                        row)
+            print(arrayString)
             return arrayString
         except Exception as e:
             print(e)
@@ -171,14 +196,14 @@ class Database:
         today = date.today()
         dateToday = time.strptime(today.strftime("%Y/%m/%d"), "%Y/%m/%d")
         try:
-            self.cur.execute("SELECT * FROM events WHERE event_type = 'Future Event'")
+            self.cur.execute("SELECT * FROM events")
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
-                print(row)
-                dateStart = time.strptime(row[2], "%Y/%m/%d")
+                dateStart = time.strptime(row[START_DATE], "%Y/%m/%d")
                 if (dateToday < dateStart):
                     arrayString.append(row)
+            print(arrayString)
             return arrayString
         except Exception as e:
             print(e)
@@ -188,14 +213,14 @@ class Database:
         today = date.today()
         dateToday = time.strptime(today.strftime("%Y/%m/%d"), "%Y/%m/%d")
         try:
-            self.cur.execute("SELECT * FROM events WHERE event_type = 'Past Event'")
+            self.cur.execute("SELECT * FROM events")
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
-                print(row)
-                dateEnd = time.strptime(row[3], "%Y/%m/%d")
+                dateEnd = time.strptime(row[COLLECTION_DATE], "%Y/%m/%d")
                 if (dateEnd < dateToday):
                     arrayString.append(row)
+            print(arrayString)
             return arrayString
         except Exception as e:
             print(e)
@@ -257,24 +282,30 @@ class Database:
         try:
             self.cur.execute("SELECT * FROM events_joined")
             rows = self.cur.fetchall()
+            arrayString = []
             for row in rows:
-                print(row)
+                arrayString.append(row)
+            print(arrayString)
+            return arrayString
         except Exception as e:
             print(e)
             return e
     
     def query_event_joined(self, event_name):
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM events_joined WHERE event_name=?", (event_name,))
             rows = self.cur.fetchall()
             arrayString=[]
             for row in rows:
                 arrayString.append(row)
-                print(row)
+            print(arrayString)
             return arrayString
         except Exception as e:
             print(e)
-            return e    
+            return e   
+        finally:
+            LOCK.release() 
 
     def query_user_choice(self, event_name, item_chosen):
         try:
@@ -285,6 +316,17 @@ class Database:
                 arrayString.append(row)
             print(arrayString)
             return arrayString
+        except Exception as e:
+            print(e)
+            return e
+
+    def query_number_user_joined(self, event_name, timing):
+        try:
+            self.cur.execute("SELECT * FROM events_joined WHERE event_name=? AND timing=?", (event_name, timing,))
+            rows = self.cur.fetchall()
+            userNumber = len(rows)
+            print(userNumber)
+            return userNumber
         except Exception as e:
             print(e)
             return e   

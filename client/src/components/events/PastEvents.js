@@ -4,6 +4,15 @@ import { Switch, Route, Link, useRouteMatch } from "react-router-dom";
 import axios from "axios";
 import EditEvent from "./EditEvent";
 
+const EVENT_NAME = 0;
+const START_DATE = 1;
+const END_DATE = 2;
+const COLLECTION_DATE = 3;
+const START_TIME = 4;
+const END_TIME = 5;
+const MESSAGE = 6;
+const ITEM_BOOL = 7;
+
 const PastEvents = () => {
   let match = useRouteMatch();
   const [arrayObject, setArrayObject] = React.useState([]);
@@ -19,8 +28,8 @@ const PastEvents = () => {
         var initialArray = [];
         for (var i = 0; i < res.data.length; i++) {
           var object = {
-            name: res.data[i][0],
-            eventDate: res.data[i][4],
+            name: res.data[i][EVENT_NAME],
+            eventDate: res.data[i][COLLECTION_DATE],
           };
           initialArray.push(object);
         }

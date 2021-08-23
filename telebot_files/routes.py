@@ -12,6 +12,7 @@ Initializing Flask and CORS
 '''
 app = Flask(__name__)
 cors = CORS(app, resources={r"*": {"origins": "*"}})
+# cors = CORS(app, resources={r"*": {"origins": "http://localhost:port"}})
 api = Api(app)
 
 '''
@@ -52,7 +53,7 @@ class Events(Resource):
             number = 1
         event_inserted = database.insert_event(
           event_json['eventName'],
-          event_json['eventType'],
+        #   event_json['eventType'],
           replace_dash_with_slash(event_json['startDate']),
           replace_dash_with_slash(event_json['endDate']),
           replace_dash_with_slash(event_json['collectionDate']),
@@ -76,13 +77,13 @@ class Events(Resource):
             events = database.query_all_past_events()
         elif (event_type == "current"):
             print("Events are here!!")
-            events = database.query_all_current_events()
+            events = database.query_all_ongoing_events()
         elif (event_type == "future"):
             events = database.query_all_future_events()
         elif (event_type == "all"):
             events = database.query_all_events()
         print(events)
-        return events
+        return make_response(jsonify(events), 200)
 
     def delete(self):
         print(request.args)
@@ -102,7 +103,7 @@ class Users(Resource):
     def get(self):
         event_name = request.args['eventName']
         users_joined = database.query_event_joined(event_name)
-        return users_joined
+        return make_response(jsonify(users_joined), 200)
     
     def post(self):
         event_json = request.get_json(force=True)
@@ -118,23 +119,32 @@ class UserShuffle(Resource):
     def get(self):
         event_name = request.args['eventName']
         choice_pax = request.args.getlist('choicePax[]')
+        total_pax = int(request.args['totalPax'])
         event_choices = database.query_events_choices(event_name)
         print(event_choices)
-        
-        choice_pax = list(map(lambda choice: int(choice), choice_pax))
 
-        final_user_array = []
+        if choice_pax:
+            choice_pax = list(map(lambda choice: int(choice), choice_pax))
 
-        for index in range(len(choice_pax)):
-            pax = choice_pax[index]
-            choice = event_choices[index][2]
-            users = database.query_user_choice(event_name, choice)
+            final_user_array = []
+
+            for index in range(len(choice_pax)):
+                pax = choice_pax[index]
+                choice = event_choices[index][2]
+                users = database.query_user_choice(event_name, choice)
+                random.shuffle(users)
+                users = users[0:pax]
+                for user in users:
+                    final_user_array.append(user)
+        else:
+            final_user_array = []
+            users = database.query_event_joined(event_name)
             random.shuffle(users)
-            users = users[0:pax]
+            users = users[0:total_pax]
             for user in users:
-                final_user_array.append(user[1])
-        print(final_user_array)
+                final_user_array.append(user)
 
+        print(final_user_array)
         # Returns the list of users chosen based on the algorithm
         return make_response(jsonify(final_user_array), 200)
         
@@ -145,7 +155,7 @@ class Feedbacks(Resource):
             event_feedback = database.query_user_feedback("general")
         else:
             event_feedback = database.query_user_feedback(event_name)
-        return event_feedback
+        return make_response(jsonify(event_feedback), 200)
 
 api.add_resource(HelloWorld, '/')
 api.add_resource(Events, '/events')

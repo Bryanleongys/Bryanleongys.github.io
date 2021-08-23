@@ -75,13 +75,13 @@ def main():
         entry_points=[CallbackQueryHandler(partial(
             signup.show_current_welfare, db=db), pattern="current_welfare")],
         states={
-            1: [CallbackQueryHandler(partial(signup.show_timings), pattern="current")],
+            1: [CallbackQueryHandler(partial(signup.show_timings, db=db), pattern="current")],
             2: [CallbackQueryHandler(partial(signup.show_item_events, db=db), pattern="timing")],
             3: [CallbackQueryHandler(partial(signup.confirm_timing, db=db), pattern="timing")]
         },
         fallbacks=[CallbackQueryHandler(
             signup.prompt_welfare, pattern="return_prompt"), CallbackQueryHandler(
-            partial(signup.show_timings), pattern="return_back"), CallbackQueryHandler(
+            partial(signup.show_timings, db=db), pattern="return_back"), CallbackQueryHandler(
             partial(
                 signup.show_current_welfare, db=db), pattern="return_current")],
         per_user=False

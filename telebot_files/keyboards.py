@@ -93,12 +93,24 @@ def future_events_keyboard(events_array):
     return InlineKeyboardMarkup(keyboard)
 
 
-def timings_keyboard(timings):
+def timings_keyboard(timings, db, event_name):
     # 15 min time interval default
     ## timings: [mintime, maxtime]
     keyboard = []
     mintime = int(timings[0][:2] + timings[0][3:])
     maxtime = int(timings[1][:2] + timings[1][3:])
+    no_slots = 0
+    while mintime < maxtime:
+        if (mintime % 100 == 60):
+            mintime += 40
+        if (mintime == maxtime):
+            break
+        mintime += 15
+        no_slots += 1
+
+    mintime = int(timings[0][:2] + timings[0][3:])
+    maxtime = int(timings[1][:2] + timings[1][3:])
+    slot_pax = 500 / no_slots
     while mintime < maxtime:
         array = []
         # convert all 60 to 00hrs
@@ -108,8 +120,12 @@ def timings_keyboard(timings):
             break
 
         while (mintime % 100 != 60):
-            array.append(InlineKeyboardButton(
-                str(mintime), callback_data="timing" + str(mintime)))
+            edit_mintime = str(mintime)
+            edit_mintime = edit_mintime[:2] + ":" + edit_mintime[2:]
+            user_pax = db.query_number_user_joined(event_name, edit_mintime)
+            if (user_pax <= slot_pax):
+                array.append(InlineKeyboardButton(
+                    str(mintime), callback_data="timing" + str(mintime)))
             mintime += 15
 
         keyboard.append(array)
