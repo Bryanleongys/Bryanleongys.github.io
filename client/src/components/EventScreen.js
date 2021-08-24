@@ -14,6 +14,7 @@ import { Plus, PlusSquare } from "react-bootstrap-icons";
 import EditEvent from "./events/EditEvent";
 import UserTable from "./users/UserTable";
 import axios from "axios";
+import baseURL from "../common/Constants";
 
 const EventScreen = () => {
   let match = useRouteMatch();
@@ -34,27 +35,23 @@ const EventScreen = () => {
       eventType: "current",
     };
 
-    axios
-      .get(`http://127.0.0.1:5000/events`, { params: all_events })
-      .then((res) => {
-        var initialArray = [];
-        for (var i = 0; i < res.data.length; i++) {
-          initialArray.push(res.data[i][0]);
-        }
-        setAllEvents(initialArray);
-      });
-    axios
-      .get(`http://127.0.0.1:5000/events`, { params: current_events })
-      .then((res) => {
-        console.log(res.data)
-        setCurrentEvents(res.data)
-        // var initialArray = [];
-        // for (var i = 0; i < res.data.length; i++) {
-        //   initialArray.push(res.data[i][0]);
-        // }
-        // console.log(initialArray)
-        // setCurrentEvents(initialArray);
-      });
+    axios.get(`${baseURL}events`, { params: all_events }).then((res) => {
+      var initialArray = [];
+      for (var i = 0; i < res.data.length; i++) {
+        initialArray.push(res.data[i][0]);
+      }
+      setAllEvents(initialArray);
+    });
+    axios.get(`${baseURL}events`, { params: current_events }).then((res) => {
+      console.log(res.data);
+      setCurrentEvents(res.data);
+      // var initialArray = [];
+      // for (var i = 0; i < res.data.length; i++) {
+      //   initialArray.push(res.data[i][0]);
+      // }
+      // console.log(initialArray)
+      // setCurrentEvents(initialArray);
+    });
   }, []);
 
   return (
@@ -104,7 +101,7 @@ const EventScreen = () => {
             );
           })}
           {currentEvents.map((event, index) => {
-            const eventName = event[0]
+            const eventName = event[0];
             return (
               <Route key={index} path={`${match.url}/users-${eventName}`}>
                 <UserTable event={event} />

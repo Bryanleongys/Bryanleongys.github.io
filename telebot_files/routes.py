@@ -158,11 +158,11 @@ class Feedbacks(Resource):
         return make_response(jsonify(event_feedback), 200)
 
 api.add_resource(HelloWorld, '/')
-api.add_resource(Events, '/events')
-api.add_resource(EventChoices, '/events/choices')
-api.add_resource(Users, '/users')
-api.add_resource(UserShuffle, '/users/shuffle')
-api.add_resource(Feedbacks, '/feedbacks')
+api.add_resource(Events, '/api/events')
+api.add_resource(EventChoices, '/api/events/choices')
+api.add_resource(Users, '/api/users')
+api.add_resource(UserShuffle, '/api/users/shuffle')
+api.add_resource(Feedbacks, '/api/feedbacks')
 
 if __name__ == '__main__':
     app.run(debug=True)

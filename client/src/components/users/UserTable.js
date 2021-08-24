@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Table, Button, Form, Alert, Card } from "react-bootstrap";
 import axios from "axios";
+import baseURL from "../../common/Constants";
 
 const USER_NAME = 1;
 const TELEGRAM_ID = 2;
@@ -41,7 +42,7 @@ const UserTable = ({ event }) => {
     };
 
     axios
-      .get(`http://127.0.0.1:5000/users`, { params: eventJson })
+      .get(`${baseURL}users`, { params: eventJson })
       .then((res) => {
         var arrayUser = [];
         for (var i = 0; i < res.data.length; i++) {
@@ -74,7 +75,7 @@ const UserTable = ({ event }) => {
         eventName: event[0],
       };
       axios
-        .get(`http://127.0.0.1:5000/events/choices`, { params: eventJson })
+        .get(`${baseURL}events/choices`, { params: eventJson })
         .then((res) => {
           setChoiceArray(res.data);
           let tempArray = [];
@@ -135,7 +136,7 @@ const UserTable = ({ event }) => {
         totalPax: pax,
       };
       axios
-        .get(`http://127.0.0.1:5000/users/shuffle`, { params: choiceJson })
+        .get(`${baseURL}users/shuffle`, { params: choiceJson })
         .then((res) => {
           var arraySet = [];
           for (var i = 0; i < res.data.length; i++) {
@@ -210,7 +211,7 @@ const UserTable = ({ event }) => {
         event: event[0],
       };
       if (shouldHighlight[i]) {
-        axios.post(`http://127.0.0.1:5000/users`, eventJson);
+        axios.post(`${baseURL}users`, eventJson);
       }
     }
     setIsSent(true);

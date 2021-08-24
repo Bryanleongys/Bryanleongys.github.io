@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Dropdown, Table } from "react-bootstrap";
 import axios from "axios";
+import baseURL from "../../common/Constants";
 
 // Constants
 const EVENT_NAME = 0;
@@ -17,33 +18,31 @@ const EventFeedback = () => {
       eventType: "past",
     };
 
-    axios
-      .get(`http://127.0.0.1:5000/events`, { params: eventType })
-      .then((res) => {
-        const eventArray = [];
-        for (var i = 0; i < res.data.length; i++) {
-          eventArray.push(res.data[i][EVENT_NAME]);
-        }
-        setEvents(eventArray);
-        setDropdownItem(eventArray[0]); // first option
-        const eventName = {
-          eventName: eventArray[0],
-        };
+    axios.get(`${baseURL}events`, { params: eventType }).then((res) => {
+      const eventArray = [];
+      for (var i = 0; i < res.data.length; i++) {
+        eventArray.push(res.data[i][EVENT_NAME]);
+      }
+      setEvents(eventArray);
+      setDropdownItem(eventArray[0]); // first option
+      const eventName = {
+        eventName: eventArray[0],
+      };
 
-        axios
-          .get(`http://127.0.0.1:5000/feedbacks`, { params: eventName })
-          .then((res) => {
-            const feedbackArray = [];
-            for (var i = 0; i < res.data.length; i++) {
-              feedbackArray.push({
-                name: res.data[i][USER_NAME],
-                message: res.data[i][FEEDBACK_MESSAGE],
-              });
-            }
-            setFeedbacks(feedbackArray);
-          })
-          .catch((error) => console.log(error.response));
-      });
+      axios
+        .get(`${baseURL}feedbacks`, { params: eventName })
+        .then((res) => {
+          const feedbackArray = [];
+          for (var i = 0; i < res.data.length; i++) {
+            feedbackArray.push({
+              name: res.data[i][USER_NAME],
+              message: res.data[i][FEEDBACK_MESSAGE],
+            });
+          }
+          setFeedbacks(feedbackArray);
+        })
+        .catch((error) => console.log(error.response));
+    });
   }, []);
 
   const handlePress = (event) => {
@@ -52,7 +51,7 @@ const EventFeedback = () => {
     };
 
     axios
-      .get(`http://127.0.0.1:5000/feedbacks`, { params: eventName })
+      .get(`${baseURL}feedbacks`, { params: eventName })
       .then((res) => {
         const feedbackArray = [];
         for (var i = 0; i < res.data.length; i++) {
