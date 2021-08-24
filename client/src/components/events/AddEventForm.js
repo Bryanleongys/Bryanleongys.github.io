@@ -18,6 +18,8 @@ import {
 import axios from "axios";
 import { Plus } from "react-bootstrap-icons";
 
+import baseURL from "../../common/Constants";
+
 const AddEventForm = () => {
   const [eventName, setEventName] = React.useState(null);
   const [startDate, setStartDate] = React.useState(null);
@@ -47,7 +49,7 @@ const AddEventForm = () => {
     };
 
     axios
-      .post(`http://127.0.0.1:5000/events`, eventJson)
+      .post(`${baseURL}events`, eventJson)
       .then((res) => {
         console.log(res);
         console.log(res.data);
@@ -78,7 +80,7 @@ const AddEventForm = () => {
     };
 
     axios
-      .post(`http://127.0.0.1:5000/events`, eventJson)
+      .post(`${baseURL}events`, eventJson)
       .then((res) => {
         if (!res.data) {
           setSubmitType("submit");

@@ -4,6 +4,8 @@ import { Switch, Route, Link, useRouteMatch } from "react-router-dom";
 import axios from "axios";
 import EditEvent from "./EditEvent";
 
+import baseURL from "../../common/Constants";
+
 const EVENT_NAME = 0;
 const START_DATE = 1;
 const END_DATE = 2;
@@ -23,7 +25,7 @@ const CurrentEvents = () => {
     };
 
     axios
-      .get(`http://127.0.0.1:5000/events`, { params: event_type })
+      .get(`${baseURL}events`, { params: event_type })
       .then((res) => {
         var initialArray = [];
         for (var i = 0; i < res.data.length; i++) {
@@ -55,7 +57,7 @@ const CurrentEvents = () => {
     console.log(eventJson);
 
     axios
-      .delete(`http://127.0.0.1:5000/events`, { data: eventJson })
+      .delete(`${baseURL}events`, { data: eventJson })
       .then((res) => console.log(res))
       .catch((error) => {
         if (error.request) {

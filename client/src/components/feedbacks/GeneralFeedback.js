@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Dropdown, Table } from "react-bootstrap";
 import axios from "axios";
+import baseURL from "../../common/Constants";
 
 const EVENT_NAME = 0;
 const USER_NAME = 1;
@@ -19,7 +20,7 @@ const GeneralFeedback = () => {
     };
 
     axios
-      .get(`http://127.0.0.1:5000/feedbacks`, { params: eventName })
+      .get(`${baseURL}feedbacks`, { params: eventName })
       .then((res) => {
         const feedbackArray = [];
         for (var i = 0; i < res.data.length; i++) {

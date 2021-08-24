@@ -5,6 +5,8 @@ import { Plus, PlusSquare } from "react-bootstrap-icons";
 import axios from "axios";
 import EditEvent from "./EditEvent";
 
+import baseURL from "../../common/Constants";
+
 const EVENT_NAME = 0;
 const START_DATE = 1;
 const END_DATE = 2;
@@ -22,23 +24,21 @@ const FutureEvents = () => {
     const event_type = {
       eventType: "future",
     };
-    axios
-      .get(`http://127.0.0.1:5000/events`, { params: event_type })
-      .then((res) => {
-        var initialArray = [];
-        for (var i = 0; i < res.data.length; i++) {
-          var object = {
-            name: res.data[i][EVENT_NAME],
-            startDate: res.data[i][START_DATE],
-            endDate: res.data[i][END_DATE],
-            eventDate: res.data[i][COLLECTION_DATE],
-            startTime: res.data[i][START_TIME],
-            endTime: res.data[i][END_TIME],
-          };
-          initialArray.push(object);
-        }
-        setArrayObject(initialArray);
-      });
+    axios.get(`${baseURL}events`, { params: event_type }).then((res) => {
+      var initialArray = [];
+      for (var i = 0; i < res.data.length; i++) {
+        var object = {
+          name: res.data[i][EVENT_NAME],
+          startDate: res.data[i][START_DATE],
+          endDate: res.data[i][END_DATE],
+          eventDate: res.data[i][COLLECTION_DATE],
+          startTime: res.data[i][START_TIME],
+          endTime: res.data[i][END_TIME],
+        };
+        initialArray.push(object);
+      }
+      setArrayObject(initialArray);
+    });
   }, []);
 
   // React.useEffect(() => {
@@ -60,7 +60,7 @@ const FutureEvents = () => {
     console.log(eventJson);
 
     axios
-      .delete(`http://127.0.0.1:5000/events`, { data: eventJson })
+      .delete(`${baseURL}events`, { data: eventJson })
       .then((res) => console.log(res))
       .catch((error) => {
         if (error.request) {
