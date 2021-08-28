@@ -123,6 +123,10 @@ def main():
         )
     )
 
+    # Settings
+    dp.add_handler(CallbackQueryHandler(partial(
+        settings.get_account_details, db=db), pattern="account_details"))
+
     # Other additionals
     dp.add_handler(CallbackQueryHandler(
         show_home, pattern='back_home'))

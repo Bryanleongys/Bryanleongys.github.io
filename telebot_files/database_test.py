@@ -17,6 +17,9 @@ print("==========================")
 print("Exepcted: 1 user name printed")
 testDatabase.query_user_name("1157634501")
 print("==========================")
+print("Exepcted: 1 user details printed")
+testDatabase.query_user_details("1157634501")
+print("==========================")
 
 # Ensuring events table queries work
 ## Past Welfare
@@ -24,12 +27,12 @@ testDatabase.insert_event("Holiday Welfare", "2021/08/03", "2021/08/04", "2021/0
 testDatabase.insert_event("Random Welfare", "2021/08/03", "2021/08/03", "2021/08/03", '15:30', '18:00', "You have been selected!",0)
 
 ## Ongoing Welfare (but signups over)
-testDatabase.insert_event("Hello Welfare", "2021/08/10", "2021/08/10", "2021/08/21", '15:30', '18:00', "You have been selected!",0)
-testDatabase.insert_event("Giveaway Welfare", "2021/08/10", "2021/08/15", "2021/08/21", '15:30', '18:00', "You have been selected!",0)
+testDatabase.insert_event("Hello Welfare", "2021/08/10", "2021/08/10", "2021/08/30", '15:30', '18:00', "You have been selected!",0)
+testDatabase.insert_event("Giveaway Welfare", "2021/08/10", "2021/08/15", "2021/08/30", '15:30', '18:00', "You have been selected!",0)
 
 ## Sign up Welfare
-testDatabase.insert_event("Sem 2 Welfare", "2021/08/03", "2021/08/20", "2021/08/21", '12:30', '13:30', "You have been selected!", 1)
-testDatabase.insert_event("Recess Week Welfare", "2021/08/03", "2021/08/20", "2021/08/25", '15:30', '18:00', "You have been selected!",0)
+testDatabase.insert_event("Sem 2 Welfare", "2021/08/03", "2021/08/30", "2021/09/01", '12:30', '13:30', "You have been selected!", 1)
+testDatabase.insert_event("Recess Week Welfare", "2021/08/03", "2021/08/30", "2021/09/01", '15:30', '18:00', "You have been selected!",0)
 
 ## Future Welfare
 testDatabase.insert_event("Orientation Welfare", "2021/09/10", "2021/09/10", "2021/09/03", '15:30', '18:00', "You have been selected!",0)

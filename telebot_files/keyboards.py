@@ -20,7 +20,7 @@ def house_keyboard():
         [KeyboardButton("Leo")],
         [KeyboardButton("Noctua")]
     ]
-    return ReplyKeyboardMarkup(keyboard)
+    return ReplyKeyboardMarkup(keyboard=keyboard, one_time_keyboard=True)
 
 
 def welfare_keyboard():
@@ -49,8 +49,8 @@ def feedback_keyboard():
 
 def settings_keyboard():
     keyboard = [
-        [InlineKeyboardButton("On/Off Motivational Quotes",
-                              callback_data='quotes_switch')],
+        [InlineKeyboardButton("Update Account Details",
+                              callback_data='account_details')],
         [InlineKeyboardButton("Back",
                               callback_data='back_home')],
     ]
@@ -172,4 +172,8 @@ def general_feedback_back():
 
 def events_feedback_back():
     keyboard = [[InlineKeyboardButton("Back", callback_data="return_events")]]
+    return InlineKeyboardMarkup(keyboard)
+
+def account_details_back():
+    keyboard = [[InlineKeyboardButton("Back", callback_data="settings")]]
     return InlineKeyboardMarkup(keyboard)

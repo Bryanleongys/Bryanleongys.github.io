@@ -114,6 +114,18 @@ class Database:
             print(e)
             return e
 
+    def query_user_details(self, telegram_id):
+        try:
+            self.cur.execute("SELECT * FROM users WHERE telegram_id=?", (telegram_id,))
+            self.con.commit()
+            rows = self.cur.fetchall()
+            user_details = rows[0]
+            print(user_details)
+            return user_details
+        
+        except Exception as e:
+            print(e)
+            return e
     '''
     SQLite queries for events table
     '''
