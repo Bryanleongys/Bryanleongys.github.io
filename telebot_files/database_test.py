@@ -41,10 +41,6 @@ testDatabase.insert_event("BBT Welfare", "2021/09/10", "2021/09/10", "2021/09/03
 testDatabase.insert_event("Final Week Welfare", "2021/08/10", "2021/08/16", "2021/08/21", '15:30', '18:00', "You have been selected!",0)
 
 testDatabase.delete_event("Final Week Welfare")
-testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level would you like?", "25%")
-testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level would you like?", "50%")
-testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level would you like?", "75%")
-testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level would you like?", "100%")
 print("Expected: 4 ongoing events rows printed")
 testDatabase.query_all_ongoing_events()
 print("==========================")
@@ -73,7 +69,15 @@ testDatabase.insert_event_joined("Recess Week Welfare", "Bryan Leong Yong Sheng"
 testDatabase.delete_event_joined("Orientation Welfare")
 testDatabase.query_all_events_joined()
 print("==========================")
+print("Expected: 2 events_joined rows printed")
+testDatabase.query_event_joined("Sem 2 Welfare")
+print("==========================")
+print("Expected: 2 printed")
+testDatabase.query_number_user_joined("Sem 2 Welfare", "16:00")
+print("==========================")
 
+
+# Ensuring feedback table queries work
 print("Expected: 2 user feedback rows printed")
 testDatabase.insert_user_feedback("Orientation Welfare", "Bryan Wong Hong Liang", "My sugar level was definitely wrong; I asked for 50 percent and it tasted like 200 percent!")
 testDatabase.insert_user_feedback("Orientation Welfare", "Bryan Leong Yong Sheng", "The bubble tea is the best, thanks!")
@@ -82,20 +86,23 @@ testDatabase.insert_user_feedback("Holiday Welfare", "Bryan Leong Yong Sheng", "
 testDatabase.insert_user_feedback("Holiday Welfare", "Bryan Wong Hong Liang", "Why'd you take my holiday up?")
 testDatabase.insert_user_feedback("general", "Bryan Wong Hong Liang", "Thank you welfare for everything!")
 testDatabase.insert_user_feedback("general", "Bryan Wong Hong Liang", "Welfare is the best!")
-print(testDatabase.query_user_feedback("Holiday Welfare"))
+testDatabase.query_user_feedback("Holiday Welfare")
+print("==========================")
+print("Expected: 0 event custom choices printed")
+testDatabase.delete_user_feedback("Orientation Welfare")
+testDatabase.query_user_feedback("Orientation Welfare")
 print("==========================")
 
-# Ensuring query_event_joined query work
-print("Expected: 2 events_joined rows printed")
-testDatabase.query_event_joined("Sem 2 Welfare")
-print("==========================")
-print("Expected: 2 printed")
-testDatabase.query_number_user_joined("Sem 2 Welfare", "16:00")
-print("==========================")
-
-# Ensuring events_custom_choices work
+# Ensuring events_custom_choices table queries work
+testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level would you like?", "25%")
+testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level would you like?", "50%")
+testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level would you like?", "75%")
+testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level would you like?", "100%")
 print("Expected: 4 event custom choices printed")
 testDatabase.query_events_choices("Sem 2 Welfare")
 print("==========================")
+print("Expected: 0 event custom choices printed")
+testDatabase.delete_events_custom_choices("Sem 2 Welfare")
+testDatabase.query_events_choices("Sem 2 Welfare")
 
 print("============ End Of Test ==============")
