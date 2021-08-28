@@ -102,7 +102,6 @@ print("Expected: 4 event custom choices printed")
 testDatabase.query_events_choices("Sem 2 Welfare")
 print("==========================")
 print("Expected: 0 event custom choices printed")
-testDatabase.delete_events_custom_choices("Sem 2 Welfare")
 testDatabase.query_events_choices("Sem 2 Welfare")
 
 print("============ End Of Test ==============")

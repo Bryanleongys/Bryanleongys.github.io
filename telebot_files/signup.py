@@ -10,7 +10,7 @@ Defining constants
 EVENT_NAME = 0
 START_SIGNUP = 1
 END_SIGNUP = 2
-END_DATE = 3
+COLLECTION_DATE = 3
 START_TIME = 4
 END_TIME = 5
 ITEM_BOOL = 7
@@ -40,7 +40,7 @@ def show_future_welfare(update, context, db):
     future_events = []
     for event in events:
         future_events.append(
-            event[EVENT_NAME] + ", " + event[END_DATE])
+            event[EVENT_NAME] + ", " + event[COLLECTION_DATE])
 
     text = "Below are the list of welfare in the future!"
     context.bot.edit_message_text(
@@ -59,7 +59,7 @@ def show_current_welfare(update, context, db):
     context.user_data["events"] = events
     current_events = []
     for event in events:
-        current_events.append(event[EVENT_NAME] + ", closes " + event[END_SIGNUP])
+        current_events.append(event[EVENT_NAME] + " (" + event[COLLECTION_DATE] + ")" + ", closes " + event[END_SIGNUP])
 
     text = "Please select one of the options to sign up for welfare!"
     context.bot.edit_message_text(
@@ -83,13 +83,13 @@ def show_timings(update, context, db):
     ## initialize variables
     events = context.user_data["events"]
     context.user_data["event_name"] = events[index][EVENT_NAME]
-    context.user_data["event_date"] = events[index][START_SIGNUP]
+    context.user_data["event_date"] = events[index][COLLECTION_DATE]
     context.user_data["item_bool"] = events[index][ITEM_BOOL]
     context.user_data["index"] = index
     timings = [events[index][START_TIME], events[index][END_TIME]]
 
     text = "Select time slot to sign up for " + \
-        events[index][EVENT_NAME] + " on " + events[index][START_SIGNUP] + "."
+        events[index][EVENT_NAME] + " on " + events[index][COLLECTION_DATE] + "."
     context.bot.edit_message_text(
         chat_id=chat_id,
         message_id=message_id,
