@@ -114,6 +114,18 @@ class Database:
             print(e)
             return e
 
+    def query_user_details(self, telegram_id):
+        try:
+            self.cur.execute("SELECT * FROM users WHERE telegram_id=?", (telegram_id,))
+            self.con.commit()
+            rows = self.cur.fetchall()
+            user_details = rows[0]
+            print(user_details)
+            return user_details
+        
+        except Exception as e:
+            print(e)
+            return e
     '''
     SQLite queries for events table
     '''
@@ -344,6 +356,15 @@ class Database:
             print(e)
             return e
 
+    def delete_events_custom_choices(self, event_name):
+        try:
+            self.cur.execute(
+                "DELETE FROM events_custom_choices WHERE event_name=?", (event_name,))
+            self.con.commit()
+        except Exception as e:
+            print(e)
+            return e
+
     def query_events_choices(self, event_name):
         try:
             LOCK.acquire(True)
@@ -373,6 +394,15 @@ class Database:
             print(e)
             return e
 
+    def delete_user_feedback(self, event_name):
+        try:
+            self.cur.execute(
+                "DELETE FROM user_feedback WHERE event_name=?", (event_name,))
+            self.con.commit()
+        except Exception as e:
+            print(e)
+            return e
+    
     def query_user_feedback(self, event_name):
         try:
             self.cur.execute("SELECT * FROM user_feedback WHERE event_name = (?)", (event_name,))

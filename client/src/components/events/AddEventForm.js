@@ -33,6 +33,8 @@ const AddEventForm = () => {
   const [question, setQuestion] = React.useState("");
   const [submitType, setSubmitType] = React.useState("");
   const [showToast, setShowToast] = React.useState(false);
+  const [showAlertDate, setShowAlertDate] = React.useState(false);
+  const [showAlertTime, setShowAlertTime] = React.useState(false);
 
   const handlePostRequest = () => {
     const eventJson = {
@@ -73,6 +75,38 @@ const AddEventForm = () => {
     }
   };
 
+  const handleDateCheck = () => {
+    if (startDate > endDate || endDate >= collectionDate) {
+      setSubmitType("");
+      setShowAlertDate(true);
+    } else {
+      setSubmitType("submit");
+      setShowAlertDate(false);
+    }
+  };
+
+  const handleTimeCheck = () => {
+    if (startTime == null || endTime == null) {
+      return;
+    }
+    if (!(startTime[3] && startTime[4] && endTime[3] && endTime[4])) {
+      return;
+    }
+    const startTime_minutes = parseInt(startTime[3].concat(startTime[4]));
+    const endTime_minutes = parseInt(endTime[3].concat(endTime[4]));
+    if (
+      startTime >= endTime ||
+      startTime_minutes % 15 != 0 ||
+      endTime_minutes % 15 != 0
+    ) {
+      setSubmitType("");
+      setShowAlertTime(true);
+    } else {
+      setSubmitType("submit");
+      setShowAlertTime(false);
+    }
+  };
+
   const handleSubmitCheck = (eventName) => {
     const eventJson = {
       requestType: "check",
@@ -101,6 +135,16 @@ const AddEventForm = () => {
       setValidated(false);
     }
   });
+
+  const firstUpdate = React.useRef(true);
+  React.useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+    handleDateCheck();
+    handleTimeCheck();
+  }, [startDate, endDate, collectionDate, startTime, endTime]);
 
   return (
     <Container>
@@ -188,13 +232,34 @@ const AddEventForm = () => {
           />
         </InputGroup>
 
+        <Row>
+          <Col xs={6}>
+            <Toast bg={"danger"} show={showAlertDate}>
+              <Toast.Header closeButton={false}>
+                <img
+                  src="holder.js/20x20?text=%20"
+                  className="rounded me-2"
+                  alt=""
+                />
+                <strong className="me-auto">
+                  Please check order of dates!
+                </strong>
+              </Toast.Header>
+              {/* <Toast.Body>Event Name already exists!</Toast.Body> */}
+            </Toast>
+          </Col>
+        </Row>
+
         <Form.Label htmlFor="basic-url">Collection Time:</Form.Label>
         <InputGroup className="mb-3">
           <InputGroup.Text id="basic-addon1">Start Time</InputGroup.Text>
           <Form.Control
             required
             type="time"
-            onChange={(e) => setStartTime(e.target.value)}
+            onChange={(e) => {
+              setStartTime(e.target.value);
+              console.log(e.target.value[3], e.target.value[4]);
+            }}
           />
           <InputGroup.Text id="basic-addon1">End Time</InputGroup.Text>
           <Form.Control
@@ -203,6 +268,22 @@ const AddEventForm = () => {
             onChange={(e) => setEndTime(e.target.value)}
           />
         </InputGroup>
+
+        <Row>
+          <Col xs={6}>
+            <Toast bg={"danger"} show={showAlertTime}>
+              <Toast.Header closeButton={false}>
+                <img
+                  src="holder.js/20x20?text=%20"
+                  className="rounded me-2"
+                  alt=""
+                />
+                <strong className="me-auto">Please check time inputs!</strong>
+              </Toast.Header>
+              {/* <Toast.Body>Event Name already exists!</Toast.Body> */}
+            </Toast>
+          </Col>
+        </Row>
 
         <Form.Label htmlFor="basic-url">Confirmation Message:</Form.Label>
         <InputGroup className="mb-3">

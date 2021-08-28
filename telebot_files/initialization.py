@@ -20,6 +20,7 @@ def start(update, context):
 def get_name(update, context):
     chat_id = update.message.chat.id
     user_input = update.message.text
+    user_input = user_input.title()
     context.user_data["full_name"] = user_input
 
     text = "Your name " + user_input + " has been registered."
@@ -34,6 +35,12 @@ def get_name(update, context):
 def get_matric(update, context):
     chat_id = update.message.chat.id
     user_input = update.message.text
+    user_input = user_input.title()
+    if not (len(user_input) == 3 and user_input[0].isdigit() and user_input[1].isdigit() and user_input[2].isalpha()):
+        update.message.reply_text(
+            text="Please key in the correct format. (e.g. 02M)"
+        )
+        return 2
     context.user_data["nusnet_id"] = user_input
 
     text = "The last 3-digits of your matric number, " + \
@@ -49,6 +56,12 @@ def get_matric(update, context):
 def get_house(update, context, db):
     chat_id = update.message.chat.id
     user_input = update.message.text
+    user_input = user_input.title()
+    if not (user_input == "Leo" or user_input == "Aquila" or user_input == "Ursa" or user_input == "Draco" or user_input == "Noctua"):
+        update.message.reply_text(
+            text="Please input a correct house."
+        )
+        return 3
     telegram_handle = context.user_data["telegram_handle"]
     full_name = context.user_data["full_name"]
     nusnet_id = context.user_data["nusnet_id"]
