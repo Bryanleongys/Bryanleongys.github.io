@@ -59,7 +59,7 @@ def show_current_welfare(update, context, db):
     context.user_data["events"] = events
     current_events = []
     for event in events:
-        current_events.append(event[EVENT_NAME] + " (" + event[COLLECTION_DATE] + ")" + ", closes " + event[END_SIGNUP])
+        current_events.append(event[EVENT_NAME] + ", closes " + event[END_SIGNUP])
 
     text = "Please select one of the options to sign up for welfare!"
     context.bot.edit_message_text(
@@ -147,6 +147,8 @@ def confirm_timing(update, context, db):
     event_name = context.user_data["event_name"]
     event_date = context.user_data["event_date"]
     full_name = db.query_user_name(chat_id)
+    timing = str(timing)
+    timing = timing[0:2] + ":" + timing[2:]
 
     db.insert_event_joined(event_name, full_name, chat_id, username, timing, item_chosen)
     db.query_all_events_joined()
