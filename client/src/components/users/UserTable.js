@@ -6,6 +6,7 @@ import baseURL from "../../common/Constants";
 const USER_NAME = 1;
 const TELEGRAM_ID = 2;
 const TELEGRAM_HANDLE = 3;
+const COLLECTION_TIME = 4;
 const ITEM_CHOSEN = 5;
 const ITEM_BOOL = 7;
 
@@ -51,6 +52,7 @@ const UserTable = ({ event }) => {
             name: res.data[i][USER_NAME],
             telegram_handle: res.data[i][TELEGRAM_HANDLE],
             item_chosen: res.data[i][ITEM_CHOSEN],
+            collection_time: res.data[i][COLLECTION_TIME],
           });
         }
         setUserArray(arrayUser);
@@ -145,6 +147,7 @@ const UserTable = ({ event }) => {
               name: res.data[i][USER_NAME],
               telegram_handle: res.data[i][TELEGRAM_HANDLE],
               item_chosen: res.data[i][ITEM_CHOSEN],
+              collection_time: res.data[i][COLLECTION_TIME],
             });
           }
 
@@ -278,6 +281,7 @@ const UserTable = ({ event }) => {
             <th>Names</th>
             <th>Telegram Handle</th>
             <th>Item Chosen</th>
+            <th>Collection Time</th>
           </tr>
         </thead>
         <tbody>
@@ -293,6 +297,7 @@ const UserTable = ({ event }) => {
                 <td>{user.name}</td>
                 <td>{user.telegram_handle}</td>
                 <td>{user.item_chosen}</td>
+                <td>{user.collection_time}</td>
               </tr>
             );
           })}

@@ -35,6 +35,7 @@ const AddEventForm = () => {
   const [showToast, setShowToast] = React.useState(false);
   const [showAlertDate, setShowAlertDate] = React.useState(false);
   const [showAlertTime, setShowAlertTime] = React.useState(false);
+  const [showAlertName, setShowAlertName] = React.useState(false);
 
   const handlePostRequest = () => {
     const eventJson = {
@@ -108,11 +109,18 @@ const AddEventForm = () => {
   };
 
   const handleSubmitCheck = (eventName) => {
+    if (eventName.includes("(") && eventName.includes(")")) {
+      setSubmitType("");
+      setShowAlertName(true);
+    } else {
+      setSubmitType("submit");
+      setShowAlertName(false);
+    }
+
     const eventJson = {
       requestType: "check",
       eventName: eventName,
     };
-
     axios
       .post(`${baseURL}events`, eventJson)
       .then((res) => {
@@ -175,6 +183,25 @@ const AddEventForm = () => {
                 />
                 <strong className="me-auto">
                   Event name already exists! Please use different name.
+                </strong>
+              </Toast.Header>
+              {/* <Toast.Body>Event Name already exists!</Toast.Body> */}
+            </Toast>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col xs={6}>
+            <Toast bg={"danger"} show={showAlertName}>
+              <Toast.Header closeButton={false}>
+                <img
+                  src="holder.js/20x20?text=%20"
+                  className="rounded me-2"
+                  alt=""
+                />
+                <strong className="me-auto">
+                  Event name invalid. Please do not include brackets in your
+                  name!
                 </strong>
               </Toast.Header>
               {/* <Toast.Body>Event Name already exists!</Toast.Body> */}

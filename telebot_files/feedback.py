@@ -7,7 +7,7 @@ from telegram import InlineKeyboardMarkup, InlineKeyboardButton, ParseMode, Repl
 EVENT_NAME = 0
 START_SIGNUP = 1
 END_SIGNUP = 2
-END_DATE = 3
+COLLECTION_DATE = 3
 START_TIME = 4
 END_TIME = 5
 ITEM_BOOL = 7

@@ -119,7 +119,7 @@ def timings_keyboard(timings, db, event_name):
         if (mintime == maxtime):
             break
 
-        while (mintime % 100 != 60):
+        while (mintime % 100 != 60 and mintime < maxtime):
             edit_mintime = str(mintime)
             edit_mintime = edit_mintime[:2] + ":" + edit_mintime[2:]
             user_pax = db.query_number_user_joined(event_name, edit_mintime)
