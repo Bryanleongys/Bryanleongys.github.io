@@ -157,8 +157,8 @@ def confirm_timing(update, context, db):
         text = "Confirmation Message: You have signed up for " + event_name + \
             " on " + str(event_date) + ", " + str(timing) + "hrs."
     else:
-        text = "Confirmation Message: You have signed up for " + event_name + \
-            " on " + str(event_date) + ", " + str(item_chosen) + ", " + str(timing) + "hrs."
+        text = "Confirmation Message: You have signed up for " + event_name + ", "+ str(item_chosen) + "," +\
+            " on " + str(event_date) + ", " + str(timing) + "hrs."
     text2 = "Welcome home. Feel free to access the features below!"
     context.bot.edit_message_text(
         chat_id=chat_id,
