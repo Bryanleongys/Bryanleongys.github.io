@@ -10,6 +10,8 @@ from functools import partial
 from database import Database
 
 print("Bot started...")
+
+## Initialize empty database.db
 db = Database()
 db.create_tables()
 
