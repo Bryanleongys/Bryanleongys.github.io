@@ -153,8 +153,12 @@ def confirm_timing(update, context, db):
     db.insert_event_joined(event_name, full_name, chat_id, username, timing, item_chosen)
     db.query_all_events_joined()
 
-    text = "Confirmation Message: You have signed up for " + event_name + \
-        " on " + str(event_date) + ", " + str(timing) + "hrs."
+    if item_chosen == "":
+        text = "Confirmation Message: You have signed up for " + event_name + \
+            " on " + str(event_date) + ", " + str(timing) + "hrs."
+    else:
+        text = "Confirmation Message: You have signed up for " + event_name + \
+            " on " + str(event_date) + ", " + str(item_chosen) + ", " + str(timing) + "hrs."
     text2 = "Welcome home. Feel free to access the features below!"
     context.bot.edit_message_text(
         chat_id=chat_id,
