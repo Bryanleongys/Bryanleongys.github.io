@@ -36,7 +36,7 @@ const UserTable = ({ event }) => {
 
   const formProps = isSubmitted ? { disabled: true } : {};
   const randomProps = isSelected ? { disabled: true } : {};
-  // const sendProps = isSent ? { disabled: true } : {};
+  const sendProps = isSent ? { disabled: true } : {};
 
   React.useEffect(() => {
     const eventJson = {
@@ -44,7 +44,7 @@ const UserTable = ({ event }) => {
     };
 
     axios
-      .get(`${baseURL}users`, { params: eventJson })
+      .get(`${baseURL}users/event`, { params: eventJson })
       .then((res) => {
         var arrayUser = [];
         for (var i = 0; i < res.data.length; i++) {
@@ -215,7 +215,7 @@ const UserTable = ({ event }) => {
         message: message,
       };
       if (shouldHighlight[i]) {
-        axios.post(`${baseURL}users`, eventJson);
+        axios.post(`${baseURL}users/event`, eventJson);
       }
     }
     setIsSent(true);
@@ -317,7 +317,7 @@ const UserTable = ({ event }) => {
         </Form.Group>
       </Form>
 
-      <Button onClick={handleSend} {...randomProps}>
+      <Button onClick={handleSend} {...randomProps} disabled={isSent}>
         {" "}
         Send Welfare Message To Recipients{" "}
       </Button>

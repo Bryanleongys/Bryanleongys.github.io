@@ -101,8 +101,12 @@ class EventChoices(Resource):
         print(event_choices)
         return make_response(jsonify(event_choices), 200)
 
-
 class Users(Resource):
+    def get(self):
+        users = database.query_all_users()
+        return make_response(jsonify(users), 200)
+
+class UserEvent(Resource):
     def get(self):
         event_name = request.args['eventName']
         users_joined = database.query_event_joined(event_name)
@@ -163,7 +167,7 @@ class Feedbacks(Resource):
 api.add_resource(HelloWorld, '/')
 api.add_resource(Events, '/api/events')
 api.add_resource(EventChoices, '/api/events/choices')
-api.add_resource(Users, '/api/users')
+api.add_resource(UserEvent, '/api/users/event')
 api.add_resource(UserShuffle, '/api/users/shuffle')
 api.add_resource(Feedbacks, '/api/feedbacks')
 

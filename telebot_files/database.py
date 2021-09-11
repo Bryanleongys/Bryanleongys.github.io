@@ -47,7 +47,7 @@ class Database:
             self.cur.execute(
                 '''CREATE TABLE events_custom_choices(event_name text, choice_header text, choice_name text)''')
             self.cur.execute(
-                '''CREATE TABLE user_feedback(event_name text, username text, telegram_id text, feedback text)''')
+                '''CREATE TABLE user_feedback(event_name text, username text, telegram_id text, feedback text)''')     
             self.con.commit()
             return True
         except Exception as e:
@@ -422,4 +422,3 @@ class Database:
         except Exception as e:
             print(e)
             return e
-            
