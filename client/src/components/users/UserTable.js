@@ -26,6 +26,7 @@ const UserTable = ({ event }) => {
   const [isSent, setIsSent] = React.useState(false);
   const [choiceArray, setChoiceArray] = React.useState(null);
   const [choicePax, setChoicePax] = React.useState(null);
+  const [message, setMessage] = React.useState(null);
 
   // Unused States (might remove)
   // const [colorChosen, setColorChosen] = React.useState("#52cca2");
@@ -211,7 +212,7 @@ const UserTable = ({ event }) => {
     for (var i = 0; i < shouldHighlight.length; i++) {
       const eventJson = {
         chat_id: userArray[i].telegram_id,
-        event: event[0],
+        message: message,
       };
       if (shouldHighlight[i]) {
         axios.post(`${baseURL}users`, eventJson);
@@ -303,23 +304,23 @@ const UserTable = ({ event }) => {
           })}
         </tbody>
       </Table>
+
+      <Form>
+        <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+          <Form.Label>Confirmation Message:</Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={3}
+            placeholder="You have been selected! Please head down to the dining hall at your respective time slot to collect your welfare."
+            onChange={(e) => setMessage(e.target.value)}
+          />
+        </Form.Group>
+      </Form>
+
       <Button onClick={handleSend} {...randomProps}>
         {" "}
         Send Welfare Message To Recipients{" "}
       </Button>
-      {/* {isSelected ? (
-        <Button
-          style={styles.confirmButton}
-          onClick={handleSend}
-          {...sendProps}
-        >
-          Send Message
-        </Button>
-      ) : (
-        <Button style={styles.confirmButton} onClick={handleSelect}>
-          Select Highlighted People
-        </Button>
-      )} */}
 
       <br></br>
       <br></br>

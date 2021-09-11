@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { Container, Table, Button, Nav } from "react-bootstrap";
+import { Container, Table, Button, Nav, Modal } from "react-bootstrap";
 import { Switch, Route, Link, useRouteMatch } from "react-router-dom";
 import axios from "axios";
 import EditEvent from "./EditEvent";
@@ -18,6 +18,19 @@ const ITEM_BOOL = 7;
 const PastEvents = () => {
   let match = useRouteMatch();
   const [arrayObject, setArrayObject] = React.useState([]);
+  const [show, setShow] = React.useState(false);
+  const [eventName, setEventName] = React.useState(null);
+  const [eventIndex, setEventIndex] = React.useState(null);
+
+  const handleClose = () => {
+    setShow(false);
+  };
+
+  const handleShow = (index, eventName) => {
+    setShow(true);
+    setEventName(eventName);
+    setEventIndex(index);
+  };
 
   React.useEffect(() => {
     const event_type = {
@@ -49,7 +62,8 @@ const PastEvents = () => {
   //   setArrayObject(newArray);
   // };
 
-  const handlePress = (index, eventName) => {
+  const handlePress = () => {
+    setShow(false);
     const eventJson = {
       eventName: eventName,
     };
@@ -68,12 +82,27 @@ const PastEvents = () => {
       });
 
     var newArray = arrayObject;
-    newArray.splice(index, 1);
+    newArray.splice(eventIndex, 1);
     setArrayObject([...newArray]);
   };
 
   return (
     <Container>
+      <Modal show={show} onHide={() => handleClose()}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm to Remove Event?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>You are unable to undo this action.</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => handleClose()}>
+            Close
+          </Button>
+          <Button variant="danger" onClick={() => handlePress()}>
+            Remove
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -96,7 +125,7 @@ const PastEvents = () => {
                 <td>{event.eventDate}</td>
                 <td>
                   <Button
-                    onClick={() => handlePress(index, event.name)}
+                    onClick={() => handleShow(index, event.name)}
                     variant="danger"
                   >
                     Remove

@@ -112,9 +112,9 @@ class Users(Resource):
         event_json = request.get_json(force=True)
         token = keys.API_KEY
         chat_id = event_json['chat_id']
-        event = event_json['event']
-        text = database.query_event_message(event)
-        url_req = "https://api.telegram.org/bot" + token + "/sendMessage" + "?chat_id=" + str(chat_id) + "&text=" + text 
+        message = event_json['message']
+        # text = database.query_event_message(event)
+        url_req = "https://api.telegram.org/bot" + token + "/sendMessage" + "?chat_id=" + str(chat_id) + "&text=" + message 
         results = requests.get(url_req)
         print(results.json())
 
