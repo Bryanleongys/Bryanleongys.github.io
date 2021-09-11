@@ -27,20 +27,23 @@ testDatabase.insert_event("Holiday Welfare", "2021/08/03", "2021/08/04", "2021/0
 testDatabase.insert_event("Random Welfare", "2021/08/03", "2021/08/03", "2021/08/03", '15:30', '18:00', "You have been selected!",0)
 
 ## Ongoing Welfare (but signups over)
-testDatabase.insert_event("Hello Welfare", "2021/08/10", "2021/08/10", "2021/08/30", '15:30', '18:00', "You have been selected!",0)
-testDatabase.insert_event("Giveaway Welfare", "2021/08/10", "2021/08/15", "2021/08/30", '15:30', '18:00', "You have been selected!",0)
+testDatabase.insert_event("Hello Welfare", "2021/09/01", "2021/09/02", "2021/09/14", '15:30', '18:00', "You have been selected!",0)
+testDatabase.insert_event("Giveaway Welfare", "2021/08/10", "2021/08/15", "2021/09/16", '15:30', '18:00', "You have been selected!",0)
 
 ## Sign up Welfare
-testDatabase.insert_event("Sem 2 Welfare", "2021/08/03", "2021/08/30", "2021/09/01", '12:30', '13:30', "You have been selected!", 1)
-testDatabase.insert_event("Recess Week Welfare", "2021/08/03", "2021/08/30", "2021/09/01", '15:30', '18:00', "You have been selected!",0)
+testDatabase.insert_event("Sem 2 Welfare", "2021/09/10", "2021/09/15", "2021/09/16", '12:30', '13:30', "You have been selected!", 1)
+testDatabase.insert_event("Recess Week Welfare", "2021/09/10", "2021/09/15", "2021/09/16", '15:30', '18:00', "You have been selected!",0)
 
 ## Future Welfare
-testDatabase.insert_event("Orientation Welfare", "2021/09/10", "2021/09/10", "2021/09/03", '15:30', '18:00', "You have been selected!",0)
-testDatabase.insert_event("BBT Welfare", "2021/09/10", "2021/09/10", "2021/09/03", '15:30', '18:00', "You have been selected!",0)
+testDatabase.insert_event("Orientation Welfare", "2021/10/10", "2021/10/10", "2021/10/13", '15:30', '18:00', "You have been selected!",0)
+testDatabase.insert_event("BBT Welfare", "2021/10/10", "2021/10/10", "2021/10/13", '15:30', '18:00', "You have been selected!",0)
 
 testDatabase.insert_event("Final Week Welfare", "2021/08/10", "2021/08/16", "2021/08/21", '15:30', '18:00', "You have been selected!",0)
 
 testDatabase.delete_event("Final Week Welfare")
+print("Expected: 6 events row printed")
+testDatabase.query_all_events()
+print("==========================")
 print("Expected: 4 ongoing events rows printed")
 testDatabase.query_all_ongoing_events()
 print("==========================")
@@ -73,19 +76,19 @@ print("Expected: 2 events_joined rows printed")
 testDatabase.query_event_joined("Sem 2 Welfare")
 print("==========================")
 print("Expected: 2 printed")
-testDatabase.query_number_user_joined("Sem 2 Welfare", "16:00")
+testDatabase.query_number_user_joined("Sem 2 Welfare", "12:30")
 print("==========================")
 
 
 # Ensuring feedback table queries work
 print("Expected: 2 user feedback rows printed")
-testDatabase.insert_user_feedback("Orientation Welfare", "Bryan Wong Hong Liang", "My sugar level was definitely wrong; I asked for 50 percent and it tasted like 200 percent!")
-testDatabase.insert_user_feedback("Orientation Welfare", "Bryan Leong Yong Sheng", "The bubble tea is the best, thanks!")
-testDatabase.insert_user_feedback("Random Welfare", "Bryan Leong Yong Sheng", "The bubble tea is the best, thanks!")
-testDatabase.insert_user_feedback("Holiday Welfare", "Bryan Leong Yong Sheng", "Best holiday ever!")
-testDatabase.insert_user_feedback("Holiday Welfare", "Bryan Wong Hong Liang", "Why'd you take my holiday up?")
-testDatabase.insert_user_feedback("general", "Bryan Wong Hong Liang", "Thank you welfare for everything!")
-testDatabase.insert_user_feedback("general", "Bryan Wong Hong Liang", "Welfare is the best!")
+testDatabase.insert_user_feedback("Orientation Welfare", "Bryan Wong Hong Liang", "1157634501", "My sugar level was definitely wrong; I asked for 50 percent and it tasted like 200 percent!")
+testDatabase.insert_user_feedback("Orientation Welfare", "Bryan Leong Yong Sheng", "1157634500", "The bubble tea is the best, thanks!")
+testDatabase.insert_user_feedback("Random Welfare", "Bryan Leong Yong Sheng", "1157634500", "The bubble tea is the best, thanks!")
+testDatabase.insert_user_feedback("Holiday Welfare", "Bryan Leong Yong Sheng", "1157634500", "Best holiday ever!")
+testDatabase.insert_user_feedback("Holiday Welfare", "Bryan Wong Hong Liang", "1157634501", "Why'd you take my holiday up?")
+testDatabase.insert_user_feedback("general", "Bryan Wong Hong Liang", "1157634501", "Thank you welfare for everything!")
+testDatabase.insert_user_feedback("general", "Bryan Wong Hong Liang", "1157634501", "Welfare is the best!")
 testDatabase.query_user_feedback("Holiday Welfare")
 print("==========================")
 print("Expected: 0 event custom choices printed")
@@ -101,5 +104,10 @@ testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level wou
 print("Expected: 4 event custom choices printed")
 testDatabase.query_events_choices("Sem 2 Welfare")
 print("==========================")
+
+# Ensuring events_joined and user_feedback tables are updated after name change
+testDatabase.insert_user("Biryani Leong", "e0535000", "Leo", "1157634500")
+testDatabase.query_all_events_joined()
+testDatabase.query_user_feedback("Random Welfare")
 
 print("============ End Of Test ==============")

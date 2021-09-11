@@ -3,7 +3,7 @@ from telegram.ext import *
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton, ParseMode, ReplyKeyboardMarkup, KeyboardButton, Message, Bot, ReplyKeyboardRemove
 
 USER_NAME = 0
-NUSNET_ID = 1
+MATRIC_NO = 1
 HOUSE = 2
 
 def prompt_settings(update, context):
@@ -26,7 +26,7 @@ def get_account_details(update, context, db):
 
     user_details = db.query_user_details(chat_id)
 
-    text = "Following are your details:\nName: " + user_details[USER_NAME] + "\nNUSNET ID: " + user_details[NUSNET_ID] + "\nHouse: " + user_details[HOUSE] + "\n\nPlease press /start to re-initialize your account details."
+    text = "Following are your details:\nName: " + user_details[USER_NAME] + "\nMatric Number: " + user_details[MATRIC_NO] + "\nHouse: " + user_details[HOUSE] + "\n\nPlease press /start to re-initialize your account details."
     context.bot.edit_message_text(
         chat_id=chat_id,
         message_id=message_id,
