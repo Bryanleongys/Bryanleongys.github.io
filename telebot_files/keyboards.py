@@ -146,6 +146,9 @@ def event_items_keyboard(arrayOptions):
     keyboard = []
     for option in arrayOptions:
         keyboard.append([InlineKeyboardButton(option, callback_data="timing"+option)])
+
+    keyboard.append([InlineKeyboardButton(
+        "Back", callback_data="return_back")])    
     return InlineKeyboardMarkup(keyboard)
 
 

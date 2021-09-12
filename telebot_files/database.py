@@ -47,7 +47,7 @@ class Database:
             self.cur.execute(
                 '''CREATE TABLE events_custom_choices(event_name text, choice_header text, choice_name text)''')
             self.cur.execute(
-                '''CREATE TABLE user_feedback(event_name text, username text, feedback text)''')
+                '''CREATE TABLE user_feedback(event_name text, username text, feedback text)''')     
             self.con.commit()
             return True
         except Exception as e:
@@ -61,15 +61,21 @@ class Database:
     def insert_user(self, username, nusnet_id, house, telegram_id):
         try:
             ## if user's full name and nusnet_id exists, do not insert
-            self.cur.execute("SELECT * FROM users WHERE username=? AND nusnet_id=? ", (username, nusnet_id,))
+            self.cur.execute("SELECT * FROM users WHERE username=? AND nusnet_id=? AND house=?", (username, nusnet_id, house,))
             if (len(self.cur.fetchall())):
                 return False
 
             ## if telegram_id registered before, delete and insert
             self.cur.execute("SELECT * FROM users WHERE telegram_id=?", (telegram_id,))
-            if (len(self.cur.fetchall())):
+            rows = self.cur.fetchall()
+            if (len(rows)):
+                name = rows[0][USER_NAME]
                 self.cur.execute(
                 "DELETE FROM users WHERE telegram_id=?", (telegram_id,))
+
+                ## update details of user
+                self.cur.execute("UPDATE events_joined SET username=? WHERE telegram_id=?", (username, telegram_id))
+                # self.cur.execute("UPDATE user_feedback SET username=? WHERE telegram_id=?", (username, telegram_id))
 
             self.cur.execute("INSERT INTO users(username, nusnet_id, house, telegram_id) VALUES(?,?,?,?)",
                              (username, nusnet_id, house, telegram_id,))
@@ -416,4 +422,3 @@ class Database:
         except Exception as e:
             print(e)
             return e
-            

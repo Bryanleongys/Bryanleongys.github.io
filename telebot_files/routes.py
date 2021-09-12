@@ -101,8 +101,12 @@ class EventChoices(Resource):
         print(event_choices)
         return make_response(jsonify(event_choices), 200)
 
-
 class Users(Resource):
+    def get(self):
+        users = database.query_all_users()
+        return make_response(jsonify(users), 200)
+
+class UserEvent(Resource):
     def get(self):
         event_name = request.args['eventName']
         users_joined = database.query_event_joined(event_name)
@@ -112,9 +116,9 @@ class Users(Resource):
         event_json = request.get_json(force=True)
         token = keys.API_KEY
         chat_id = event_json['chat_id']
-        event = event_json['event']
-        text = database.query_event_message(event)
-        url_req = "https://api.telegram.org/bot" + token + "/sendMessage" + "?chat_id=" + str(chat_id) + "&text=" + text 
+        message = event_json['message']
+        # text = database.query_event_message(event)
+        url_req = "https://api.telegram.org/bot" + token + "/sendMessage" + "?chat_id=" + str(chat_id) + "&text=" + message 
         results = requests.get(url_req)
         print(results.json())
 
@@ -163,7 +167,7 @@ class Feedbacks(Resource):
 api.add_resource(HelloWorld, '/')
 api.add_resource(Events, '/api/events')
 api.add_resource(EventChoices, '/api/events/choices')
-api.add_resource(Users, '/api/users')
+api.add_resource(UserEvent, '/api/users/event')
 api.add_resource(UserShuffle, '/api/users/shuffle')
 api.add_resource(Feedbacks, '/api/feedbacks')
 

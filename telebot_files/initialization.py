@@ -71,7 +71,7 @@ def get_house(update, context, db):
 
     text = "Great! Your house, " + user_input + ", has been registered."
     text2 = "Welcome to RC4 Welfare Telegram Bot! Feel free to access the features below!"
-    text3 = "You have registered before! Please press /start to re-register, or contact our adminstrators. Thank you."
+    text3 = "Name has been registered before! Please press /start to re-register, or contact our adminstrators. Thank you."
 
     if (user_inserted):
         update.message.reply_text(text)

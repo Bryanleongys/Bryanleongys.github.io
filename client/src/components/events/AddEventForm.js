@@ -69,8 +69,8 @@ const AddEventForm = () => {
       endDate !== null &&
       collectionDate !== null &&
       startTime !== null &&
-      endTime !== null &&
-      message !== null
+      endTime !== null
+      // message !== null
     ) {
       setValidated(true);
     }
@@ -312,7 +312,7 @@ const AddEventForm = () => {
           </Col>
         </Row>
 
-        <Form.Label htmlFor="basic-url">Confirmation Message:</Form.Label>
+        {/* <Form.Label htmlFor="basic-url">Confirmation Message:</Form.Label>
         <InputGroup className="mb-3">
           <FormControl
             required
@@ -325,7 +325,7 @@ const AddEventForm = () => {
           />
         </InputGroup>
 
-        <Form.Label htmlFor="basic-url">Question To Ask (Optional)</Form.Label>
+        <Form.Label htmlFor="basic-url">Question To Ask (Optional)</Form.Label> */}
 
         <Col md>
           <InputGroup className="mb-3">
