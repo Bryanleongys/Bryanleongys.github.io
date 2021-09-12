@@ -52,7 +52,7 @@ def confirm_general_feedback(update, context, db):
     event_name = "general"
     full_name = db.query_user_name(chat_id)
 
-    db.insert_user_feedback(event_name, full_name, chat_id, user_input)
+    db.insert_user_feedback(event_name, full_name, user_input)
     db.query_user_feedback(event_name)
 
 
@@ -113,7 +113,7 @@ def confirm_event_feedback(update, context, db):
     event_name = context.user_data["event_name"]
     full_name = db.query_user_name(chat_id)
 
-    db.insert_user_feedback(event_name, full_name, chat_id, user_input)
+    db.insert_user_feedback(event_name, full_name, user_input)
     db.query_user_feedback(event_name)
 
     text = "Thank you for your message! We will feedback RC4 Welfare Committee."

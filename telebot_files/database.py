@@ -47,7 +47,7 @@ class Database:
             self.cur.execute(
                 '''CREATE TABLE events_custom_choices(event_name text, choice_header text, choice_name text)''')
             self.cur.execute(
-                '''CREATE TABLE user_feedback(event_name text, username text, telegram_id text, feedback text)''')     
+                '''CREATE TABLE user_feedback(event_name text, username text, feedback text)''')     
             self.con.commit()
             return True
         except Exception as e:
@@ -75,7 +75,7 @@ class Database:
 
                 ## update details of user
                 self.cur.execute("UPDATE events_joined SET username=? WHERE telegram_id=?", (username, telegram_id))
-                self.cur.execute("UPDATE user_feedback SET username=? WHERE telegram_id=?", (username, telegram_id))
+                # self.cur.execute("UPDATE user_feedback SET username=? WHERE telegram_id=?", (username, telegram_id))
 
             self.cur.execute("INSERT INTO users(username, nusnet_id, house, telegram_id) VALUES(?,?,?,?)",
                              (username, nusnet_id, house, telegram_id,))
@@ -391,10 +391,10 @@ class Database:
     SQLite queries for user_feedback table
     '''
 
-    def insert_user_feedback(self, event_name, username, telegram_id, feedback):
+    def insert_user_feedback(self, event_name, username, feedback):
         try:
             self.cur.execute(
-                "INSERT INTO user_feedback(event_name, username, telegram_id, feedback) values (?,?,?,?)", (event_name, username, telegram_id, feedback,))
+                "INSERT INTO user_feedback(event_name, username, feedback) values (?,?,?)", (event_name, username, feedback,))
             return True
         except Exception as e:
             print(e)
