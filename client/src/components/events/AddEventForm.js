@@ -69,8 +69,8 @@ const AddEventForm = () => {
       endDate !== null &&
       collectionDate !== null &&
       startTime !== null &&
-      endTime !== null &&
-      message !== null
+      endTime !== null
+      // message !== null
     ) {
       setValidated(true);
     }
