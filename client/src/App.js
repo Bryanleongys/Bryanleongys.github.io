@@ -30,13 +30,6 @@ const App = () => (
         </Nav>
       </Container>
     </Navbar>
-    {/* <ExampleToast>
-        We now have Toasts
-        <span role="img" aria-label="tada">
-          🎉
-        </span>
-      </ExampleToast> */}
-    {/* </Container> */}
     <Container>
       <Switch>
         <Route path="/home" component={HomeScreen} />
