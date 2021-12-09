@@ -30,8 +30,6 @@ const App = () => (
         </Nav>
       </Container>
     </Navbar>
-    {/* <Container className="p-3"> */}
-    {/* <h1 className="header">Welcome To RC4 Welfare Bot</h1> */}
     {/* <ExampleToast>
         We now have Toasts
         <span role="img" aria-label="tada">
