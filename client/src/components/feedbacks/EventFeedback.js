@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Dropdown, Table } from "react-bootstrap";
 import axios from "axios";
-import baseURL from "../../common/Constants";
+import { baseURL } from "../../common/Constants";
 
 // Constants
 const EVENT_NAME = 0;
