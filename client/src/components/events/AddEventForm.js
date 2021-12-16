@@ -18,7 +18,7 @@ import {
 import axios from "axios";
 import { Plus } from "react-bootstrap-icons";
 
-import baseURL from "../../common/Constants";
+import { baseURL } from "../../common/Constants";
 
 const AddEventForm = () => {
   const [eventName, setEventName] = React.useState(null);

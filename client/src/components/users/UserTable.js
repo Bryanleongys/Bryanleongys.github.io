@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Table, Button, Form, Alert, Card } from "react-bootstrap";
 import axios from "axios";
-import baseURL from "../../common/Constants";
+import { baseURL } from "../../common/Constants";
 
 const USER_NAME = 1;
 const TELEGRAM_ID = 2;

@@ -14,7 +14,7 @@ import { Plus, PlusSquare } from "react-bootstrap-icons";
 import EditEvent from "./events/EditEvent";
 import UserTable from "./users/UserTable";
 import axios from "axios";
-import baseURL from "../common/Constants";
+import { baseURL } from "../common/Constants";
 
 const EventScreen = () => {
   let match = useRouteMatch();

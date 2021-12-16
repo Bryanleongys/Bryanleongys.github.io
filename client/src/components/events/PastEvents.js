@@ -4,7 +4,7 @@ import { Switch, Route, Link, useRouteMatch } from "react-router-dom";
 import axios from "axios";
 import EditEvent from "./EditEvent";
 
-import baseURL from "../../common/Constants";
+import {baseURL} from "../../common/Constants";
 
 const EVENT_NAME = 0;
 const START_DATE = 1;

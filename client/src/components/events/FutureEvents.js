@@ -5,7 +5,7 @@ import { Plus, PlusSquare } from "react-bootstrap-icons";
 import axios from "axios";
 import EditEvent from "./EditEvent";
 
-import baseURL from "../../common/Constants";
+import {baseURL} from "../../common/Constants";
 
 const EVENT_NAME = 0;
 const START_DATE = 1;
