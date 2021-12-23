@@ -111,3 +111,4 @@ testDatabase.query_all_events_joined()
 testDatabase.query_user_feedback("Random Welfare")
 
 print("============ End Of Test ==============")
+
