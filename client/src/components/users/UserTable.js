@@ -284,11 +284,19 @@ const UserTable = ({ event }) => {
           Generate List Of Welfare Recipients
         </Button>{" "}
         <span>&nbsp;&nbsp;</span>
-        <CSVLink data={csvData} filename={event[0]}>
-          <Button disabled={!isCsvDataGenerated} variant="warning">
+        {(isCsvDataGenerated && (
+          <CSVLink
+            data={csvData}
+            filename={event[0]}
+            disabled={!isCsvDataGenerated}
+          >
+            <Button variant="warning">Download Excel File</Button>
+          </CSVLink>
+        )) || (
+          <Button disabled={!isCsvDataGenerated} variant="secondary">
             Download Excel File
           </Button>
-        </CSVLink>
+        )}
         {/* <Button
           variant="primary"
           onClick={handleRefresh}
