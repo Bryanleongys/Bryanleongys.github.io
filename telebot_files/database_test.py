@@ -27,12 +27,12 @@ testDatabase.insert_event("Holiday Welfare", "2021/08/03", "2021/08/04", "2021/0
 testDatabase.insert_event("Random Welfare", "2021/08/03", "2021/08/03", "2021/08/03", '15:30', '18:00', "You have been selected!",0)
 
 ## Ongoing Welfare (but signups over)
-testDatabase.insert_event("Hello Welfare", "2021/09/01", "2021/09/02", "2021/12/14", '15:30', '18:00', "You have been selected!",0)
-testDatabase.insert_event("Giveaway Welfare", "2021/08/10", "2021/08/15", "2021/12/16", '15:30', '18:00', "You have been selected!",0)
+testDatabase.insert_event("Hello Welfare", "2021/09/01", "2021/09/02", "2022/01/20", '15:30', '18:00', "You have been selected!",0)
+testDatabase.insert_event("Giveaway Welfare", "2021/08/10", "2021/08/15", "2022/01/20", '15:30', '18:00', "You have been selected!",0)
 
 ## Sign up Welfare
-testDatabase.insert_event("Sem 2 Welfare", "2021/12/10", "2021/12/15", "2021/12/16", '12:30', '13:30', "You have been selected!", 1)
-testDatabase.insert_event("Recess Week Welfare", "2021/12/10", "2021/12/15", "2021/12/16", '15:30', '18:00', "You have been selected!",0)
+testDatabase.insert_event("Sem 2 Welfare", "2021/12/10", "2022/01/20", "2022/02/20", '12:30', '13:30', "You have been selected!", 1)
+testDatabase.insert_event("Recess Week Welfare", "2021/12/10", "2022/01/20", "2022/02/20", '15:30', '18:00', "You have been selected!",0)
 
 ## Future Welfare
 testDatabase.insert_event("Orientation Welfare", "2022/10/10", "2022/10/10", "2022/10/13", '15:30', '18:00', "You have been selected!",0)
