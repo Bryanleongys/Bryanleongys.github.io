@@ -42,7 +42,7 @@ class Database:
                 '''CREATE TABLE Events(EventID integer primary key, EventName text, StartDate text, EndDate text, CollectionDate text, 
                     StartTime text, EndTime text, Message text)''')
             self.cur.execute(
-                '''CREATE TABLE Users(UserID integer primary key, UserName text, NusnetId text, House text, TelegramId text)''')
+                '''CREATE TABLE Users(UserID integer primary key, UserName text, NusnetId text, House text, TelegramId text. TelegramHandle text, WinCount integer)''')
             self.cur.execute(
                 '''CREATE TABLE EventsJoined(UserID integer not null, EventID integer not null, Timing text, ItemChosen text,
                 FOREIGN KEY(UserID) REFERENCES Users(UserID),
