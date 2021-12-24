@@ -106,6 +106,13 @@ class Users(Resource):
         users = database.query_all_users()
         return make_response(jsonify(users), 200)
 
+    def delete(self):
+        user_json = request.get_json(force=True)
+        print('hello')
+        database.delete_user(user_json['telegram_id'])
+        database.query_all_users()
+        
+
 class UserEvent(Resource):
     def get(self):
         event_name = request.args['eventName']
@@ -167,6 +174,7 @@ class Feedbacks(Resource):
 api.add_resource(HelloWorld, '/')
 api.add_resource(Events, '/api/events')
 api.add_resource(EventChoices, '/api/events/choices')
+api.add_resource(Users, '/api/users')
 api.add_resource(UserEvent, '/api/users/event')
 api.add_resource(UserShuffle, '/api/users/shuffle')
 api.add_resource(Feedbacks, '/api/feedbacks')
