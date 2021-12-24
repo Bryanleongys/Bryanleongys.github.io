@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Table, Button, Form, Alert} from "react-bootstrap";
+import { Container, Table, Button, Form, Alert } from "react-bootstrap";
 import axios from "axios";
 import { baseURL } from "../../common/Constants";
 import { CSVLink } from "react-csv";
@@ -210,11 +210,11 @@ const UserTable = ({ event }) => {
     var data = [];
     for (var i = 0; i < userArray.length; i++) {
       data.push(userArray[i]);
-      data[i]['selected'] = arr[i];
+      data[i]["selected"] = arr[i];
     }
     setCsvData(data);
     setIsCsvDataGenerated(true);
-  }
+  };
 
   const handleSend = () => {
     var totalCondition = 0;
@@ -280,12 +280,23 @@ const UserTable = ({ event }) => {
             <Alert variant="danger">Please key in valid inputs!</Alert>
           ) : null}
         </Form.Group>
-
         <Button variant="primary" onClick={handleRandomize} {...formProps}>
           Generate List Of Welfare Recipients
-        </Button> <span>&nbsp;&nbsp;</span>
-        {isCsvDataGenerated && <CSVLink data={csvData} filename={event[0]}><Button variant='warning'>Download Excel File</Button></CSVLink>}
-        
+        </Button>{" "}
+        <span>&nbsp;&nbsp;</span>
+        {(isCsvDataGenerated && (
+          <CSVLink
+            data={csvData}
+            filename={event[0]}
+            disabled={!isCsvDataGenerated}
+          >
+            <Button variant="warning">Download Excel File</Button>
+          </CSVLink>
+        )) || (
+          <Button disabled={!isCsvDataGenerated} variant="secondary">
+            Download Excel File
+          </Button>
+        )}
         {/* <Button
           variant="primary"
           onClick={handleRefresh}
