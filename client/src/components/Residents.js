@@ -2,7 +2,7 @@ import axios from "axios";
 import React from "react";
 import { Container, Nav, Table, Button, Modal } from "react-bootstrap";
 import { Switch, Route, Link, useRouteMatch } from "react-router-dom";
-import baseURL from "../common/Constants";
+import { baseURL } from "../common/Constants";
 
 const USERNAME = 0;
 const NUSNET_ID = 1;
