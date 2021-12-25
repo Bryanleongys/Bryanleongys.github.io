@@ -39,15 +39,21 @@ class Database:
     def create_tables(self):
         try:
             self.cur.execute(
-                '''CREATE TABLE events(name text, start_date text, end_date text, collection_date text, start_time text, end_time text, message text, item_bool text)''')
+                '''CREATE TABLE Events(EventID integer primary key, EventName text, StartDate text, EndDate text, CollectionDate text, 
+                    StartTime text, EndTime text, Message text)''')
             self.cur.execute(
-                '''CREATE TABLE users(username text, nusnet_id text, house text, telegram_id text)''')
+                '''CREATE TABLE Users(UserID integer primary key, UserName text, NusnetId text, House text, TelegramId text. TelegramHandle text, WinCount integer)''')
             self.cur.execute(
-                '''CREATE TABLE events_joined(event_name text, username text, telegram_id text, telegram_handle text, timing text, item_chosen text)''')
+                '''CREATE TABLE EventsJoined(UserID integer not null, EventID integer not null, Timing text, ItemChosen text,
+                FOREIGN KEY(UserID) REFERENCES Users(UserID),
+                FOREIGN KEY(EventID) REFERENCES Events(EventID))''')
             self.cur.execute(
-                '''CREATE TABLE events_custom_choices(event_name text, choice_header text, choice_name text)''')
+                '''CREATE TABLE EventsCustomChoices(EventID integer not null, ChoiceHeader text, ChoiceName text
+                FOREIGN KEY(EventID) REFERENCES Events(EventID))''')
             self.cur.execute(
-                '''CREATE TABLE user_feedback(event_name text, username text, feedback text)''')     
+                '''CREATE TABLE UserFeedback(EventID integer not null, UserID integer not null, Feedback text,
+                FOREIGN KEY(UserID) REFERENCES Users(UserID),
+                FOREIGN KEY(EventID) REFERENCES Events(EventID))''')     
             self.con.commit()
             return True
         except Exception as e:
@@ -132,10 +138,11 @@ class Database:
         except Exception as e:
             print(e)
             return e
+
     '''
     SQLite queries for events table
     '''
-
+    
     def insert_event(self, name, start_date, end_date, collection_date, start_time, end_time, message, item_bool):
         try:
             ## if event name exists, do not insert
@@ -393,6 +400,7 @@ class Database:
 
     def insert_user_feedback(self, event_name, username, feedback):
         try:
+            # query events table for event id
             self.cur.execute(
                 "INSERT INTO user_feedback(event_name, username, feedback) values (?,?,?)", (event_name, username, feedback,))
             return True
