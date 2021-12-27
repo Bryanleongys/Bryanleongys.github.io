@@ -22,44 +22,44 @@ testDatabase.create_tables()
 # testDatabase.query_user_details("1157634501")
 # print("==========================")
 
-# # Ensuring events table queries work
-# ## Past Welfare
-# testDatabase.insert_event("Holiday Welfare", "2021/08/03", "2021/08/04", "2021/08/16", '15:30', '18:00', "You have been selected!",0)
-# testDatabase.insert_event("Random Welfare", "2021/08/03", "2021/08/03", "2021/08/03", '15:30', '18:00', "You have been selected!",0)
+# Ensuring events table queries work
+## Past Welfare
+testDatabase.insert_event("Holiday Welfare", "2021/08/03", "2021/08/04", "2021/08/16", '15:30', '18:00', "You have been selected!",0)
+testDatabase.insert_event("Random Welfare", "2021/08/03", "2021/08/03", "2021/08/03", '15:30', '18:00', "You have been selected!",0)
 
-# ## Ongoing Welfare (but signups over)
-# testDatabase.insert_event("Hello Welfare", "2021/09/01", "2021/09/02", "2022/01/20", '15:30', '18:00', "You have been selected!",0)
-# testDatabase.insert_event("Giveaway Welfare", "2021/08/10", "2021/08/15", "2022/01/20", '15:30', '18:00', "You have been selected!",0)
+## Ongoing Welfare (but signups over)
+testDatabase.insert_event("Hello Welfare", "2021/09/01", "2021/09/02", "2022/01/20", '15:30', '18:00', "You have been selected!",0)
+testDatabase.insert_event("Giveaway Welfare", "2021/08/10", "2021/08/15", "2022/01/20", '15:30', '18:00', "You have been selected!",0)
 
-# ## Sign up Welfare
-# testDatabase.insert_event("Sem 2 Welfare", "2021/12/10", "2022/01/20", "2022/02/20", '12:30', '13:30', "You have been selected!", 1)
-# testDatabase.insert_event("Recess Week Welfare", "2021/12/10", "2022/01/20", "2022/02/20", '15:30', '18:00', "You have been selected!",0)
+## Sign up Welfare
+testDatabase.insert_event("Sem 2 Welfare", "2021/12/10", "2022/01/20", "2022/02/20", '12:30', '13:30', "You have been selected!", 1)
+testDatabase.insert_event("Recess Week Welfare", "2021/12/10", "2022/01/20", "2022/02/20", '15:30', '18:00', "You have been selected!",0)
 
-# ## Future Welfare
-# testDatabase.insert_event("Orientation Welfare", "2022/10/10", "2022/10/10", "2022/10/13", '15:30', '18:00', "You have been selected!",0)
-# testDatabase.insert_event("BBT Welfare", "2022/10/10", "2022/10/10", "2022/10/13", '15:30', '18:00', "You have been selected!",0)
+## Future Welfare
+testDatabase.insert_event("Orientation Welfare", "2022/10/10", "2022/10/10", "2022/10/13", '15:30', '18:00', "You have been selected!",0)
+testDatabase.insert_event("BBT Welfare", "2022/10/10", "2022/10/10", "2022/10/13", '15:30', '18:00', "You have been selected!",0)
 
-# testDatabase.insert_event("Final Week Welfare", "2021/08/10", "2021/08/16", "2021/08/21", '15:30', '18:00', "You have been selected!",0)
+testDatabase.insert_event("Final Week Welfare", "2021/08/10", "2021/08/16", "2021/08/21", '15:30', '18:00', "You have been selected!",0)
 
-# testDatabase.delete_event("Final Week Welfare")
-# print("Expected: 8 events row printed")
-# testDatabase.query_all_events()
-# print("==========================")
-# print("Expected: 4 ongoing events rows printed")
-# testDatabase.query_all_ongoing_events()
-# print("==========================")
-# print("Expected: 2 events able to sign up rows printed")
-# testDatabase.query_all_sign_up_events()
-# print("==========================")
-# print("Expected: 2 future events rows printed")
-# testDatabase.query_all_future_events()
-# print("==========================")
-# print("Expected: 2 past events rows printed")
-# testDatabase.query_all_past_events()
-# print("==========================")
-# print("Expected: 1 event message printed")
-# testDatabase.query_event_message("Sem 2 Welfare")
-# print("==========================")
+testDatabase.delete_event("Final Week Welfare")
+print("Expected: 8 events row printed")
+testDatabase.query_all_events()
+print("==========================")
+print("Expected: 4 ongoing events rows printed")
+testDatabase.query_all_ongoing_events()
+print("==========================")
+print("Expected: 2 events able to sign up rows printed")
+testDatabase.query_all_sign_up_events()
+print("==========================")
+print("Expected: 2 future events rows printed")
+testDatabase.query_all_future_events()
+print("==========================")
+print("Expected: 2 past events rows printed")
+testDatabase.query_all_past_events()
+print("==========================")
+print("Expected: 1 event message printed")
+testDatabase.query_event_message("Sem 2 Welfare")
+print("==========================")
 
 # # Ensuring events_joined table queries work
 # print("Expected: 4 events_joined rows printed")

@@ -42,13 +42,13 @@ class Database:
                 '''CREATE TABLE Events(EventID integer primary key, EventName text, StartDate text, EndDate text, CollectionDate text, 
                     StartTime text, EndTime text, Message text)''')
             self.cur.execute(
-                '''CREATE TABLE Users(UserID integer primary key, UserName text, NusnetId text, House text, TelegramId text. TelegramHandle text, WinCount integer)''')
+                '''CREATE TABLE Users(UserID integer primary key, UserName text, NusnetId text, House text, TelegramId text, TelegramHandle text, WinCount integer)''')
             self.cur.execute(
                 '''CREATE TABLE EventsJoined(UserID integer not null, EventID integer not null, Timing text, ItemChosen text,
                 FOREIGN KEY(UserID) REFERENCES Users(UserID),
                 FOREIGN KEY(EventID) REFERENCES Events(EventID))''')
             self.cur.execute(
-                '''CREATE TABLE EventsCustomChoices(EventID integer not null, ChoiceHeader text, ChoiceName text
+                '''CREATE TABLE EventsCustomChoices(EventID integer not null, ChoiceHeader text, ChoiceName text,
                 FOREIGN KEY(EventID) REFERENCES Events(EventID))''')
             self.cur.execute(
                 '''CREATE TABLE UserFeedback(EventID integer not null, UserID integer not null, Feedback text,
