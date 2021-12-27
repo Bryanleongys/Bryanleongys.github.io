@@ -44,7 +44,7 @@ class Database:
             self.cur.execute(
                 '''CREATE TABLE Users(UserID integer primary key, UserName text, NusnetId text, House text, TelegramId text. TelegramHandle text, WinCount integer)''')
             self.cur.execute(
-                '''CREATE TABLE EventsJoined(UserID integer not null, EventID integer not null, Timing text, ItemChosen text,
+                '''CREATE TABLE EventsJoined(UserID integer not null, EventID integer not null, Timing text, ItemChosen text, WinCount integer,
                 FOREIGN KEY(UserID) REFERENCES Users(UserID),
                 FOREIGN KEY(EventID) REFERENCES Events(EventID))''')
             self.cur.execute(
@@ -74,8 +74,13 @@ class Database:
             ## if telegram_id registered before, delete and insert
             self.cur.execute("SELECT * FROM users WHERE telegram_id=?", (telegram_id,))
             rows = self.cur.fetchall()
+            times = 0
             if (len(rows)):
                 name = rows[0][USER_NAME]
+
+                ## get the number of times the user has been chosen    
+                times = rows[0][TIMES_CHOSEN]
+    
                 self.cur.execute(
                 "DELETE FROM users WHERE telegram_id=?", (telegram_id,))
 
@@ -83,8 +88,8 @@ class Database:
                 self.cur.execute("UPDATE events_joined SET username=? WHERE telegram_id=?", (username, telegram_id))
                 # self.cur.execute("UPDATE user_feedback SET username=? WHERE telegram_id=?", (username, telegram_id))
 
-            self.cur.execute("INSERT INTO users(username, nusnet_id, house, telegram_id) VALUES(?,?,?,?)",
-                             (username, nusnet_id, house, telegram_id,))
+            self.cur.execute("INSERT INTO users(username, nusnet_id, house, telegram_id, times_chosen) VALUES(?,?,?,?,?)",
+                             (username, nusnet_id, house, telegram_id, times))
             self.con.commit()
             return True
         except Exception as e:
@@ -121,6 +126,28 @@ class Database:
             user_name = rows[0][USER_NAME]
             print(user_name)
             return user_name
+            
+        except Exception as e:
+            print(e)
+            return e
+
+    def query_times_chosen(self, telegram_id):
+        try:
+            self.cur.execute("SELECT * FROM users WHERE telegram_id=?", (telegram_id,))
+            self.con.commit()
+            rows = self.cur.fetchall()
+            times_chosen = rows[0][TIMES_CHOSEN]
+            print(times_chosen)
+            return times_chosen
+            
+        except Exception as e:
+            print(e)
+            return e
+
+    def query_update_times_chosen(self, times_chosen, telegram_id):
+        try:
+            self.cur.execute("UPDATE users SET times_chosen=? WHERE telegram_id=?", (times_chosen, telegram_id))
+            self.con.commit()
             
         except Exception as e:
             print(e)
@@ -285,9 +312,12 @@ class Database:
             if (len(self.cur.fetchall())):
                 self.cur.execute(
                 "DELETE FROM events_joined WHERE telegram_id=? AND event_name=?", (telegram_id, event_name,))
-            
+            ## get the number of times the user was chosen
+            self.cur.execute("SELECT * FROM events_joined WHERE telegram_id=? AND event_name=?", (telegram_id, event_name,))
+            times_chosen = self.cur.fetchall()[0][TIMES_CHOSEN]
+
             self.cur.execute(
-                "INSERT INTO events_joined(event_name, username, telegram_id, telegram_handle, timing, item_chosen) values (?,?,?,?,?,?)", (event_name, username, telegram_id, telegram_handle, timing, item_chosen,))
+                "INSERT INTO events_joined(event_name, username, telegram_id, telegram_handle, timing, item_chosen, times_chosen) values (?,?,?,?,?,?,?)", (event_name, username, telegram_id, telegram_handle, timing, item_chosen, times_chosen))
             self.con.commit()
             return True
         except Exception as e:
@@ -336,6 +366,19 @@ class Database:
         try:
             self.cur.execute("SELECT * FROM events_joined WHERE event_name=? AND item_chosen=?", (event_name, item_chosen,))
             rows = self.cur.fetchall()
+            arrayString=[]
+            for row in rows:
+                arrayString.append(row)
+            print(arrayString)
+            return arrayString
+        except Exception as e:
+            print(e)
+            return e
+
+    def query_get_users(self, event_name, item_chosen, times_chosen_at_most):
+        try:
+            self.cur.execute("SELECT * FROM events_joined WHERE event_name=? AND item_chosen=? AND times_chosen<=?", (event_name, item_chosen, times_chosen_at_most))
+            times_chosen = self.cur.fetchall()
             arrayString=[]
             for row in rows:
                 arrayString.append(row)
