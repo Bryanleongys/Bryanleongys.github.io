@@ -66,7 +66,7 @@ def get_house(update, context, db):
     full_name = context.user_data["full_name"]
     nusnet_id = context.user_data["nusnet_id"]
 
-    user_inserted = db.insert_user(full_name, nusnet_id, user_input, chat_id)
+    user_inserted = db.insert_user(full_name, nusnet_id, user_input, chat_id, telegram_handle, 0)
     db.query_all_users()
 
     text = "Great! Your house, " + user_input + ", has been registered."

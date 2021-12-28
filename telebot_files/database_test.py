@@ -4,7 +4,6 @@ print("============ Start Of Test ==============")
 testDatabase = Database()
 testDatabase.create_tables()
 
-
 # # Ensuring users table queries work
 # print("Expected: 3 users rows printed")
 # testDatabase.insert_user("Bryan Wong Hong Liang", "e0535051", "Aquila", "1157634501")
