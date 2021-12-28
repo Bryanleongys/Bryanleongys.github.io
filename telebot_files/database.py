@@ -8,14 +8,15 @@ import threading
 CONSTANTS
 '''
 
-EVENT_MESSAGE = 6
+EVENT_MESSAGE = 7
 USER_ID = 0
 WIN_COUNT = 6
 EVENT_ID = 0
 USER_NAME = 1
-START_DATE = 1
-END_DATE = 2
-COLLECTION_DATE = 3
+START_DATE = 2
+END_DATE = 3
+COLLECTION_DATE = 4
+
 LOCK = threading.Lock()
 
 class Database:
@@ -158,12 +159,12 @@ class Database:
     def insert_event(self, name, start_date, end_date, collection_date, start_time, end_time, message, item_bool):
         try:
             ## if event name exists, do not insert
-            self.cur.execute("SELECT * FROM events WHERE name=?",(name,))
+            self.cur.execute("SELECT * FROM Events WHERE EventName=?",(name,))
             if (len(self.cur.fetchall())):
                 return False
 
-            self.cur.execute("INSERT INTO events(name, start_date, end_date, collection_date, start_time, end_time, message, item_bool) values (?,?,?,?,?,?,?,?)",
-                             (name, start_date, end_date, collection_date, start_time, end_time, message, item_bool))
+            self.cur.execute("INSERT INTO events(EventName, StartDate, EndDate, CollectionDate, StartTime, EndTime, Message) values (?,?,?,?,?,?,?)",
+                             (name, start_date, end_date, collection_date, start_time, end_time, message,))
             self.con.commit()
             return True
         except Exception as e:
@@ -172,7 +173,7 @@ class Database:
 
     def delete_event(self, name):
         try:
-            self.cur.execute("DELETE FROM events WHERE name=?", (name,))
+            self.cur.execute("DELETE FROM Events WHERE EventName=?", (name,))
             self.con.commit()
         except Exception as e:
             print(e)
@@ -180,7 +181,7 @@ class Database:
 
     def query_all_events(self):
         try:
-            self.cur.execute("SELECT * FROM events")
+            self.cur.execute("SELECT * FROM Events")
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
@@ -195,7 +196,7 @@ class Database:
         today = date.today()
         dateToday = time.strptime(today.strftime("%Y/%m/%d"), "%Y/%m/%d")
         try:
-            self.cur.execute("SELECT * FROM events")
+            self.cur.execute("SELECT * FROM Events")
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
@@ -214,7 +215,7 @@ class Database:
         today = date.today()
         dateToday = time.strptime(today.strftime("%Y/%m/%d"), "%Y/%m/%d")
         try:
-            self.cur.execute("SELECT * FROM events")
+            self.cur.execute("SELECT * FROM Events")
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
@@ -233,7 +234,7 @@ class Database:
         today = date.today()
         dateToday = time.strptime(today.strftime("%Y/%m/%d"), "%Y/%m/%d")
         try:
-            self.cur.execute("SELECT * FROM events")
+            self.cur.execute("SELECT * FROM Events")
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
@@ -250,7 +251,7 @@ class Database:
         today = date.today()
         dateToday = time.strptime(today.strftime("%Y/%m/%d"), "%Y/%m/%d")
         try:
-            self.cur.execute("SELECT * FROM events")
+            self.cur.execute("SELECT * FROM Events")
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
@@ -265,7 +266,7 @@ class Database:
 
     def query_event_message(self, event_name):
         try:
-            self.cur.execute("SELECT * FROM events WHERE name=?", (event_name,))
+            self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
             self.con.commit()
             rows = self.cur.fetchall()
             event_message = rows[0][EVENT_MESSAGE] # takes only one event
@@ -277,7 +278,7 @@ class Database:
 
     def query_event_exist(self, event_name):
         try:
-            self.cur.execute("SELECT * FROM events WHERE name=?", (event_name,))
+            self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
             self.con.commit()
             if (len(self.cur.fetchall())):
                 return True

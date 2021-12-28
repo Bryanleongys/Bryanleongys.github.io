@@ -4,22 +4,22 @@ print("============ Start Of Test ==============")
 testDatabase = Database()
 testDatabase.create_tables()
 
-# Ensuring users table queries work
-print("Expected: 3 users rows printed")
-testDatabase.insert_user("Bryan Wong Hong Liang", "e0535051", "Aquila", "1157634501", "bryanwhl", 1)
-testDatabase.insert_user("Bryan Leong Yong Sheng", "e0535000", "Leo", "1157634500", "smulboi", 2)
-testDatabase.insert_user("Bryan Leong Yong Sheng", "e0535001", "Leo", "1157634502", "smulboi", 3) ## same name but different nusnet_id/telegram_id
-testDatabase.insert_user("Bryan Wongggg", "e0535051", "Leo", "1157634501", "bryanwhl", 0)
-testDatabase.insert_user("Ian Tan", "e0534121", "Noctua", "e591o4", "ian", 0)
-testDatabase.delete_user("e591o4")
-testDatabase.query_all_users()
-print("==========================")
-print("Expected: 1 user name printed")
-testDatabase.query_user_name("1157634501")
-print("==========================")
-print("Exepcted: 1 user details printed")
-testDatabase.query_user_details("1157634501")
-print("==========================")
+# # Ensuring users table queries work
+# print("Expected: 3 users rows printed")
+# testDatabase.insert_user("Bryan Wong Hong Liang", "e0535051", "Aquila", "1157634501")
+# testDatabase.insert_user("Bryan Wong Hong Liang", "e0535051", "Aquila", "1157634501")
+# testDatabase.insert_user("Bryan Leong Yong Sheng", "e0535000", "Leo", "1157634500")
+# testDatabase.insert_user("Bryan Leong Yong Sheng", "e0535001", "Leo", "1157634502") ## same name but different nusnet_id/telegram_id
+# testDatabase.insert_user("Ian Tan", "e0534121", "Noctua", "e591o4")
+# testDatabase.delete_user("e591o4")
+# testDatabase.query_all_users()
+# print("==========================")
+# print("Exepcted: 1 user name printed")
+# testDatabase.query_user_name("1157634501")
+# print("==========================")
+# print("Exepcted: 1 user details printed")
+# testDatabase.query_user_details("1157634501")
+# print("==========================")
 
 # Ensuring events table queries work
 ## Past Welfare
@@ -41,7 +41,7 @@ testDatabase.insert_event("BBT Welfare", "2022/10/10", "2022/10/10", "2022/10/13
 testDatabase.insert_event("Final Week Welfare", "2021/08/10", "2021/08/16", "2021/08/21", '15:30', '18:00', "You have been selected!",0)
 
 testDatabase.delete_event("Final Week Welfare")
-print("Expected: 6 events row printed")
+print("Expected: 8 events row printed")
 testDatabase.query_all_events()
 print("==========================")
 print("Expected: 4 ongoing events rows printed")
@@ -96,14 +96,14 @@ print("==========================")
 # testDatabase.query_user_feedback("Orientation Welfare")
 # print("==========================")
 
-# Ensuring events_custom_choices table queries work
-testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level would you like?", "25%")
-testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level would you like?", "50%")
-testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level would you like?", "75%")
-testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level would you like?", "100%")
-print("Expected: 4 event custom choices printed")
-testDatabase.query_events_choices("Sem 2 Welfare")
-print("==========================")
+# # Ensuring events_custom_choices table queries work
+# testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level would you like?", "25%")
+# testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level would you like?", "50%")
+# testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level would you like?", "75%")
+# testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level would you like?", "100%")
+# print("Expected: 4 event custom choices printed")
+# testDatabase.query_events_choices("Sem 2 Welfare")
+# print("==========================")
 
 # # Ensuring events_joined and user_feedback tables are updated after name change
 # testDatabase.insert_user("Biryani Leong", "e0535000", "Leo", "1157634500")
