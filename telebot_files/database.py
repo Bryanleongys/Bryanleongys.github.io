@@ -57,7 +57,11 @@ class Database:
             self.cur.execute(
                 '''CREATE TABLE UserFeedback(EventID integer not null, UserID integer not null, Feedback text,
                 FOREIGN KEY(UserID) REFERENCES Users(UserID),
-                FOREIGN KEY(EventID) REFERENCES Events(EventID))''')     
+                FOREIGN KEY(EventID) REFERENCES Events(EventID))''')
+
+            # for general feedback table
+            # self.cur.execute('INSERT INTO Events(EventID, EventName, StartDate, EndDate, CollectionDate, StartTime, EndTime, Message) values (?,?,?,?,?,?,?,?)', 
+            #                 ((-1, 'general', None, None, None, None, None, None)))
             self.con.commit()
             return True
         except Exception as e:
@@ -299,17 +303,19 @@ class Database:
             if (event_rows):
                 event_id = event_rows[0][EVENT_ID]
             else:
-                return
+               return
 
             self.cur.execute("SELECT * FROM Users WHERE UserName=?", (username,))
             user_rows = self.cur.fetchall()
             if (user_rows):
                 user_id = user_rows[0][USER_ID]
+
             else:
                 return
 
+            self.cur.execute("SELECT * FROM EventsJoined WHERE UserID=? AND EventID=?", (user_id, event_id, ))
             if (len(self.cur.fetchall())):
-                self.cur.execute("DELETE FROM EventsJoined WHERE EventID=? AND UserID=?", (event_id, user_id,))
+                self.cur.execute("DELETE FROM EventsJoined WHERE UserID=? AND EventID=?", (user_id, event_id))
 
             self.cur.execute(
                 "INSERT INTO EventsJoined(EventID, UserID, Timing, ItemChosen) values (?,?,?,?)", (event_id, user_id, timing, item_chosen,))
@@ -377,7 +383,7 @@ class Database:
                 event_id = rows[0][EVENT_ID]
             else:
                 return
-            self.cur.execute("SELECT * FROM EventsJoined WHERE EventID=? AND item_chosen=?", (event_name, item_chosen,))
+            self.cur.execute("SELECT * FROM EventsJoined WHERE EventID=? AND ItemChosen=?", (event_id, item_chosen,))
             rows = self.cur.fetchall()
             arrayString=[]
             for row in rows:
@@ -468,20 +474,24 @@ class Database:
     def insert_user_feedback(self, event_name, username, feedback):
         try:
             # query events table for event id
-            self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
-            event_rows = self.cur.fetchall()
-            if (event_rows):
-                event_id = event_rows[0][EVENT_ID]
-            else:
-                return
             self.cur.execute("SELECT * FROM Users WHERE UserName=?", (username,))
             user_rows = self.cur.fetchall()
             if (user_rows):
-                user_id = user_rows[0][EVENT_ID]
+                user_id = user_rows[0][USER_ID]
             else:
                 return
-            self.cur.execute(
-                "INSERT INTO UserFeedback(EventID, UserID, Feedback) values (?,?,?)", (event_id, user_id, feedback,))
+            if (event_name == 'general'):
+                self.cur.execute("INSERT INTO UserFeedback(EventID, UserID, Feedback) values (?,?,?)", (-1, user_id, feedback,))
+                self.con.commit()
+            else: 
+                self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
+                event_rows = self.cur.fetchall()
+                if (event_rows):
+                    event_id = event_rows[0][EVENT_ID]
+                else:
+                    return
+                self.cur.execute("INSERT INTO UserFeedback(EventID, UserID, Feedback) values (?,?,?)", (event_id, user_id, feedback,))
+                self.con.commit()
             return True
         except Exception as e:
             print(e)
@@ -504,15 +514,19 @@ class Database:
     
     def query_user_feedback(self, event_name):
         try:
-            self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
-            event_rows = self.cur.fetchall()
-            if (event_rows):
-                event_id = event_rows[0][EVENT_ID]
+            LOCK.acquire(True)
+            if (event_name == 'general'):
+                self.cur.execute("SELECT * FROM UserFeedback WHERE EventID =?", (-1,))
+                rows = self.cur.fetchall()
             else:
-                return
-            self.cur.execute("SELECT * FROM UserFeedback WHERE EventID =?", (event_id,))
-            self.con.commit()
-            rows = self.cur.fetchall()
+                self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
+                event_rows = self.cur.fetchall()
+                if (event_rows):
+                    event_id = event_rows[0][EVENT_ID]
+                else:
+                    return
+                self.cur.execute("SELECT * FROM UserFeedback WHERE EventID =?", (event_id,))
+                rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
                 arrayString.append(row)
@@ -521,3 +535,5 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
