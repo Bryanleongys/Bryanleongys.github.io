@@ -5,7 +5,7 @@ import { baseURL } from "../../common/Constants";
 
 // Constants
 const EVENT_NAME = 1;
-const USER_NAME = 2;
+const USER_NAME = 1;
 const FEEDBACK_MESSAGE = 2;
 
 const EventFeedback = () => {
