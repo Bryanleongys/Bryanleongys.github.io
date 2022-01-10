@@ -12,6 +12,7 @@ EVENT_MESSAGE = 7
 USER_ID = 0
 WIN_COUNT = 6
 EVENT_ID = 0
+EVENT_NAME = 1
 USER_NAME = 1
 START_DATE = 2
 END_DATE = 3
@@ -155,6 +156,17 @@ class Database:
         except Exception as e:
             print(e)
             return e
+    
+    def query_user_id(self, user_id):
+        try:
+            self.cur.execute("SELECT * FROM Users WHERE UserID=?", (user_id,))
+            self.con.commit()
+            rows = self.cur.fetchall()
+            user_details = rows[0]
+            return user_details
+        except Exception as e:
+            print(e)
+            return e
 
     '''
     SQLite queries for events table
@@ -287,6 +299,17 @@ class Database:
             if (len(self.cur.fetchall())):
                 return True
             return False
+        except Exception as e:
+            print(e)
+            return e
+
+    def query_event_id(self, event_id):
+        try:
+            self.cur.execute("SELECT * FROM Events WHERE EventID=?", (event_id,))
+            self.con.commit()
+            rows = self.cur.fetchall()
+            event_details = rows[0]
+            return event_details
         except Exception as e:
             print(e)
             return e

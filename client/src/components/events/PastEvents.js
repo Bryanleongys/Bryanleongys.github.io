@@ -4,16 +4,15 @@ import { Switch, Route, Link, useRouteMatch } from "react-router-dom";
 import axios from "axios";
 import EditEvent from "./EditEvent";
 
-import {baseURL} from "../../common/Constants";
+import { baseURL } from "../../common/Constants";
 
-const EVENT_NAME = 0;
-const START_DATE = 1;
-const END_DATE = 2;
-const COLLECTION_DATE = 3;
-const START_TIME = 4;
-const END_TIME = 5;
-const MESSAGE = 6;
-const ITEM_BOOL = 7;
+const EVENT_NAME = 1;
+const START_DATE = 2;
+const END_DATE = 3;
+const COLLECTION_DATE = 4;
+const START_TIME = 5;
+const END_TIME = 6;
+const MESSAGE = 7;
 
 const PastEvents = () => {
   let match = useRouteMatch();

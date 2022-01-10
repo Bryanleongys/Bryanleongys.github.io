@@ -4,10 +4,10 @@ import { Container, Nav, Table, Button, Modal } from "react-bootstrap";
 import { Switch, Route, Link, useRouteMatch } from "react-router-dom";
 import { baseURL } from "../common/Constants";
 
-const USERNAME = 0;
-const NUSNET_ID = 1;
-const HOUSE = 2;
-const TELEGRAM_ID = 3;
+const USERNAME = 1;
+const NUSNET_ID = 2;
+const HOUSE = 3;
+const TELEGRAM_ID = 4;
 
 const Residents = () => {
   const [users, setUsers] = React.useState([]);

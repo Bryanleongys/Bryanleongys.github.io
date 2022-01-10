@@ -96,9 +96,13 @@ class Events(Resource):
 
 class EventChoices(Resource):
     def get(self):
-        event_name = request.args['eventName']
+        event_name = request.args['eventName'] ## use event_name as per it is now
         event_choices = database.query_events_choices(event_name)
-        print(event_choices)
+        edit_event_choices = []
+        for event_choice in event_choices:
+            new_event_choice = (event_name, event_choice[1], event_choice[2])
+            edit_event_choices.append(new_event_choice)
+        print(new_event_choice)
         return make_response(jsonify(event_choices), 200)
 
 class Users(Resource):
@@ -117,7 +121,17 @@ class UserEvent(Resource):
     def get(self):
         event_name = request.args['eventName']
         users_joined = database.query_event_joined(event_name)
-        return make_response(jsonify(users_joined), 200)
+        edit_users_joined = []
+        for user_joined in users_joined:
+            user_id = user_joined[0]
+            user_details = database.query_user_id(user_id)
+            username = user_details[1]
+            telegram_id = user_details[4]
+            telegram_handle = user_details[5]
+            new_user_joined = (event_name, username, telegram_id, telegram_handle, user_joined[2], user_joined[3])
+            edit_users_joined.append(new_user_joined)
+            
+        return make_response(jsonify(edit_users_joined), 200)
     
     def post(self):
         event_json = request.get_json(force=True)
@@ -166,10 +180,16 @@ class Feedbacks(Resource):
     def get(self):
         event_name = request.args['eventName']
         if (event_name == "general"):
-            event_feedback = database.query_user_feedback("general")
+            event_feedbacks = database.query_user_feedback("general")
         else:
-            event_feedback = database.query_user_feedback(event_name)
-        return make_response(jsonify(event_feedback), 200)
+            event_feedbacks = database.query_user_feedback(event_name)
+        edit_event_feedbacks = []
+        for event_feedback in event_feedbacks:
+            user_details = database.query_user_id(event_feedback[1])
+            user_name = user_details[1]
+            new_event_feedback = (event_name, user_name, event_feedback[2])
+            edit_event_feedbacks.append(new_event_feedback)
+        return make_response(jsonify(edit_event_feedbacks), 200)
 
 api.add_resource(HelloWorld, '/')
 api.add_resource(Events, '/api/events')
