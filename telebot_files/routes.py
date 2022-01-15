@@ -145,15 +145,41 @@ class UserShuffle(Resource):
             for index in range(len(choice_pax)):
                 pax = choice_pax[index]
                 choice = event_choices[index][2]
-                users = database.query_user_choice(event_name, choice)
-                random.shuffle(users)
+                max_wincount = len(database.query_all_past_events)
+                users = []
+                # users = database.query_user_choice(event_name, choice)
+
+                for win_count in range(0, max_wincount):
+                    if len(users) >= total_pax:
+                        break
+                    else:
+                        current_users = database.query_user_choice(event_name, choice, win_count)
+                        random.shuffle(current_users)
+
+                        for user in current_users:
+                            users.append(user)
+
                 users = users[0:pax]
                 for user in users:
                     final_user_array.append(user)
         else:
             final_user_array = []
-            users = database.query_event_joined(event_name)
-            random.shuffle(users)
+            # users = database.query_event_joined(event_name)
+
+            max_wincount = len(database.query_all_past_events)
+            users = []
+
+
+            for win_count in range(0, max_wincount):
+                if len(users) >= total_pax:
+                    break
+                else:
+                    current_users = database.query_event_joined(event_name, win_count)
+                    random.shuffle(current_users)
+
+                    for user in current_users:
+                        users.append(user)
+
             users = users[0:total_pax]
             for user in users:
                 final_user_array.append(user)
