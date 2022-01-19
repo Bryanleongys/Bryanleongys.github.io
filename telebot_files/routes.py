@@ -129,6 +129,12 @@ class UserEvent(Resource):
         results = requests.get(url_req)
         print(results.json())
 
+class UserWincount(Resource):    
+    def post(self):
+        user_json = request.get_json(force=True)
+        telegram_id = user_json['telegram_id']
+        database.query_update_wincount(telegram_id)
+
 class UserShuffle(Resource):
     def get(self):
         event_name = request.args['eventName']
@@ -202,6 +208,7 @@ api.add_resource(Events, '/api/events')
 api.add_resource(EventChoices, '/api/events/choices')
 api.add_resource(Users, '/api/users')
 api.add_resource(UserEvent, '/api/users/event')
+api.add_resource(UserWincount, '/api/users/wincount')
 api.add_resource(UserShuffle, '/api/users/shuffle')
 api.add_resource(Feedbacks, '/api/feedbacks')
 

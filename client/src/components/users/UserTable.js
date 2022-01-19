@@ -230,8 +230,12 @@ const UserTable = ({ event }) => {
         chat_id: userArray[i].telegram_id,
         message: message,
       };
+      const userJson = {
+        chat_id: userArray[i].telegram_id,
+      };
       if (shouldHighlight[i]) {
         axios.post(`${baseURL}users/event`, eventJson);
+        axios.post(`${baseURL}users/wincount`, userJson);
       }
     }
     setIsSent(true);
