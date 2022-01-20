@@ -231,7 +231,7 @@ const UserTable = ({ event }) => {
         message: message,
       };
       const userJson = {
-        chat_id: userArray[i].telegram_id,
+        telegram_id: userArray[i].telegram_id,
       };
       if (shouldHighlight[i]) {
         axios.post(`${baseURL}users/event`, eventJson);

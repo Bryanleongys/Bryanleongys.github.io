@@ -133,7 +133,7 @@ class UserWincount(Resource):
     def post(self):
         user_json = request.get_json(force=True)
         telegram_id = user_json['telegram_id']
-        database.query_update_wincount(telegram_id)
+        database.increase_wincount(telegram_id)
 
 class UserShuffle(Resource):
     def get(self):
