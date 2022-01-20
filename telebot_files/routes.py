@@ -157,7 +157,6 @@ class Users(Resource):
 
     def delete(self):
         user_json = request.get_json(force=True)
-        print('hello')
         database.delete_user(user_json['telegram_id'])
         database.query_all_users()
         
@@ -230,7 +229,11 @@ class Feedbacks(Resource):
             event_feedbacks = database.query_user_feedback(event_name)
         edit_event_feedbacks = []
         for event_feedback in event_feedbacks:
+            print("event_feedback:")
+            print(event_feedback)
             user_details = database.query_user_id(event_feedback[UF_USER_ID])
+            print("user_details:")
+            print(user_details)
             user_name = user_details[USER_NAME]
             new_event_feedback = (event_name, user_name, event_feedback[FEEDBACK])
             edit_event_feedbacks.append(new_event_feedback)

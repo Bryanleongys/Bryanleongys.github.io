@@ -394,6 +394,22 @@ class Database:
             print(e)
             return e
 
+    def delete_event_joined2(self, telegram_id):
+        try:
+            self.cur.execute("SELECT * FROM Users WHERE TelegramId=?", (telegram_id,))
+            user_rows = self.cur.fetchall()
+            if (user_rows):
+                user_id = user_rows[0][USER_ID]
+            else:
+                return
+            self.cur.execute(
+                "DELETE FROM EventsJoined WHERE UserID=?", (user_id,)
+            )
+            self.con.commit()
+        except Exception as e:
+            print(e)
+            return e
+
     def query_all_events_joined(self):
         try:
             self.cur.execute("SELECT * FROM EventsJoined")
@@ -596,6 +612,21 @@ class Database:
                 return
             self.cur.execute(
                 "DELETE FROM UserFeedback WHERE EventID=?", (event_id,))
+            self.con.commit()
+        except Exception as e:
+            print(e)
+            return e
+
+    def delete_user_feedback2(self, telegram_id):
+        try:
+            self.cur.execute("SELECT * FROM Users WHERE TelegramId=?", (telegram_id,))
+            user_rows = self.cur.fetchall()
+            if (user_rows):
+                user_id = user_rows[0][USER_ID]
+            else:
+                return
+            self.cur.execute(
+                "DELETE FROM UserFeedback WHERE UserID=?", (user_id,))
             self.con.commit()
         except Exception as e:
             print(e)

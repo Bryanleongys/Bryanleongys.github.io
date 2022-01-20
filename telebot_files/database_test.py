@@ -71,7 +71,7 @@ testDatabase.query_event_message("Sem 2 Welfare")
 print("==========================")
 
 # Ensuring events_joined table queries work
-print("Expected: 6 events_joined rows printed")
+print("Expected: 5 events_joined rows printed")
 testDatabase.insert_event_joined("Orientation Welfare", "Bryan Wong",  "1157634501", "bryanwhl","16:00", "socks")
 testDatabase.insert_event_joined("Orientation Welfare", "Bryan Leong Yong Sheng",  "1157634500", "bryanlys","17:00", "lanyard")
 testDatabase.insert_event_joined("Sem 2 Welfare", "Bryan Wong",  "1157634501", "bryanwhl","12:30", "75%")
@@ -82,6 +82,7 @@ testDatabase.insert_event_joined("Recess Week Welfare", "Bryan Leong Yong Sheng"
 testDatabase.insert_event_joined("Recess Week Welfare", "Steve Lim",  "1000000000", "stevelim","16:00", "")
 testDatabase.insert_event_joined("Recess Week Welfare", "Diane Leong",  "1000000001", "dianeleong","17:00", "")
 testDatabase.delete_event_joined("Orientation Welfare")
+testDatabase.delete_event_joined2("1000000000")
 testDatabase.query_all_events_joined()
 print("==========================")
 print("Expected: 1 events_joined rows printed")
@@ -96,7 +97,7 @@ print("==========================")
 
 
 # Ensuring feedback table queries work
-print("Expected: 4 user feedback rows printed")
+print("Expected: 3 user feedback rows printed")
 testDatabase.insert_user_feedback("Orientation Welfare", "Bryan Wong", "My sugar level was definitely wrong; I asked for 50 percent and it tasted like 200 percent!")
 testDatabase.insert_user_feedback("Orientation Welfare", "Bryan Leong Yong Sheng", "The bubble tea is the best, thanks!")
 testDatabase.insert_user_feedback("Random Welfare", "Bryan Leong Yong Sheng", "The bubble tea is the best, thanks!")
@@ -106,6 +107,7 @@ testDatabase.insert_user_feedback("general", "Bryan Wong", "Thank you welfare fo
 testDatabase.insert_user_feedback("general", "Steve Lim", "Welfare is the best!")
 testDatabase.insert_user_feedback("general", "Daniel Chia", "Welfare best comm!")
 testDatabase.insert_user_feedback("general", "Eliza Soh", "Thanks for the bbt!")
+testDatabase.delete_user_feedback2("1000000000")
 testDatabase.query_user_feedback("general")
 print("==========================")
 print("Expected: 2 user_feedback rows printed")
