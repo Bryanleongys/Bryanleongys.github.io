@@ -6,19 +6,19 @@ testDatabase.create_tables()
 
 # Ensuring users table queries work
 print("Expected: 9 users rows printed")
-testDatabase.insert_user("Bryan Wong Hong Liang", "e0535051", "Aquila", "1157634501", "bryanwhl", 1)
-testDatabase.insert_user("Bryan Leong Yong Sheng", "e0535000", "Leo", "1157634500", "smulboi", 2)
-testDatabase.insert_user("Bryan Leong Yong Sheng", "e0535001", "Leo", "1157634502", "smulboi", 3) ## same name but different nusnet_id/telegram_id
-testDatabase.insert_user("Bryan Wong", "e0535051", "Leo", "1157634501", "bryanwhl", 0)
-testDatabase.insert_user("Ian Tan", "e0534121", "Noctua", "e591o4", "ian", 0)
-testDatabase.insert_user("Steve Lim", "e0000001", "Aquila", "1000000000", "stevelim", 1)
-testDatabase.insert_user("Diane Leong", "e0000001", "Noctua", "1000000001", "dianeleong", 0)
-testDatabase.insert_user("Kyle Ng", "e0000002", "Ursa", "1000000002", "kyleng", 2) # delete
-testDatabase.insert_user("Eliza Soh", "e0000003", "Leo", "1000000003", "elizasoh", 1)
-testDatabase.insert_user("Tan Jia Hui", "e0000004", "Draco", "1000000004", "tanjiahui", 2) # delete
-testDatabase.insert_user("Nathan Lee", "e0000005", "Noctua", "1000000005", "nathanlee", 0)
-testDatabase.insert_user("Vivian Foo", "e0000006", "Ursa", "1000000006", "vivianfoo", 0)
-testDatabase.insert_user("Daniel Chia", "e0000007", "Draco", "1000000007", "danielchia", 0)
+testDatabase.insert_user("Bryan Wong Hong Liang", "01M", "Aquila", "1157634501", "bryanwhl", 1)
+testDatabase.insert_user("Bryan Leong Yong Sheng", "02M", "Leo", "1157634500", "smulboi", 2)
+testDatabase.insert_user("Bryan Leong Yong Sheng", "03M", "Leo", "1157634502", "smulboi", 3) ## same name but different nusnet_id/telegram_id
+testDatabase.insert_user("Bryan Wong", "01M", "Leo", "1157634501", "bryanwhl", 0)
+testDatabase.insert_user("Ian Tan", "04M", "Noctua", "e591o4", "ian", 0)
+testDatabase.insert_user("Steve Lim", "05M", "Aquila", "1000000000", "stevelim", 1)
+testDatabase.insert_user("Diane Leong", "06M", "Noctua", "1000000001", "dianeleong", 0)
+testDatabase.insert_user("Kyle Ng", "07M", "Ursa", "1000000002", "kyleng", 2) # delete
+testDatabase.insert_user("Eliza Soh", "08M", "Leo", "1000000003", "elizasoh", 1)
+testDatabase.insert_user("Tan Jia Hui", "09M", "Draco", "1000000004", "tanjiahui", 2) # delete
+testDatabase.insert_user("Nathan Lee", "10M", "Noctua", "1000000005", "nathanlee", 0)
+testDatabase.insert_user("Vivian Foo", "11M", "Ursa", "1000000006", "vivianfoo", 0)
+testDatabase.insert_user("Daniel Chia", "12M", "Draco", "1000000007", "danielchia", 0)
 testDatabase.delete_user("e591o4")
 testDatabase.delete_user("1000000004")
 testDatabase.delete_user("1000000002")
@@ -42,7 +42,7 @@ testDatabase.insert_event("Giveaway Welfare", "2021/08/10", "2021/08/15", "2022/
 
 ## Sign up Welfare
 testDatabase.insert_event("Sem 2 Welfare", "2021/12/10", "2022/01/20", "2022/02/20", '12:30', '13:30', "You have been selected!", 1)
-testDatabase.insert_event("Recess Week Welfare", "2021/12/10", "2022/01/20", "2022/02/20", '15:30', '18:00', "You have been selected!",1)
+testDatabase.insert_event("Recess Week Welfare", "2021/12/10", "2022/01/20", "2022/02/20", '15:30', '18:00', "You have been selected!",0)
 
 ## Future Welfare
 testDatabase.insert_event("Orientation Welfare", "2022/10/10", "2022/10/10", "2022/10/13", '15:30', '18:00', "You have been selected!",1)
@@ -51,7 +51,7 @@ testDatabase.insert_event("BBT Welfare", "2022/10/10", "2022/10/10", "2022/10/13
 testDatabase.insert_event("Final Week Welfare", "2021/08/10", "2021/08/16", "2021/08/21", '15:30', '18:00', "You have been selected!",0)
 
 testDatabase.delete_event("Final Week Welfare")
-print("Expected: 6 events row printed")
+print("Expected: 8 events row printed")
 testDatabase.query_all_events()
 print("==========================")
 print("Expected: 4 ongoing events rows printed")
@@ -76,22 +76,22 @@ testDatabase.insert_event_joined("Orientation Welfare", "Bryan Wong",  "11576345
 testDatabase.insert_event_joined("Orientation Welfare", "Bryan Leong Yong Sheng",  "1157634500", "bryanlys","17:00", "lanyard")
 testDatabase.insert_event_joined("Sem 2 Welfare", "Bryan Wong",  "1157634501", "bryanwhl","12:30", "75%")
 testDatabase.insert_event_joined("Sem 2 Welfare", "Bryan Leong Yong Sheng","1157634500", "bryanlys", "12:30", "25%")
-testDatabase.insert_event_joined("Recess Week Welfare", "Bryan Wong", "1157634501", "bryanwhl", "16:00", "milk tea")
-testDatabase.insert_event_joined("Recess Week Welfare", "Bryan Leong Yong Sheng", "1157634500", "bryanlys", "16:00", "milk tea")
-testDatabase.insert_event_joined("Recess Week Welfare", "Bryan Leong Yong Sheng", "1157634500", "bryanlys", "17:00", "milk tea") ## this should be printed
-testDatabase.insert_event_joined("Recess Week Welfare", "Steve Lim",  "1000000000", "stevelim","16:00", "milk tea")
-testDatabase.insert_event_joined("Recess Week Welfare", "Diane Leong",  "1000000001", "dianeleong","17:00", "green tea")
+testDatabase.insert_event_joined("Recess Week Welfare", "Bryan Wong", "1157634501", "bryanwhl", "16:00", "")
+testDatabase.insert_event_joined("Recess Week Welfare", "Bryan Leong Yong Sheng", "1157634500", "bryanlys", "16:00", "") ## this should not be printed
+testDatabase.insert_event_joined("Recess Week Welfare", "Bryan Leong Yong Sheng", "1157634500", "bryanlys", "17:00", "") ## this should be printed
+testDatabase.insert_event_joined("Recess Week Welfare", "Steve Lim",  "1000000000", "stevelim","16:00", "")
+testDatabase.insert_event_joined("Recess Week Welfare", "Diane Leong",  "1000000001", "dianeleong","17:00", "")
 testDatabase.delete_event_joined("Orientation Welfare")
 testDatabase.query_all_events_joined()
 print("==========================")
 print("Expected: 1 events_joined rows printed")
-testDatabase.query_event_joined("Sem 2 Welfare", 2)
+testDatabase.query_event_joined("Recess Week Welfare", 2)
 print("==========================")
 print("Expected: 2 printed")
 testDatabase.query_number_user_joined("Sem 2 Welfare", "12:30")
 print("==========================")
 print("Expected: 1 events_joined rows printed")
-testDatabase.query_user_choice("Recess Week Welfare", "milk tea", 1)
+testDatabase.query_user_choice("Sem 2 Welfare", "25%", 2)
 print("==========================")
 
 
@@ -106,7 +106,6 @@ testDatabase.insert_user_feedback("general", "Bryan Wong", "Thank you welfare fo
 testDatabase.insert_user_feedback("general", "Steve Lim", "Welfare is the best!")
 testDatabase.insert_user_feedback("general", "Daniel Chia", "Welfare best comm!")
 testDatabase.insert_user_feedback("general", "Eliza Soh", "Thanks for the bbt!")
-print("==========================")
 testDatabase.query_user_feedback("general")
 print("==========================")
 print("Expected: 2 user_feedback rows printed")
@@ -133,9 +132,14 @@ print(testDatabase.query_event_choice_exist("Sem 2 Welfare"))
 print("==========================")
 
 # Ensuring events_joined and user_feedback tables are updated after name change
-testDatabase.insert_user("Biryani Leong", "e0535000", "Leo", "1157634500", 'birleong', 3)
+testDatabase.insert_user("Biryani Leong", "02M", "Leo", "1157634500", 'smulboi', 2)
+print("Expected: Bryan Leong Yong Sheng changed to Biryani Leong")
 testDatabase.query_user_details("1157634500")
+print("==========================")
+print("Expected: events_joined for UserID = 2 is retained.")
 testDatabase.query_all_events_joined()
+print("==========================")
+print("Expected: user_feedback for UserID=2 is retained.")
 testDatabase.query_user_feedback("Random Welfare")
 
 print("============ End Of Test ==============")

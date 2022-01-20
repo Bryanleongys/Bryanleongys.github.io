@@ -6,18 +6,41 @@ import threading
 from tkinter import E
 
 '''
-CONSTANTS
+CONSTANTS FOR EVENTS
 '''
-
-EVENT_MESSAGE = 7
-USER_ID = 0
-WIN_COUNT = 6
 EVENT_ID = 0
 EVENT_NAME = 1
-USER_NAME = 1
 START_DATE = 2
 END_DATE = 3
 COLLECTION_DATE = 4
+START_TIME = 5
+END_TIME = 6
+EVENT_MESSAGE = 7
+
+'''
+CONSTANTS FOR USERS
+'''
+USER_ID = 0
+USER_NAME = 1
+NUSNET_ID = 2
+HOUSE = 3
+TELEGRAM_ID = 4
+TELEGRAM_HANDLE = 5
+WIN_COUNT = 6
+
+'''
+CONSTANTS FOR EVENTS_CUSTOM_CHOICES
+'''
+ECC_EVENT_ID = 0
+CHOICE_HEADER = 1
+CHOICE_NAME = 2
+
+'''
+USER_FEEDBACK
+'''
+UF_EVENT_ID = 0
+UF_USER_ID = 1
+FEEDBACK = 2
 
 '''
 CONSTANTS FOR EVENTS_JOINED
@@ -403,7 +426,6 @@ class Database:
                 user_entry = self.cur.fetchall()
                 user_win_count = user_entry[0][WIN_COUNT]
                 if (user_win_count == win_count):
-                    print(user_entry)
                     arrayString.append(row)
                 else:
                     continue
@@ -432,7 +454,6 @@ class Database:
                 user_entry = self.cur.fetchall()
                 user_win_count = user_entry[0][WIN_COUNT]
                 if (user_win_count == win_count):
-                    print(user_entry)
                     arrayString.append(row)
                 else:
                     continue

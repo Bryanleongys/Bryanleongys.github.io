@@ -4,13 +4,14 @@ import signup
 from telegram.ext import *
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton, ParseMode, ReplyKeyboardMarkup, KeyboardButton, Message, Bot, ReplyKeyboardRemove
 
-EVENT_NAME = 0
-START_SIGNUP = 1
-END_SIGNUP = 2
-COLLECTION_DATE = 3
-START_TIME = 4
-END_TIME = 5
-ITEM_BOOL = 7
+EVENT_ID = 0
+EVENT_NAME = 1
+START_DATE = 2
+END_DATE = 3
+COLLECTION_DATE = 4
+START_TIME = 5
+END_TIME = 6
+EVENT_MESSAGE = 7
 
 def prompt_feedback(update, context):
     query = update.callback_query
