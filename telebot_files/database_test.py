@@ -84,14 +84,14 @@ testDatabase.insert_event_joined("Recess Week Welfare", "Diane Leong",  "1000000
 testDatabase.delete_event_joined("Orientation Welfare")
 testDatabase.query_all_events_joined()
 print("==========================")
-print("Expected: 2 events_joined rows printed")
-testDatabase.query_event_joined("Sem 2 Welfare")
+print("Expected: 1 events_joined rows printed")
+testDatabase.query_event_joined("Sem 2 Welfare", 2)
 print("==========================")
 print("Expected: 2 printed")
 testDatabase.query_number_user_joined("Sem 2 Welfare", "12:30")
 print("==========================")
-print("Expected: 3 events_joined rows printed")
-testDatabase.query_user_choice("Recess Week Welfare", "milk tea")
+print("Expected: 1 events_joined rows printed")
+testDatabase.query_user_choice("Recess Week Welfare", "milk tea", 1)
 print("==========================")
 
 
@@ -124,6 +124,12 @@ testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level wou
 testDatabase.insert_events_custom_choices("Sem 2 Welfare", "What sugar level would you like?", "100%")
 print("Expected: 4 event custom choices printed")
 testDatabase.query_events_choices("Sem 2 Welfare")
+print("==========================")
+print("Expected: False printed")
+print(testDatabase.query_event_choice_exist("Orientation Welfare"))
+print("==========================")
+print("Expected: True printed")
+print(testDatabase.query_event_choice_exist("Sem 2 Welfare"))
 print("==========================")
 
 # Ensuring events_joined and user_feedback tables are updated after name change

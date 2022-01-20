@@ -3,6 +3,7 @@ from datetime import datetime
 from datetime import date
 import time
 import threading
+from tkinter import E
 
 '''
 CONSTANTS
@@ -17,6 +18,14 @@ USER_NAME = 1
 START_DATE = 2
 END_DATE = 3
 COLLECTION_DATE = 4
+
+'''
+CONSTANTS FOR EVENTS_JOINED
+'''
+EJ_USER_ID = 0
+EJ_EVENT_ID = 1
+EJ_TIMING = 2
+EJ_ITEM_CHOSEN = 3
 
 LOCK = threading.Lock()
 
@@ -303,7 +312,7 @@ class Database:
             print(e)
             return e
 
-    def query_event_id(self, event_id):
+    def query_event_id(self, event_id): ## input: event_id, output: event_details
         try:
             self.cur.execute("SELECT * FROM Events WHERE EventID=?", (event_id,))
             self.con.commit()
@@ -376,7 +385,7 @@ class Database:
             print(e)
             return e
     
-    def query_event_joined(self, event_name):
+    def query_event_joined(self, event_name, win_count): 
         try:
             LOCK.acquire(True)
             self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
@@ -389,7 +398,15 @@ class Database:
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
-                arrayString.append(row)
+                user_id = row[EJ_USER_ID]
+                self.cur.execute("SELECT * FROM Users WHERE UserID=?", (user_id,))
+                user_entry = self.cur.fetchall()
+                user_win_count = user_entry[0][WIN_COUNT]
+                if (user_win_count == win_count):
+                    print(user_entry)
+                    arrayString.append(row)
+                else:
+                    continue
             print(arrayString)
             return arrayString
         except Exception as e:
@@ -398,7 +415,7 @@ class Database:
         finally:
             LOCK.release() 
 
-    def query_user_choice(self, event_name, item_chosen):
+    def query_user_choice(self, event_name, item_chosen, win_count):
         try:
             self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
             rows = self.cur.fetchall()
@@ -410,7 +427,15 @@ class Database:
             rows = self.cur.fetchall()
             arrayString=[]
             for row in rows:
-                arrayString.append(row)
+                user_id = row[EJ_USER_ID]
+                self.cur.execute("SELECT * FROM Users WHERE UserID=?", (user_id,))
+                user_entry = self.cur.fetchall()
+                user_win_count = user_entry[0][WIN_COUNT]
+                if (user_win_count == win_count):
+                    print(user_entry)
+                    arrayString.append(row)
+                else:
+                    continue
             print(arrayString)
             return arrayString
         except Exception as e:
@@ -489,6 +514,27 @@ class Database:
             return e
         finally:
             LOCK.release()
+
+    def query_event_choice_exist(self, event_name):
+        try:
+            LOCK.acquire(True)
+            self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
+            rows = self.cur.fetchall()
+            if (rows):
+                event_id = rows[0][EVENT_ID]
+            else:
+                return
+            self.cur.execute("SELECT * FROM EventsCustomChoices WHERE EventID=?", (event_id,))
+            rows = self.cur.fetchall()
+            if (rows):
+                return True
+            return False
+        except Exception as e:
+            print(e)
+            return e
+        finally:
+            LOCK.release()
+            
 
     '''
     SQLite queries for user_feedback table
