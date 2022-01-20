@@ -8,6 +8,51 @@ import requests
 import json
 
 '''
+CONSTANTS FOR EVENTS
+'''
+EVENT_ID = 0
+EVENT_NAME = 1
+START_DATE = 2
+END_DATE = 3
+COLLECTION_DATE = 4
+START_TIME = 5
+END_TIME = 6
+EVENT_MESSAGE = 7
+
+'''
+CONSTANTS FOR USERS
+'''
+USER_ID = 0
+USER_NAME = 1
+NUSNET_ID = 2
+HOUSE = 3
+TELEGRAM_ID = 4
+TELEGRAM_HANDLE = 5
+WIN_COUNT = 6
+
+'''
+CONSTANTS FOR EVENTS_CUSTOM_CHOICES
+'''
+ECC_EVENT_ID = 0
+CHOICE_HEADER = 1
+CHOICE_NAME = 2
+
+'''
+USER_FEEDBACK
+'''
+UF_EVENT_ID = 0
+UF_USER_ID = 1
+FEEDBACK = 2
+
+'''
+CONSTANTS FOR EVENTS_JOINED
+'''
+EJ_USER_ID = 0
+EJ_EVENT_ID = 1
+EJ_TIMING = 2
+EJ_ITEM_CHOSEN = 3
+
+'''
 Initializing Flask and CORS
 '''
 app = Flask(__name__)
@@ -100,7 +145,7 @@ class EventChoices(Resource):
         event_choices = database.query_events_choices(event_name)
         edit_event_choices = []
         for event_choice in event_choices:
-            new_event_choice = (event_name, event_choice[1], event_choice[2])
+            new_event_choice = (event_name, event_choice[CHOICE_HEADER], event_choice[CHOICE_NAME])
             edit_event_choices.append(new_event_choice)
         print(new_event_choice)
         return make_response(jsonify(event_choices), 200)
@@ -125,10 +170,10 @@ class UserEvent(Resource):
         for user_joined in users_joined:
             user_id = user_joined[0]
             user_details = database.query_user_id(user_id)
-            username = user_details[1]
-            telegram_id = user_details[4]
-            telegram_handle = user_details[5]
-            new_user_joined = (event_name, username, telegram_id, telegram_handle, user_joined[2], user_joined[3])
+            username = user_details[USER_NAME]
+            telegram_id = user_details[TELEGRAM_ID]
+            telegram_handle = user_details[TELEGRAM_HANDLE]
+            new_user_joined = (event_name, username, telegram_id, telegram_handle, user_joined[EJ_TIMING], user_joined[EJ_ITEM_CHOSEN])
             edit_users_joined.append(new_user_joined)
             
         return make_response(jsonify(edit_users_joined), 200)
@@ -185,9 +230,9 @@ class Feedbacks(Resource):
             event_feedbacks = database.query_user_feedback(event_name)
         edit_event_feedbacks = []
         for event_feedback in event_feedbacks:
-            user_details = database.query_user_id(event_feedback[1])
-            user_name = user_details[1]
-            new_event_feedback = (event_name, user_name, event_feedback[2])
+            user_details = database.query_user_id(event_feedback[UF_USER_ID])
+            user_name = user_details[USER_NAME]
+            new_event_feedback = (event_name, user_name, event_feedback[FEEDBACK])
             edit_event_feedbacks.append(new_event_feedback)
         return make_response(jsonify(edit_event_feedbacks), 200)
 

@@ -12,7 +12,7 @@ const END_DATE = 3;
 const COLLECTION_DATE = 4;
 const START_TIME = 5;
 const END_TIME = 6;
-const MESSAGE = 7;
+const EVENT_MESSAGE = 7;
 
 const PastEvents = () => {
   let match = useRouteMatch();
