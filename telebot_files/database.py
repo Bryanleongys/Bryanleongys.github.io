@@ -3,7 +3,6 @@ from datetime import datetime
 from datetime import date
 import time
 import threading
-from tkinter import E
 
 '''
 CONSTANTS FOR EVENTS
@@ -627,3 +626,22 @@ class Database:
             return e
         finally:
             LOCK.release()
+
+
+    '''
+    SQLite queries for win_count
+    '''
+    def increase_wincount(self, telegram_id): ## adds 1 to wincount of user
+        try:
+            self.cur.execute("SELECT * FROM Users WHERE TelegramId=?", (telegram_id,))
+            user = self.cur.fetchall()
+            user_id = user[0][USER_ID]
+            win_count = user[0][WIN_COUNT]
+            win_count += 1
+            self.cur.execute("UPDATE Users SET WinCount=? WHERE UserId=?", (win_count, user_id,))
+            self.con.commit()
+            return True
+        except Exception as e:
+            print(e)
+            return e
+
