@@ -193,6 +193,8 @@ class Database:
             self.cur.execute("SELECT * FROM Users WHERE UserID=?", (user_id,))
             self.con.commit()
             rows = self.cur.fetchall()
+            if not (rows):
+                return
             user_details = rows[0]
             return user_details
         except Exception as e:
@@ -628,6 +630,7 @@ class Database:
             self.cur.execute(
                 "DELETE FROM UserFeedback WHERE UserID=?", (user_id,))
             self.con.commit()
+            print(telegram_id)
         except Exception as e:
             print(e)
             return e

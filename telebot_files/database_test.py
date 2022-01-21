@@ -97,7 +97,7 @@ print("==========================")
 
 
 # Ensuring feedback table queries work
-print("Expected: 3 user feedback rows printed")
+print("Expected: 3 general user feedback rows printed")
 testDatabase.insert_user_feedback("Orientation Welfare", "Bryan Wong", "My sugar level was definitely wrong; I asked for 50 percent and it tasted like 200 percent!")
 testDatabase.insert_user_feedback("Orientation Welfare", "Bryan Leong Yong Sheng", "The bubble tea is the best, thanks!")
 testDatabase.insert_user_feedback("Random Welfare", "Bryan Leong Yong Sheng", "The bubble tea is the best, thanks!")
