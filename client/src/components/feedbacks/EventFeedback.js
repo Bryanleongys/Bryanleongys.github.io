@@ -4,7 +4,7 @@ import axios from "axios";
 import { baseURL } from "../../common/Constants";
 
 // Constants
-const EVENT_NAME = 0;
+const EVENT_NAME = 1;
 const USER_NAME = 1;
 const FEEDBACK_MESSAGE = 2;
 

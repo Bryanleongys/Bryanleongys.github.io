@@ -2,9 +2,13 @@ import keyboards, initialization, signup, feedback
 from telegram.ext import *
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton, ParseMode, ReplyKeyboardMarkup, KeyboardButton, Message, Bot, ReplyKeyboardRemove
 
-USER_NAME = 0
-MATRIC_NO = 1
-HOUSE = 2
+USER_ID = 0
+USER_NAME = 1
+NUSNET_ID = 2
+HOUSE = 3
+TELEGRAM_ID = 4
+TELEGRAM_HANDLE = 5
+WIN_COUNT = 6
 
 def prompt_settings(update, context):
     query = update.callback_query
@@ -26,7 +30,7 @@ def get_account_details(update, context, db):
 
     user_details = db.query_user_details(chat_id)
 
-    text = "Following are your details:\nName: " + user_details[USER_NAME] + "\nMatric Number: " + user_details[MATRIC_NO] + "\nHouse: " + user_details[HOUSE] + "\n\nPlease press /start to re-initialize your account details."
+    text = "Following are your details:\nName: " + user_details[USER_NAME] + "\nMatric Number: " + user_details[NUSNET_ID] + "\nHouse: " + user_details[HOUSE] + "\n\nPlease press /start to re-initialize your account details."
     context.bot.edit_message_text(
         chat_id=chat_id,
         message_id=message_id,
