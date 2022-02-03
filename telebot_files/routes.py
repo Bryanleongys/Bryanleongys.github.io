@@ -166,7 +166,6 @@ class Users(Resource):
 class UserEvent(Resource):
     def get(self):
         event_name = request.args['eventName']
-
         max_wincount = len(database.query_all_past_events())
         users_joined = []
         ## getting all users that joined event

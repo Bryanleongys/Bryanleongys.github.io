@@ -50,6 +50,7 @@ const CurrentEvents = () => {
         for (var i = 0; i < res.data.length; i++) {
           var object = {
             name: res.data[i][EVENT_NAME],
+            startDate: res.data[i][START_DATE],
             endDate: res.data[i][END_DATE],
             eventDate: res.data[i][COLLECTION_DATE],
             startTime: res.data[i][START_TIME],
@@ -119,6 +120,7 @@ const CurrentEvents = () => {
           <tr>
             <th>#</th>
             <th>Name of Event</th>
+            <th>Start Date</th>
             <th>End Date</th>
             <th>Date of Event</th>
             <th>Start Time</th>
@@ -137,6 +139,7 @@ const CurrentEvents = () => {
                     {event.name}
                   </Nav.Link>
                 </Nav>
+                <td>{event.startDate}</td>
                 <td>{event.endDate}</td>
                 <td>{event.eventDate}</td>
                 <td>{event.startTime}</td>
