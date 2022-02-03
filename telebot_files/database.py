@@ -129,7 +129,7 @@ class Database:
                 # new_user_id = rows[0][USER_ID]
                 # self.cur.execute("UPDATE EventsJoined SET UserID=? WHERE UserID=?", (new_user_id, old_user_id))
                 # # self.cur.execute("UPDATE user_feedback SET username=? WHERE telegram_id=?", (username, telegram_id))
-                self.cur.execute("UPDATE Users SET UserName=?, NusnetId=?, House=?, TelegramId=?, TelegramHandle=?, WinCount=? WHERE UserId=?", (username, nusnet_id, house, telegram_id, telegram_handle, win_count, user_id))
+                self.cur.execute("UPDATE Users SET UserName=?, NusnetId=?, House=?, TelegramId=?, TelegramHandle=? WHERE UserId=?", (username, nusnet_id, house, telegram_id, telegram_handle, user_id))
             else:
                 self.cur.execute("INSERT INTO Users(UserName, NusnetId, House, TelegramId, TelegramHandle, WinCount) VALUES(?,?,?,?,?,?)",
                                 (username, nusnet_id, house, telegram_id, telegram_handle, win_count))                
