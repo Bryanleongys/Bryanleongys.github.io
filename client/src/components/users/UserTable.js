@@ -42,10 +42,57 @@ const UserTable = ({ event }) => {
   const sendProps = isSent ? { disabled: true } : {};
 
   React.useEffect(() => {
-    console.log("hello");
     const eventJson = {
-      eventName: event[0],
+      eventName: event,
     };
+
+    axios
+      .get(`${baseURL}events/choices/exist`, { params: eventJson })
+      .then((res) => {
+        if (res.data) {
+          const eventJson = {
+            eventName: event,
+          };
+          axios
+            .get(`${baseURL}events/choices`, { params: eventJson })
+            .then((res) => {
+              setChoiceArray(res.data);
+              let tempArray = [];
+              res.data.map((choice) => {
+                tempArray.push("");
+              });
+              setChoicePax(tempArray);
+            })
+            .catch((error) => {
+              if (error.response) {
+                // Request made and server responded
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+              } else if (error.request) {
+                // The request was made but no response was received
+                console.log(error.request);
+              } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log("Error", error.message);
+              }
+            });
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          // Request made and server responded
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.log(error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log("Error", error.message);
+        }
+      });
 
     axios
       .get(`${baseURL}users/event`, { params: eventJson })
@@ -76,37 +123,6 @@ const UserTable = ({ event }) => {
           console.log("Error", error.message);
         }
       });
-
-    if (event[ITEM_BOOL] === "1") {
-      const eventJson = {
-        eventName: event[0],
-      };
-      axios
-        .get(`${baseURL}events/choices`, { params: eventJson })
-        .then((res) => {
-          setChoiceArray(res.data);
-          let tempArray = [];
-          res.data.map((choice) => {
-            tempArray.push("");
-          });
-          setChoicePax(tempArray);
-          console.log(tempArray);
-        })
-        .catch((error) => {
-          if (error.response) {
-            // Request made and server responded
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-          } else if (error.request) {
-            // The request was made but no response was received
-            console.log(error.request);
-          } else {
-            // Something happened in setting up the request that triggered an Error
-            console.log("Error", error.message);
-          }
-        });
-    }
   }, []);
 
   const handleRandomize = () => {
@@ -138,7 +154,7 @@ const UserTable = ({ event }) => {
     } else {
       setRandomizeAlert(false);
       let choiceJson = {
-        eventName: event[0],
+        eventName: event,
         choicePax: choicePax,
         totalPax: pax,
       };
@@ -155,10 +171,6 @@ const UserTable = ({ event }) => {
               collection_time: res.data[i][COLLECTION_TIME],
             });
           }
-
-          console.log(arraySet);
-          console.log(userArray);
-
           // Change shouldHighlight list
           // var i = 0; // counter for userArray
           // var j = 0; // counter for arraySet
@@ -184,7 +196,6 @@ const UserTable = ({ event }) => {
               array.push(0);
             }
           }
-          console.log(array);
           setShouldHighlight(array);
           generateExcel(array);
         })
@@ -292,7 +303,7 @@ const UserTable = ({ event }) => {
         {(isCsvDataGenerated && (
           <CSVLink
             data={csvData}
-            filename={event[0]}
+            filename={event}
             disabled={!isCsvDataGenerated}
           >
             <Button variant="warning">Download Excel File</Button>
