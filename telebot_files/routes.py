@@ -134,10 +134,10 @@ class Events(Resource):
     def delete(self):
         # print(request.args)
         event_json = request.get_json(force=True)
-        database.delete_event(event_json['eventName'])
         database.delete_event_joined(event_json['eventName'])
         database.delete_events_custom_choices(event_json['eventName'])
         database.delete_user_feedback(event_json['eventName'])
+        database.delete_event(event_json['eventName'])
         database.query_all_events()
 
 class EventChoices(Resource):

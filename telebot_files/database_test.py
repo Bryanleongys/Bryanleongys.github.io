@@ -134,14 +134,14 @@ print(testDatabase.query_event_choice_exist("Sem 2 Welfare"))
 print("==========================")
 
 # Ensuring win_count queries work
-print("Expected: Bryan Wong Hong Liang win_count increased to 2")
-testDatabase.increase_wincount("1157634501")
-testDatabase.query_user_details("1157634501")
+print("Expected: Eliza Soh win_count increased to 2")
+testDatabase.increase_wincount("1000000003")
+testDatabase.query_user_details("1000000003")
 print("==========================")
 
 # Ensuring events_joined and user_feedback tables are updated after name change
 testDatabase.insert_user("Biryani Leong", "02M", "Leo", "1157634500", 'smulboi', 0)
-print("Expected: Bryan Leong Yong Sheng changed to Biryani Leong")
+print("Expected: Bryan Leong Yong Sheng changed to Biryani Leong, win_count stays 2")
 testDatabase.query_user_details("1157634500")
 print("==========================")
 print("Expected: events_joined for UserID = 2 is retained.")

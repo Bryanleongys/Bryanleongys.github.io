@@ -106,6 +106,7 @@ class Database:
 
     def insert_user(self, username, nusnet_id, house, telegram_id, telegram_handle, win_count):
         try:
+            LOCK.acquire(True)
             ## if user's full name and nusnet_id exists, do not insert
             self.cur.execute("SELECT * FROM Users WHERE UserName=? AND NusnetId=? AND House=?", (username, nusnet_id, house,))
             if (len(self.cur.fetchall())):
@@ -129,7 +130,7 @@ class Database:
                 # new_user_id = rows[0][USER_ID]
                 # self.cur.execute("UPDATE EventsJoined SET UserID=? WHERE UserID=?", (new_user_id, old_user_id))
                 # # self.cur.execute("UPDATE user_feedback SET username=? WHERE telegram_id=?", (username, telegram_id))
-                self.cur.execute("UPDATE Users SET UserName=?, NusnetId=?, House=?, TelegramId=?, TelegramHandle=?, WinCount=? WHERE UserId=?", (username, nusnet_id, house, telegram_id, telegram_handle, win_count, user_id))
+                self.cur.execute("UPDATE Users SET UserName=?, NusnetId=?, House=?, TelegramId=?, TelegramHandle=? WHERE UserId=?", (username, nusnet_id, house, telegram_id, telegram_handle, user_id))
             else:
                 self.cur.execute("INSERT INTO Users(UserName, NusnetId, House, TelegramId, TelegramHandle, WinCount) VALUES(?,?,?,?,?,?)",
                                 (username, nusnet_id, house, telegram_id, telegram_handle, win_count))                
@@ -139,18 +140,24 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()       
 
     def delete_user(self, telegram_id):
         try:
+            LOCK.acquire(True)
             self.cur.execute(
                 "DELETE FROM Users WHERE TelegramId=?", (telegram_id,))
             self.con.commit()    
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()            
 
     def query_all_users(self):
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM Users")
             rows = self.cur.fetchall()
             arrayString = []
@@ -161,35 +168,42 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
 
     def query_user_name(self, telegram_id):
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM Users WHERE TelegramId=?", (telegram_id,))
             self.con.commit()
             rows = self.cur.fetchall()
             user_name = rows[0][USER_NAME]
             print(user_name)
-            return user_name
-            
+            return user_name 
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
 
     def query_user_details(self, telegram_id):
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM Users WHERE TelegramId=?", (telegram_id,))
             self.con.commit()
             rows = self.cur.fetchall()
             user_details = rows[0]
             print(user_details)
             return user_details
-        
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
     
     def query_user_id(self, user_id):
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM Users WHERE UserID=?", (user_id,))
             self.con.commit()
             rows = self.cur.fetchall()
@@ -200,6 +214,8 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
 
     '''
     SQLite queries for events table
@@ -207,6 +223,7 @@ class Database:
     
     def insert_event(self, name, start_date, end_date, collection_date, start_time, end_time, message, item_bool):
         try:
+            LOCK.acquire(True)
             ## if event name exists, do not insert
             self.cur.execute("SELECT * FROM Events WHERE EventName=?",(name,))
             if (len(self.cur.fetchall())):
@@ -219,17 +236,23 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
 
     def delete_event(self, name):
         try:
+            LOCK.acquire(True)
             self.cur.execute("DELETE FROM Events WHERE EventName=?", (name,))
             self.con.commit()
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
 
     def query_all_events(self):
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM Events")
             rows = self.cur.fetchall()
             arrayString = []
@@ -240,11 +263,14 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
 
     def query_all_sign_up_events(self):
         today = date.today()
         dateToday = time.strptime(today.strftime("%Y/%m/%d"), "%Y/%m/%d")
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM Events")
             rows = self.cur.fetchall()
             arrayString = []
@@ -259,11 +285,14 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
 
     def query_all_ongoing_events(self):
         today = date.today()
         dateToday = time.strptime(today.strftime("%Y/%m/%d"), "%Y/%m/%d")
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM Events")
             rows = self.cur.fetchall()
             arrayString = []
@@ -278,11 +307,14 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
 
     def query_all_future_events(self):
         today = date.today()
         dateToday = time.strptime(today.strftime("%Y/%m/%d"), "%Y/%m/%d")
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM Events")
             rows = self.cur.fetchall()
             arrayString = []
@@ -295,11 +327,14 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
 
     def query_all_past_events(self):
         today = date.today()
         dateToday = time.strptime(today.strftime("%Y/%m/%d"), "%Y/%m/%d")
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM Events")
             rows = self.cur.fetchall()
             arrayString = []
@@ -312,9 +347,12 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
 
     def query_event_message(self, event_name):
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
             self.con.commit()
             rows = self.cur.fetchall()
@@ -324,9 +362,12 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
 
     def query_event_exist(self, event_name):
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
             self.con.commit()
             if (len(self.cur.fetchall())):
@@ -335,9 +376,12 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
 
     def query_event_id(self, event_id): ## input: event_id, output: event_details
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM Events WHERE EventID=?", (event_id,))
             self.con.commit()
             rows = self.cur.fetchall()
@@ -346,6 +390,8 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
 
     '''
     SQLite queries for events_joined table
@@ -353,6 +399,7 @@ class Database:
 
     def insert_event_joined(self, event_name, username, telegram_id, telegram_handle, timing, item_chosen):
         try:
+            LOCK.acquire(True)
             ## delete event user have signed up for and insert a new query
             self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
             event_rows = self.cur.fetchall()
@@ -380,9 +427,12 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
 
     def delete_event_joined(self, event_name):
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
             rows = self.cur.fetchall()
             if (rows):
@@ -395,9 +445,12 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
 
     def delete_event_joined2(self, telegram_id):
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM Users WHERE TelegramId=?", (telegram_id,))
             user_rows = self.cur.fetchall()
             if (user_rows):
@@ -411,9 +464,12 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
 
     def query_all_events_joined(self):
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM EventsJoined")
             rows = self.cur.fetchall()
             arrayString = []
@@ -424,6 +480,8 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
     
     def query_event_joined(self, event_name, win_count): 
         try:
@@ -456,6 +514,7 @@ class Database:
 
     def query_user_choice(self, event_name, item_chosen, win_count):
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
             rows = self.cur.fetchall()
             if (rows):
@@ -479,9 +538,12 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
 
     def query_number_user_joined(self, event_name, timing):
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
             rows = self.cur.fetchall()
             if (rows):
@@ -495,13 +557,16 @@ class Database:
             return userNumber
         except Exception as e:
             print(e)
-            return e   
+            return e
+        finally:
+            LOCK.release() 
 
     '''
     SQLite queries for events_custom_choices table
     '''
     def insert_events_custom_choices(self, event_name, choice_header, choice_name):
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
             rows = self.cur.fetchall()
             if (rows):
@@ -515,9 +580,12 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
 
     def delete_events_custom_choices(self, event_name):
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
             rows = self.cur.fetchall()
             if (rows):
@@ -530,6 +598,8 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
 
     def query_events_choices(self, event_name):
         try:
@@ -580,6 +650,7 @@ class Database:
 
     def insert_user_feedback(self, event_name, username, feedback):
         try:
+            LOCK.acquire(True)
             # query events table for event id
             self.cur.execute("SELECT * FROM Users WHERE UserName=?", (username,))
             user_rows = self.cur.fetchall()
@@ -603,9 +674,12 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
 
     def delete_user_feedback(self, event_name):
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
             event_rows = self.cur.fetchall()
             if (event_rows):
@@ -618,9 +692,12 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
 
     def delete_user_feedback2(self, telegram_id):
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM Users WHERE TelegramId=?", (telegram_id,))
             user_rows = self.cur.fetchall()
             if (user_rows):
@@ -634,6 +711,8 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
     
     def query_user_feedback(self, event_name):
         try:
@@ -667,7 +746,9 @@ class Database:
     '''
     def increase_wincount(self, telegram_id): ## adds 1 to wincount of user
         try:
+            LOCK.acquire(True)
             self.cur.execute("SELECT * FROM Users WHERE TelegramId=?", (telegram_id,))
+            print(telegram_id)
             user = self.cur.fetchall()
             user_id = user[0][USER_ID]
             win_count = user[0][WIN_COUNT]
@@ -678,4 +759,6 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
 
