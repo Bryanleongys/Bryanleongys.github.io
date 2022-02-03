@@ -42,6 +42,7 @@ const UserTable = ({ event }) => {
   const sendProps = isSent ? { disabled: true } : {};
 
   React.useEffect(() => {
+    console.log("hello");
     const eventJson = {
       eventName: event[0],
     };

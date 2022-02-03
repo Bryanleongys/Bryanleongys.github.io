@@ -1,6 +1,12 @@
 import React, { useRef } from "react";
 import { Container, Table, Button, Nav, Modal } from "react-bootstrap";
-import { Switch, Route, Link, useRouteMatch } from "react-router-dom";
+import {
+  Switch,
+  Route,
+  Link,
+  useRouteMatch,
+  useHistory,
+} from "react-router-dom";
 import axios from "axios";
 import EditEvent from "./EditEvent";
 
@@ -15,6 +21,7 @@ const END_TIME = 6;
 const EVENT_MESSAGE = 7;
 
 const CurrentEvents = () => {
+  let history = useHistory();
   let match = useRouteMatch();
   const [arrayObject, setArrayObject] = React.useState([]);
   const [show, setShow] = React.useState(false);
@@ -86,6 +93,10 @@ const CurrentEvents = () => {
     setArrayObject([...newArray]);
   };
 
+  const handleManage = (name) => {
+    history.push(`/events/users-${name}`);
+  };
+
   return (
     <Container>
       <Modal show={show} onHide={() => handleClose()}>
@@ -139,9 +150,14 @@ const CurrentEvents = () => {
                   </Button>
                 </td>
                 <td>
-                  <Link to={`users-${event.name}`}>
-                    <Button variant="warning">Manage</Button>
-                  </Link>
+                  {/* <Link to={`users-${event.name}`}> */}
+                  <Button
+                    onClick={() => handleManage(event.name)}
+                    variant="warning"
+                  >
+                    Manage
+                  </Button>
+                  {/* </Link> */}
                 </td>
               </tr>
             );
