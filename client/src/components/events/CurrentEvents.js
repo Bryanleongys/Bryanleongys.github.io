@@ -166,11 +166,9 @@ const CurrentEvents = () => {
       </Table>
       {/* <Switch>
         {arrayObject.map((event, index) => {
-          <Route
-            key={index}
-            path={`${match.url}/${event.name}`}
-            component={EditEvent}
-          />;
+          <Route key={index} path={`${event.name}`} component={EditEvent}>
+            <EditEvent event={event}/>
+          </Route>;
         })}
       </Switch> */}
     </Container>

@@ -240,7 +240,7 @@ const UserTable = ({ event }) => {
 
   return (
     <Container>
-      <h3>Manage {event[0]}</h3>
+      <h3>Manage {event}</h3>
       <Form style={styles.form}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <div className="mb-3">

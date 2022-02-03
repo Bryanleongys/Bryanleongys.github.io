@@ -8,7 +8,7 @@ import LoginWrapper from "./LoginWrapper";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <LoginWrapper />
   </React.StrictMode>,
   document.getElementById("root")
 );
