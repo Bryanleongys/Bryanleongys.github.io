@@ -16,6 +16,14 @@ import UserTable from "./users/UserTable";
 import axios from "axios";
 import { baseURL } from "../common/Constants";
 
+const EVENT_NAME = 1;
+const START_DATE = 2;
+const END_DATE = 3;
+const COLLECTION_DATE = 4;
+const START_TIME = 5;
+const END_TIME = 6;
+const EVENT_MESSAGE = 7;
+
 const EventScreen = () => {
   let match = useRouteMatch();
   let history = useHistory();
@@ -38,20 +46,20 @@ const EventScreen = () => {
     axios.get(`${baseURL}events`, { params: all_events }).then((res) => {
       var initialArray = [];
       for (var i = 0; i < res.data.length; i++) {
-        initialArray.push(res.data[i][0]);
+        initialArray.push(res.data[i][EVENT_NAME]);
       }
       setAllEvents(initialArray);
     });
     axios.get(`${baseURL}events`, { params: current_events }).then((res) => {
-      console.log(res.data);
-      setCurrentEvents(res.data);
-      // var initialArray = [];
-      // for (var i = 0; i < res.data.length; i++) {
-      //   initialArray.push(res.data[i][0]);
-      // }
-      // console.log(initialArray)
-      // setCurrentEvents(initialArray);
+      var initialArray = [];
+      for (var i = 0; i < res.data.length; i++) {
+        initialArray.push(res.data[i][EVENT_NAME]);
+      }
+      setCurrentEvents(initialArray);
     });
+    // allEvents.map((event, index) => {
+    //   console.log("hello" + event);
+    // });
   }, []);
 
   return (
@@ -87,12 +95,6 @@ const EventScreen = () => {
           </Nav.Item>
         </Nav>
         <Switch>
-          <Route path={`${match.url}/past-events`} component={PastEvents} />
-          <Route
-            path={`${match.url}/current-events`}
-            component={CurrentEvents}
-          />
-          <Route path={`${match.url}/future-events`} component={FutureEvents} />
           {allEvents.map((event, index) => {
             return (
               <Route key={index} path={`${match.url}/${event}`}>
@@ -100,10 +102,18 @@ const EventScreen = () => {
               </Route>
             );
           })}
+          {/* <Route path={`${match.url}/past-events`} component={PastEvents} /> */}
+          <Route path={`${match.url}/past-events`}>
+            <PastEvents />
+          </Route>
+          <Route
+            path={`${match.url}/current-events`}
+            component={CurrentEvents}
+          />
+          <Route path={`${match.url}/future-events`} component={FutureEvents} />
           {currentEvents.map((event, index) => {
-            const eventName = event[0];
             return (
-              <Route key={index} path={`${match.url}/users-${eventName}`}>
+              <Route key={index} path={`${match.url}/users-${event}`}>
                 <UserTable event={event} />
               </Route>
             );

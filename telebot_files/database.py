@@ -5,17 +5,49 @@ import time
 import threading
 
 '''
-CONSTANTS
+CONSTANTS FOR EVENTS
 '''
-
-EVENT_MESSAGE = 7
-USER_ID = 0
-WIN_COUNT = 6
 EVENT_ID = 0
-USER_NAME = 1
+EVENT_NAME = 1
 START_DATE = 2
 END_DATE = 3
 COLLECTION_DATE = 4
+START_TIME = 5
+END_TIME = 6
+EVENT_MESSAGE = 7
+
+'''
+CONSTANTS FOR USERS
+'''
+USER_ID = 0
+USER_NAME = 1
+NUSNET_ID = 2
+HOUSE = 3
+TELEGRAM_ID = 4
+TELEGRAM_HANDLE = 5
+WIN_COUNT = 6
+
+'''
+CONSTANTS FOR EVENTS_CUSTOM_CHOICES
+'''
+ECC_EVENT_ID = 0
+CHOICE_HEADER = 1
+CHOICE_NAME = 2
+
+'''
+USER_FEEDBACK
+'''
+UF_EVENT_ID = 0
+UF_USER_ID = 1
+FEEDBACK = 2
+
+'''
+CONSTANTS FOR EVENTS_JOINED
+'''
+EJ_USER_ID = 0
+EJ_EVENT_ID = 1
+EJ_TIMING = 2
+EJ_ITEM_CHOSEN = 3
 
 LOCK = threading.Lock()
 
@@ -57,7 +89,11 @@ class Database:
             self.cur.execute(
                 '''CREATE TABLE UserFeedback(EventID integer not null, UserID integer not null, Feedback text,
                 FOREIGN KEY(UserID) REFERENCES Users(UserID),
-                FOREIGN KEY(EventID) REFERENCES Events(EventID))''')     
+                FOREIGN KEY(EventID) REFERENCES Events(EventID))''')
+
+            # for general feedback table
+            # self.cur.execute('INSERT INTO Events(EventID, EventName, StartDate, EndDate, CollectionDate, StartTime, EndTime, Message) values (?,?,?,?,?,?,?,?)', 
+            #                 ((-1, 'general', None, None, None, None, None, None)))
             self.con.commit()
             return True
         except Exception as e:
@@ -148,6 +184,19 @@ class Database:
             print(user_details)
             return user_details
         
+        except Exception as e:
+            print(e)
+            return e
+    
+    def query_user_id(self, user_id):
+        try:
+            self.cur.execute("SELECT * FROM Users WHERE UserID=?", (user_id,))
+            self.con.commit()
+            rows = self.cur.fetchall()
+            if not (rows):
+                return
+            user_details = rows[0]
+            return user_details
         except Exception as e:
             print(e)
             return e
@@ -287,6 +336,17 @@ class Database:
             print(e)
             return e
 
+    def query_event_id(self, event_id): ## input: event_id, output: event_details
+        try:
+            self.cur.execute("SELECT * FROM Events WHERE EventID=?", (event_id,))
+            self.con.commit()
+            rows = self.cur.fetchall()
+            event_details = rows[0]
+            return event_details
+        except Exception as e:
+            print(e)
+            return e
+
     '''
     SQLite queries for events_joined table
     '''
@@ -294,13 +354,27 @@ class Database:
     def insert_event_joined(self, event_name, username, telegram_id, telegram_handle, timing, item_chosen):
         try:
             ## delete event user have signed up for and insert a new query
-            self.cur.execute("SELECT * FROM events_joined WHERE telegram_id=? AND event_name=?", (telegram_id, event_name,))
+            self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
+            event_rows = self.cur.fetchall()
+            if (event_rows):
+                event_id = event_rows[0][EVENT_ID]
+            else:
+               return
+
+            self.cur.execute("SELECT * FROM Users WHERE UserName=?", (username,))
+            user_rows = self.cur.fetchall()
+            if (user_rows):
+                user_id = user_rows[0][USER_ID]
+
+            else:
+                return
+
+            self.cur.execute("SELECT * FROM EventsJoined WHERE UserID=? AND EventID=?", (user_id, event_id, ))
             if (len(self.cur.fetchall())):
-                self.cur.execute(
-                "DELETE FROM events_joined WHERE telegram_id=? AND event_name=?", (telegram_id, event_name,))
-            
+                self.cur.execute("DELETE FROM EventsJoined WHERE UserID=? AND EventID=?", (user_id, event_id))
+
             self.cur.execute(
-                "INSERT INTO events_joined(event_name, username, telegram_id, telegram_handle, timing, item_chosen) values (?,?,?,?,?,?)", (event_name, username, telegram_id, telegram_handle, timing, item_chosen,))
+                "INSERT INTO EventsJoined(EventID, UserID, Timing, ItemChosen) values (?,?,?,?)", (event_id, user_id, timing, item_chosen,))
             self.con.commit()
             return True
         except Exception as e:
@@ -309,8 +383,30 @@ class Database:
 
     def delete_event_joined(self, event_name):
         try:
+            self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
+            rows = self.cur.fetchall()
+            if (rows):
+                event_id = rows[0][EVENT_ID]
+            else:
+                return
             self.cur.execute(
-                "DELETE FROM events_joined WHERE event_name=?", (event_name,))
+                "DELETE FROM EventsJoined WHERE EventID=?", (event_id,))
+            self.con.commit()
+        except Exception as e:
+            print(e)
+            return e
+
+    def delete_event_joined2(self, telegram_id):
+        try:
+            self.cur.execute("SELECT * FROM Users WHERE TelegramId=?", (telegram_id,))
+            user_rows = self.cur.fetchall()
+            if (user_rows):
+                user_id = user_rows[0][USER_ID]
+            else:
+                return
+            self.cur.execute(
+                "DELETE FROM EventsJoined WHERE UserID=?", (user_id,)
+            )
             self.con.commit()
         except Exception as e:
             print(e)
@@ -318,7 +414,7 @@ class Database:
 
     def query_all_events_joined(self):
         try:
-            self.cur.execute("SELECT * FROM events_joined")
+            self.cur.execute("SELECT * FROM EventsJoined")
             rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
@@ -329,14 +425,27 @@ class Database:
             print(e)
             return e
     
-    def query_event_joined(self, event_name):
+    def query_event_joined(self, event_name, win_count): 
         try:
             LOCK.acquire(True)
-            self.cur.execute("SELECT * FROM events_joined WHERE event_name=?", (event_name,))
+            self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
             rows = self.cur.fetchall()
-            arrayString=[]
+            if (rows):
+                event_id = rows[0][EVENT_ID]
+            else:
+                return
+            self.cur.execute("SELECT * FROM EventsJoined WHERE EventID=?", (event_id,))
+            rows = self.cur.fetchall()
+            arrayString = []
             for row in rows:
-                arrayString.append(row)
+                user_id = row[EJ_USER_ID]
+                self.cur.execute("SELECT * FROM Users WHERE UserID=?", (user_id,))
+                user_entry = self.cur.fetchall()
+                user_win_count = user_entry[0][WIN_COUNT]
+                if (user_win_count == win_count):
+                    arrayString.append(row)
+                else:
+                    continue
             print(arrayString)
             return arrayString
         except Exception as e:
@@ -345,13 +454,26 @@ class Database:
         finally:
             LOCK.release() 
 
-    def query_user_choice(self, event_name, item_chosen):
+    def query_user_choice(self, event_name, item_chosen, win_count):
         try:
-            self.cur.execute("SELECT * FROM events_joined WHERE event_name=? AND item_chosen=?", (event_name, item_chosen,))
+            self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
+            rows = self.cur.fetchall()
+            if (rows):
+                event_id = rows[0][EVENT_ID]
+            else:
+                return
+            self.cur.execute("SELECT * FROM EventsJoined WHERE EventID=? AND ItemChosen=?", (event_id, item_chosen,))
             rows = self.cur.fetchall()
             arrayString=[]
             for row in rows:
-                arrayString.append(row)
+                user_id = row[EJ_USER_ID]
+                self.cur.execute("SELECT * FROM Users WHERE UserID=?", (user_id,))
+                user_entry = self.cur.fetchall()
+                user_win_count = user_entry[0][WIN_COUNT]
+                if (user_win_count == win_count):
+                    arrayString.append(row)
+                else:
+                    continue
             print(arrayString)
             return arrayString
         except Exception as e:
@@ -360,7 +482,13 @@ class Database:
 
     def query_number_user_joined(self, event_name, timing):
         try:
-            self.cur.execute("SELECT * FROM events_joined WHERE event_name=? AND timing=?", (event_name, timing,))
+            self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
+            rows = self.cur.fetchall()
+            if (rows):
+                event_id = rows[0][EVENT_ID]
+            else:
+                return
+            self.cur.execute("SELECT * FROM EventsJoined WHERE EventID=? AND Timing=?", (event_id, timing,))
             rows = self.cur.fetchall()
             userNumber = len(rows)
             print(userNumber)
@@ -425,6 +553,27 @@ class Database:
         finally:
             LOCK.release()
 
+    def query_event_choice_exist(self, event_name):
+        try:
+            LOCK.acquire(True)
+            self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
+            rows = self.cur.fetchall()
+            if (rows):
+                event_id = rows[0][EVENT_ID]
+            else:
+                return
+            self.cur.execute("SELECT * FROM EventsCustomChoices WHERE EventID=?", (event_id,))
+            rows = self.cur.fetchall()
+            if (rows):
+                return True
+            return False
+        except Exception as e:
+            print(e)
+            return e
+        finally:
+            LOCK.release()
+            
+
     '''
     SQLite queries for user_feedback table
     '''
@@ -432,8 +581,24 @@ class Database:
     def insert_user_feedback(self, event_name, username, feedback):
         try:
             # query events table for event id
-            self.cur.execute(
-                "INSERT INTO user_feedback(event_name, username, feedback) values (?,?,?)", (event_name, username, feedback,))
+            self.cur.execute("SELECT * FROM Users WHERE UserName=?", (username,))
+            user_rows = self.cur.fetchall()
+            if (user_rows):
+                user_id = user_rows[0][USER_ID]
+            else:
+                return
+            if (event_name == 'general'):
+                self.cur.execute("INSERT INTO UserFeedback(EventID, UserID, Feedback) values (?,?,?)", (-1, user_id, feedback,))
+                self.con.commit()
+            else: 
+                self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
+                event_rows = self.cur.fetchall()
+                if (event_rows):
+                    event_id = event_rows[0][EVENT_ID]
+                else:
+                    return
+                self.cur.execute("INSERT INTO UserFeedback(EventID, UserID, Feedback) values (?,?,?)", (event_id, user_id, feedback,))
+                self.con.commit()
             return True
         except Exception as e:
             print(e)
@@ -441,18 +606,50 @@ class Database:
 
     def delete_user_feedback(self, event_name):
         try:
+            self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
+            event_rows = self.cur.fetchall()
+            if (event_rows):
+                event_id = event_rows[0][EVENT_ID]
+            else:
+                return
             self.cur.execute(
-                "DELETE FROM user_feedback WHERE event_name=?", (event_name,))
+                "DELETE FROM UserFeedback WHERE EventID=?", (event_id,))
             self.con.commit()
+        except Exception as e:
+            print(e)
+            return e
+
+    def delete_user_feedback2(self, telegram_id):
+        try:
+            self.cur.execute("SELECT * FROM Users WHERE TelegramId=?", (telegram_id,))
+            user_rows = self.cur.fetchall()
+            if (user_rows):
+                user_id = user_rows[0][USER_ID]
+            else:
+                return
+            self.cur.execute(
+                "DELETE FROM UserFeedback WHERE UserID=?", (user_id,))
+            self.con.commit()
+            print(telegram_id)
         except Exception as e:
             print(e)
             return e
     
     def query_user_feedback(self, event_name):
         try:
-            self.cur.execute("SELECT * FROM user_feedback WHERE event_name = (?)", (event_name,))
-            self.con.commit()
-            rows = self.cur.fetchall()
+            LOCK.acquire(True)
+            if (event_name == 'general'):
+                self.cur.execute("SELECT * FROM UserFeedback WHERE EventID =?", (-1,))
+                rows = self.cur.fetchall()
+            else:
+                self.cur.execute("SELECT * FROM Events WHERE EventName=?", (event_name,))
+                event_rows = self.cur.fetchall()
+                if (event_rows):
+                    event_id = event_rows[0][EVENT_ID]
+                else:
+                    return
+                self.cur.execute("SELECT * FROM UserFeedback WHERE EventID =?", (event_id,))
+                rows = self.cur.fetchall()
             arrayString = []
             for row in rows:
                 arrayString.append(row)
@@ -461,3 +658,24 @@ class Database:
         except Exception as e:
             print(e)
             return e
+        finally:
+            LOCK.release()
+
+
+    '''
+    SQLite queries for win_count
+    '''
+    def increase_wincount(self, telegram_id): ## adds 1 to wincount of user
+        try:
+            self.cur.execute("SELECT * FROM Users WHERE TelegramId=?", (telegram_id,))
+            user = self.cur.fetchall()
+            user_id = user[0][USER_ID]
+            win_count = user[0][WIN_COUNT]
+            win_count += 1
+            self.cur.execute("UPDATE Users SET WinCount=? WHERE UserId=?", (win_count, user_id,))
+            self.con.commit()
+            return True
+        except Exception as e:
+            print(e)
+            return e
+

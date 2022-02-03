@@ -7,13 +7,18 @@ from telegram import InlineKeyboardMarkup, InlineKeyboardButton, ParseMode, Repl
 Defining constants
 '''
 
-EVENT_NAME = 0
-START_SIGNUP = 1
-END_SIGNUP = 2
-COLLECTION_DATE = 3
-START_TIME = 4
-END_TIME = 5
-ITEM_BOOL = 7
+EVENT_ID = 0
+EVENT_NAME = 1
+START_DATE = 2
+END_DATE = 3
+COLLECTION_DATE = 4
+START_TIME = 5
+END_TIME = 6
+EVENT_MESSAGE = 7
+
+ECC_EVENT_ID = 0
+CHOICE_HEADER = 1
+CHOICE_NAME = 2
 
 def prompt_welfare(update, context):
     query = update.callback_query
@@ -59,7 +64,7 @@ def show_current_welfare(update, context, db):
     context.user_data["events"] = events
     current_events = []
     for event in events:
-        current_events.append(event[EVENT_NAME] + ", closes " + event[END_SIGNUP])
+        current_events.append(event[EVENT_NAME] + ", closes " + event[END_DATE])
 
     text = "Please select one of the options to sign up for welfare!"
     context.bot.edit_message_text(
@@ -84,7 +89,8 @@ def show_timings(update, context, db):
     events = context.user_data["events"]
     context.user_data["event_name"] = events[index][EVENT_NAME]
     context.user_data["event_date"] = events[index][COLLECTION_DATE]
-    context.user_data["item_bool"] = events[index][ITEM_BOOL]
+    item_bool = db.query_event_choice_exist(events[index][EVENT_NAME])
+    context.user_data["item_bool"] = item_bool
     context.user_data["index"] = index
     timings = [events[index][START_TIME], events[index][END_TIME]]
 
@@ -97,7 +103,7 @@ def show_timings(update, context, db):
         reply_markup=keyboards.timings_keyboard(timings, db, events[index][EVENT_NAME])
     )
     # print(items_bool_array[index] == '1')
-    if ( events[index][ITEM_BOOL] == '1'):
+    if (item_bool):
         return 2
     else:
         return 3
@@ -115,7 +121,7 @@ def show_item_events(update, context, db):
     arrayOptions = []
 
     for row in arrayDatabase:
-        arrayOptions.append(row[2])
+        arrayOptions.append(row[CHOICE_NAME])
         
     text = arrayDatabase[0][1]
 
@@ -134,7 +140,7 @@ def confirm_timing(update, context, db):
     username = query.message.chat.username
     item_bool = context.user_data["item_bool"]
 
-    if (item_bool == '1'):
+    if (item_bool):
         timing = context.user_data["timing"]
         item_chosen = query.data[6:]
         print(item_chosen)
