@@ -1,3 +1,4 @@
+from multiprocessing import Value
 from flask import Flask, request, jsonify, make_response, abort, Response
 from flask_cors import CORS
 from flask_restful import Api, Resource
@@ -70,7 +71,7 @@ Defining helper functions
 '''
 def replace_dash_with_slash(dateString):
     replacedDateString = dateString.replace("-", "/")
-    print(replacedDateString)
+    # print(replacedDateString)
     return replacedDateString
 
 '''
@@ -117,21 +118,21 @@ class Events(Resource):
 
     def get(self):
         event_type = request.args['eventType']
-        print(event_type)
+        # print(event_type)
         if (event_type == "past"):
             events = database.query_all_past_events()
         elif (event_type == "current"):
-            print("Events are here!!")
+            # print("Events are here!!")
             events = database.query_all_ongoing_events()
         elif (event_type == "future"):
             events = database.query_all_future_events()
         elif (event_type == "all"):
             events = database.query_all_events()
-        print(events)
+        # print(events)
         return make_response(jsonify(events), 200)
 
     def delete(self):
-        print(request.args)
+        # print(request.args)
         event_json = request.get_json(force=True)
         database.delete_event(event_json['eventName'])
         database.delete_event_joined(event_json['eventName'])
@@ -147,7 +148,7 @@ class EventChoices(Resource):
         for event_choice in event_choices:
             new_event_choice = (event_name, event_choice[CHOICE_HEADER], event_choice[CHOICE_NAME])
             edit_event_choices.append(new_event_choice)
-        print(new_event_choice)
+        # print(new_event_choice)
         return make_response(jsonify(event_choices), 200)
 
 class Users(Resource):
@@ -165,7 +166,13 @@ class Users(Resource):
 class UserEvent(Resource):
     def get(self):
         event_name = request.args['eventName']
-        users_joined = database.query_event_joined(event_name)
+        max_wincount = len(database.query_all_past_events())
+        users_joined = []
+        ## getting all users that joined event
+        for win_count in range(0, max_wincount + 1):
+            users = database.query_event_joined(event_name, win_count)
+            for user in users:
+                users_joined.append(user)
         edit_users_joined = []
         for user_joined in users_joined:
             user_id = user_joined[0]
@@ -186,7 +193,13 @@ class UserEvent(Resource):
         # text = database.query_event_message(event)
         url_req = "https://api.telegram.org/bot" + token + "/sendMessage" + "?chat_id=" + str(chat_id) + "&text=" + message 
         results = requests.get(url_req)
-        print(results.json())
+        # print(results.json())
+
+class UserWincount(Resource):    
+    def post(self):
+        user_json = request.get_json(force=True)
+        telegram_id = user_json['telegram_id']
+        database.increase_wincount(telegram_id)
 
 class UserShuffle(Resource):
     def get(self):
@@ -194,7 +207,8 @@ class UserShuffle(Resource):
         choice_pax = request.args.getlist('choicePax[]')
         total_pax = int(request.args['totalPax'])
         event_choices = database.query_events_choices(event_name)
-        print(event_choices)
+        # print(event_choices)
+        # print(choice_pax)
 
         if choice_pax:
             choice_pax = list(map(lambda choice: int(choice), choice_pax))
@@ -204,22 +218,56 @@ class UserShuffle(Resource):
             for index in range(len(choice_pax)):
                 pax = choice_pax[index]
                 choice = event_choices[index][2]
-                users = database.query_user_choice(event_name, choice)
-                random.shuffle(users)
+                max_wincount = len(database.query_all_past_events())
+                users = []
+                # users = database.query_user_choice(event_name, choice)
+
+                for win_count in range(0, max_wincount + 1):
+                    if len(users) >= total_pax:
+                        break
+                    else:
+                        current_users = database.query_user_choice(event_name, choice, win_count)
+                        random.shuffle(current_users)
+
+                        for user in current_users:
+                            users.append(user)
+
                 users = users[0:pax]
                 for user in users:
                     final_user_array.append(user)
         else:
             final_user_array = []
-            users = database.query_event_joined(event_name)
-            random.shuffle(users)
+            # users = database.query_event_joined(event_name)
+
+            max_wincount = len(database.query_all_past_events())
+            users = []
+
+
+            for win_count in range(0, max_wincount + 1):
+                if len(users) >= total_pax:
+                    break
+                else:
+                    current_users = database.query_event_joined(event_name, win_count)
+                    random.shuffle(current_users)
+
+                    for user in current_users:
+                        users.append(user)
+
             users = users[0:total_pax]
             for user in users:
                 final_user_array.append(user)
 
-        print(final_user_array)
+        finalized_user_array = []
+        for user in final_user_array:
+            user_id = user[0]
+            user_details = database.query_user_id(user_id)
+            username = user_details[USER_NAME]
+            telegram_id = user_details[TELEGRAM_ID]
+            telegram_handle = user_details[TELEGRAM_HANDLE]
+            new_user_joined = (event_name, username, telegram_id, telegram_handle, user[EJ_TIMING], user[EJ_ITEM_CHOSEN])
+            finalized_user_array.append(new_user_joined)
         # Returns the list of users chosen based on the algorithm
-        return make_response(jsonify(final_user_array), 200)
+        return make_response(jsonify(finalized_user_array), 200)
         
 class Feedbacks(Resource):
     def get(self):
@@ -233,15 +281,23 @@ class Feedbacks(Resource):
             user_details = database.query_user_id(event_feedback[UF_USER_ID])
             user_name = user_details[USER_NAME]
             new_event_feedback = (event_name, user_name, event_feedback[FEEDBACK])
-            print(new_event_feedback)
+            # print(new_event_feedback)
             edit_event_feedbacks.append(new_event_feedback)
         return make_response(jsonify(edit_event_feedbacks), 200)
+
+class EventChoicesExist(Resource):
+    def get(self):
+        event_name = request.args['eventName']
+        value = database.query_event_choice_exist(event_name)
+        return make_response(jsonify(value), 200)
 
 api.add_resource(HelloWorld, '/')
 api.add_resource(Events, '/api/events')
 api.add_resource(EventChoices, '/api/events/choices')
+api.add_resource(EventChoicesExist, '/api/events/choices/exist')
 api.add_resource(Users, '/api/users')
 api.add_resource(UserEvent, '/api/users/event')
+api.add_resource(UserWincount, '/api/users/wincount')
 api.add_resource(UserShuffle, '/api/users/shuffle')
 api.add_resource(Feedbacks, '/api/feedbacks')
 

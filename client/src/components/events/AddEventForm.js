@@ -234,7 +234,7 @@ const AddEventForm = () => {
           </DropdownButton>
         </InputGroup> */}
 
-        <Form.Label htmlFor="basic-url">Event Duration:</Form.Label>
+        <Form.Label htmlFor="basic-url">Sign Up Period:</Form.Label>
         <InputGroup className="mb-3">
           <InputGroup.Text id="basic-addon1">Start Date</InputGroup.Text>
           <Form.Control

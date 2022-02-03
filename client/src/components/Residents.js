@@ -8,6 +8,8 @@ const USERNAME = 1;
 const NUSNET_ID = 2;
 const HOUSE = 3;
 const TELEGRAM_ID = 4;
+const TELEGRAM_HANDLE = 5;
+const WIN_COUNT = 6;
 
 const Residents = () => {
   const [users, setUsers] = React.useState([]);
@@ -26,6 +28,8 @@ const Residents = () => {
             nusnet_id: res.data[i][NUSNET_ID],
             house: res.data[i][HOUSE],
             telegram_id: res.data[i][TELEGRAM_ID],
+            telegram_handle: res.data[i][TELEGRAM_HANDLE],
+            win_count: res.data[i][WIN_COUNT],
           });
         }
         setUsers(userArray);
@@ -88,6 +92,8 @@ const Residents = () => {
             <th>Name</th>
             <th>NUSNET ID</th>
             <th>House</th>
+            <th>Telegram Handle</th>
+            <th>Win Count</th>
             <th>Delete User</th>
           </tr>
         </thead>
@@ -99,6 +105,8 @@ const Residents = () => {
                 <td>{user.name}</td>
                 <td>{user.nusnet_id}</td>
                 <td>{user.house}</td>
+                <td>{user.telegram_handle}</td>
+                <td>{user.win_count}</td>
                 <td>
                   <Button
                     variant="danger"
