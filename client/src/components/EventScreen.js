@@ -95,6 +95,13 @@ const EventScreen = () => {
           </Nav.Item>
         </Nav>
         <Switch>
+          {currentEvents.map((event, index) => {
+            return (
+              <Route key={index} path={`${match.url}/users-${event}`}>
+                <UserTable event={event} />
+              </Route>
+            );
+          })}
           {allEvents.map((event, index) => {
             return (
               <Route key={index} path={`${match.url}/${event}`}>
@@ -111,13 +118,6 @@ const EventScreen = () => {
             component={CurrentEvents}
           />
           <Route path={`${match.url}/future-events`} component={FutureEvents} />
-          {currentEvents.map((event, index) => {
-            return (
-              <Route key={index} path={`${match.url}/users-${event}`}>
-                <UserTable event={event} />
-              </Route>
-            );
-          })}
         </Switch>
       </Card>
       <br></br>
