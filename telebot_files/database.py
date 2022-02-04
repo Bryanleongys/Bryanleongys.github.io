@@ -745,6 +745,7 @@ class Database:
     SQLite queries for win_count
     '''
     def increase_wincount(self, telegram_id): ## adds 1 to wincount of user
+        max_win_count = len(self.query_all_past_events())
         try:
             LOCK.acquire(True)
             self.cur.execute("SELECT * FROM Users WHERE TelegramId=?", (telegram_id,))
@@ -752,9 +753,11 @@ class Database:
             user = self.cur.fetchall()
             user_id = user[0][USER_ID]
             win_count = user[0][WIN_COUNT]
-            win_count += 1
-            self.cur.execute("UPDATE Users SET WinCount=? WHERE UserId=?", (win_count, user_id,))
-            self.con.commit()
+            ## only increase win_count to max_win_count
+            if (win_count < max_win_count):
+                win_count += 1
+                self.cur.execute("UPDATE Users SET WinCount=? WHERE UserId=?", (win_count, user_id,))
+                self.con.commit()
             return True
         except Exception as e:
             print(e)
